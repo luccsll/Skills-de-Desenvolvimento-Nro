@@ -1,0 +1,485 @@
+/* =========================================================================
+   NOVA UI — TOASTS, MODAIS E DRAWERS
+   Depende de tokens.css, base.css, buttons.css e do .dialog de ux.css.
+   Comportamento em overlays.js.
+
+   1. Toast            aviso rápido que some sozinho (NovaToast)
+   2. Modal            <dialog class="dialog"> com tamanhos, rolagem,
+                       carregamento e aviso de alterações não salvas
+   3. Drawer           painel lateral ou inferior (<dialog class="dialog
+                       dialog--drawer">)
+   ========================================================================= */
+
+/* =========================================================================
+   1. TOAST
+   ========================================================================= */
+.toast-region {
+    position: fixed;
+    inset: auto;
+    z-index: var(--nova-z-toast);
+    display: flex;
+    flex-direction: column;
+    gap: var(--nova-space-2);
+    width: min(400px, calc(100vw - 32px));
+    max-height: calc(100vh - 32px);
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    pointer-events: none;
+}
+
+/* posições */
+.toast-region[data-position="bottom-right"] {
+    right: var(--nova-space-4);
+    bottom: var(--nova-space-4);
+    flex-direction: column-reverse;
+}
+
+.toast-region[data-position="bottom-left"] {
+    bottom: var(--nova-space-4);
+    left: var(--nova-space-4);
+    flex-direction: column-reverse;
+}
+
+.toast-region[data-position="bottom-center"] {
+    bottom: var(--nova-space-4);
+    left: 50%;
+    flex-direction: column-reverse;
+    transform: translateX(-50%);
+}
+
+.toast-region[data-position="top-right"] {
+    top: var(--nova-space-4);
+    right: var(--nova-space-4);
+}
+
+.toast-region[data-position="top-center"] {
+    top: var(--nova-space-4);
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+@media (max-width: 575.98px) {
+    .toast-region[data-position] {
+        right: var(--nova-space-3);
+        left: var(--nova-space-3);
+        width: auto;
+        transform: none;
+    }
+
+    .toast-region[data-position^="bottom"] {
+        bottom: calc(var(--nova-space-3) + env(safe-area-inset-bottom, 0px));
+    }
+}
+
+.toast {
+    --toast-accent: var(--nova-color-brand-500);
+    --toast-duration: 5000ms;
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--nova-space-3);
+    padding: var(--nova-space-3) var(--nova-space-3) var(--nova-space-3) var(--nova-space-4);
+    overflow: hidden;
+    border: var(--nova-border);
+    border-radius: var(--nova-radius-md);
+    background: var(--nova-color-bg-surface);
+    box-shadow: var(--nova-shadow-lg);
+    font-family: var(--nova-font-family);
+    color: var(--nova-color-text-primary);
+    pointer-events: auto;
+    touch-action: pan-y;
+    animation: nova-toast-in var(--nova-duration-base) var(--nova-ease-enter);
+    transition: transform var(--nova-duration-base) var(--nova-ease-standard), opacity var(--nova-duration-base) ease;
+}
+
+.toast-region[data-position^="top"] .toast {
+    animation-name: nova-toast-in-top;
+}
+
+.toast.is-leaving {
+    opacity: 0;
+    transform: translateX(24px);
+}
+
+.toast-region[data-position$="center"] .toast.is-leaving,
+.toast-region[data-position$="left"] .toast.is-leaving {
+    transform: translateY(8px);
+}
+
+.toast.is-dragging {
+    transition: none;
+}
+
+@keyframes nova-toast-in {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(.98);
+    }
+}
+
+@keyframes nova-toast-in-top {
+    from {
+        opacity: 0;
+        transform: translateY(-12px) scale(.98);
+    }
+}
+
+.toast__icon {
+    display: flex;
+    flex-shrink: 0;
+    padding-top: 1px;
+    color: var(--toast-accent);
+}
+
+.toast__icon .icon {
+    --icon-size: 22px;
+    --icon-fill: 1;
+}
+
+.toast__icon .spinner {
+    --spinner-size: 20px;
+    margin: 1px;
+}
+
+.toast__content {
+    flex: 1;
+    min-width: 0;
+    padding-top: 1px;
+}
+
+.toast__title {
+    margin: 0;
+    font-size: var(--nova-font-size-base);
+    font-weight: var(--nova-font-weight-semibold);
+    line-height: var(--nova-line-height-snug);
+}
+
+.toast__message {
+    margin: 2px 0 0;
+    font-size: var(--nova-font-size-sm);
+    line-height: var(--nova-line-height-base);
+    color: var(--nova-color-text-secondary);
+    overflow-wrap: anywhere;
+}
+
+.toast__title:empty,
+.toast__message:empty {
+    display: none;
+}
+
+.toast__title:empty+.toast__message {
+    margin-top: 0;
+    color: var(--nova-color-text-primary);
+    font-size: var(--nova-font-size-base);
+}
+
+.toast__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nova-space-2);
+    margin-top: var(--nova-space-2);
+}
+
+.toast__actions:empty {
+    display: none;
+}
+
+.toast__count {
+    display: inline-flex;
+    align-items: center;
+    min-width: 20px;
+    height: 18px;
+    margin-left: 6px;
+    padding: 0 6px;
+    border-radius: var(--nova-radius-pill);
+    background: var(--nova-color-bg-subtle);
+    font-size: var(--nova-font-size-2xs);
+    font-weight: var(--nova-font-weight-bold);
+    color: var(--nova-color-text-secondary);
+    vertical-align: 2px;
+}
+
+.toast__close {
+    flex-shrink: 0;
+    margin: -4px -4px -4px 0;
+}
+
+/* tempo restante */
+.toast__timer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: var(--toast-accent);
+    opacity: .35;
+    transform-origin: left;
+    animation: nova-toast-timer var(--toast-duration) linear forwards;
+}
+
+.toast.is-paused .toast__timer {
+    animation-play-state: paused;
+}
+
+@keyframes nova-toast-timer {
+    to {
+        transform: scaleX(0);
+    }
+}
+
+.toast--success {
+    --toast-accent: var(--nova-success-text);
+}
+
+.toast--warning {
+    --toast-accent: var(--nova-warning-text);
+}
+
+.toast--danger {
+    --toast-accent: var(--nova-danger-text);
+}
+
+.toast--neutral,
+.toast--loading {
+    --toast-accent: var(--nova-color-text-secondary);
+}
+
+.toast--loading {
+    --toast-accent: var(--nova-color-brand-500);
+}
+
+/* versão escura, para avisos curtos sem título ("Copiado") */
+.toast--inverse {
+    border-color: transparent;
+    background: var(--nova-color-bg-inverse);
+    color: var(--nova-color-text-on-inverse);
+}
+
+.toast--inverse .toast__message,
+.toast--inverse .toast__title:empty+.toast__message {
+    color: var(--nova-color-text-on-inverse);
+}
+
+.toast--inverse .btn--ghost,
+.toast--inverse .btn--tertiary {
+    --btn-fg: var(--nova-color-text-on-inverse);
+    --btn-fg-hover: var(--nova-color-text-on-inverse);
+    --btn-bg-hover: color-mix(in srgb, var(--nova-color-text-on-inverse) 12%, transparent);
+}
+
+.toast--inverse .toast__actions .btn--ghost {
+    --btn-fg: var(--nro-teal-300);
+    --btn-fg-hover: var(--nro-teal-200);
+}
+
+/* =========================================================================
+   2. MODAL (complementa o .dialog de ux.css)
+   ========================================================================= */
+
+/* trava a rolagem da página com modal aberto */
+html:has(dialog.dialog[open]:modal) {
+    overflow: hidden;
+}
+
+.dialog--xl {
+    --dialog-width: 960px;
+}
+
+.dialog--full {
+    --dialog-width: calc(100vw - 32px);
+    height: calc(100vh - 32px);
+}
+
+/* corpo com rolagem própria, cabeçalho e rodapé fixos */
+.dialog--scroll .dialog__header {
+    padding-bottom: var(--nova-space-4);
+    border-bottom: var(--nova-border);
+}
+
+.dialog--scroll .dialog__header+.dialog__body {
+    padding-top: var(--nova-space-4);
+}
+
+.dialog--scroll .dialog__footer {
+    border-top: var(--nova-border);
+}
+
+.dialog__body--flush {
+    padding: 0;
+}
+
+/* abas logo abaixo do cabeçalho */
+.dialog__tabs {
+    padding: 0 var(--nova-space-6);
+    border-bottom: var(--nova-border);
+}
+
+.dialog__tabs .tabs__list {
+    border-bottom: 0;
+}
+
+/* carregamento dentro do modal */
+.dialog.is-loading .dialog__body {
+    position: relative;
+    min-height: 160px;
+}
+
+.dialog.is-loading .dialog__body::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 28px;
+    height: 28px;
+    margin: -14px 0 0 -14px;
+    border: 3px solid color-mix(in srgb, var(--nova-color-brand-500) 22%, transparent);
+    border-top-color: var(--nova-color-brand-500);
+    border-radius: 50%;
+    animation: nova-spin .7s linear infinite;
+}
+
+.dialog.is-loading .dialog__body> * {
+    visibility: hidden;
+}
+
+/* =========================================================================
+   3. DRAWER
+   <dialog class="dialog dialog--drawer [dialog--left|dialog--bottom]">
+   ========================================================================= */
+.dialog--drawer {
+    --dialog-width: 480px;
+    width: min(var(--dialog-width), 100vw);
+    max-width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100vh;
+    max-height: 100dvh;
+    margin: 0 0 0 auto;
+    border-radius: var(--nova-radius-lg) 0 0 var(--nova-radius-lg);
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.dialog--drawer[open] {
+    animation: nova-drawer-right var(--nova-duration-slow) var(--nova-ease-enter);
+}
+
+.dialog--drawer .dialog__header {
+    padding-bottom: var(--nova-space-4);
+    border-bottom: var(--nova-border);
+}
+
+.dialog--drawer .dialog__header+.dialog__body {
+    padding-top: var(--nova-space-5);
+}
+
+.dialog--drawer .dialog__footer {
+    border-top: var(--nova-border);
+}
+
+.dialog--drawer.dialog--left {
+    margin: 0 auto 0 0;
+    border-radius: 0 var(--nova-radius-lg) var(--nova-radius-lg) 0;
+}
+
+.dialog--drawer.dialog--left[open] {
+    animation-name: nova-drawer-left;
+}
+
+.dialog--drawer.dialog--bottom {
+    width: 100vw;
+    height: auto;
+    max-height: 85vh;
+    margin: auto 0 0;
+    border-radius: var(--nova-radius-lg) var(--nova-radius-lg) 0 0;
+}
+
+.dialog--drawer.dialog--bottom[open] {
+    animation-name: nova-drawer-bottom;
+}
+
+.dialog--drawer.dialog--bottom .dialog__header::before {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    width: 40px;
+    height: 4px;
+    margin-left: -20px;
+    border-radius: 2px;
+    background: var(--nova-color-border-strong);
+}
+
+.dialog--drawer.dialog--bottom .dialog__header {
+    position: relative;
+    padding-top: var(--nova-space-8);
+}
+
+.dialog--drawer-sm {
+    --dialog-width: 360px;
+}
+
+.dialog--drawer-lg {
+    --dialog-width: 720px;
+}
+
+@keyframes nova-drawer-right {
+    from {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes nova-drawer-left {
+    from {
+        transform: translateX(-100%);
+    }
+}
+
+@keyframes nova-drawer-bottom {
+    from {
+        transform: translateY(100%);
+    }
+}
+
+@media (max-width: 575.98px) {
+    .dialog--drawer {
+        width: 100vw;
+        border-radius: 0;
+    }
+
+    .dialog--drawer.dialog--bottom {
+        border-radius: var(--nova-radius-lg) var(--nova-radius-lg) 0 0;
+    }
+
+    .dialog--full {
+        height: 100vh;
+        height: 100dvh;
+        margin: 0;
+        border-radius: 0;
+    }
+}
+
+/* =========================================================================
+   ACESSIBILIDADE
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+
+    .toast,
+    .toast.is-leaving,
+    .dialog--drawer[open] {
+        animation: none;
+        transition: opacity var(--nova-duration-fast);
+    }
+
+    .toast.is-leaving {
+        transform: none;
+    }
+
+    .toast__timer {
+        display: none;
+    }
+}

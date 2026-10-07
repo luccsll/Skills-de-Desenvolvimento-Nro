@@ -1,0 +1,89 @@
+/* Relatório de abono · layout da página (o resto é componente da Nova UI) */
+.report {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: clamp(12px, 2vw, 24px);
+}
+.report-header .card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 0;
+}
+.report-header__row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.report-header__title {
+  flex: 1;
+  min-width: 220px;
+}
+.report-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.report-header__tabs {
+  margin: 0 -20px;
+}
+.report-header__tabs .tabs__list {
+  padding: 0 20px;
+  border-bottom: 0;
+}
+.report-month {
+  width: 220px;
+}
+.report-insights .list-item {
+  cursor: default;
+}
+.report-insights .list-item__content {
+  min-width: 0;
+}
+.report-insights .progress {
+  margin-top: 6px;
+}
+.report-search {
+  width: 300px;
+  max-width: 100%;
+}
+.report-filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 0 20px 14px;
+}
+.report-process {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+#tabela-solicitacoes tbody tr {
+  cursor: pointer;
+}
+#tabela-solicitacoes .cell-num {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 767.98px) {
+  .report-header__actions,
+  .report-month,
+  .report-search {
+    width: 100%;
+  }
+  .report-header__actions .btn--primary {
+    flex: 1;
+  }
+}
+.report-negative {
+  color: var(--nova-danger-text);
+}
+
+#tabela-solicitacoes {
+  --table-min-width: 1080px;
+}

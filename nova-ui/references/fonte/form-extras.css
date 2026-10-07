@@ -1,0 +1,805 @@
+/* =========================================================================
+   NOVA UI — CONTROLES EXTRAS DE FORMULÁRIO
+   Depende dos tokens --nova-*, de inputs.css e buttons.css.
+   Comportamento em form-extras.js.
+
+   Seções:
+     1. Rich Text Editor
+     2. File Upload / Drag & Drop Upload
+     3. Color Picker
+     4. Slider / Range Slider
+     5. Rating
+   ========================================================================= */
+
+/* =========================================================================
+   1. RICH TEXT EDITOR
+   O HTML editado é copiado para um <textarea> oculto (data-rte-target),
+   que é o campo gravado pelo Fluig.
+   ========================================================================= */
+.rte {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow: hidden;
+    background: var(--nova-color-bg-surface);
+    border: 1px solid var(--nova-color-border-strong);
+    border-radius: var(--nova-radius-sm);
+    font-family: var(--nova-font-family);
+    transition: border-color var(--nova-transition-fast), box-shadow var(--nova-transition-fast);
+}
+
+.rte:focus-within {
+    border-color: var(--nova-color-brand-500);
+    box-shadow: 0 0 0 3px var(--nova-color-brand-100);
+}
+
+.rte.is-error {
+    border-color: var(--nova-danger-text);
+    box-shadow: 0 0 0 3px var(--nova-danger-bg);
+}
+
+.rte__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px;
+    padding: 4px;
+    border-bottom: 1px solid var(--nova-color-border);
+    background: var(--nova-color-bg-subtle);
+}
+
+.rte__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    margin: 0;
+    padding: 0 6px;
+    border: 0;
+    border-radius: var(--nova-radius-sm);
+    background: transparent;
+    color: var(--nova-color-text-secondary);
+    font-family: inherit;
+    font-size: var(--nova-font-size-sm);
+    font-weight: var(--nova-font-weight-semibold);
+    cursor: pointer;
+    transition: background var(--nova-transition-fast), color var(--nova-transition-fast);
+}
+
+.rte__btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.rte__btn .icon {
+    --icon-size: 16px;
+}
+
+.rte__btn:hover {
+    background: var(--nova-color-hover);
+    color: var(--nova-color-text-primary);
+}
+
+.rte__btn:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--nova-color-brand-500);
+}
+
+.rte__btn[aria-pressed="true"] {
+    background: var(--nova-info-bg);
+    color: var(--nova-color-brand-900);
+}
+
+.rte__sep {
+    width: 1px;
+    height: 20px;
+    margin: 0 4px;
+    background: var(--nova-color-border-strong);
+}
+
+.rte__content {
+    min-height: var(--rte-min-height, 160px);
+    max-height: var(--rte-max-height, 420px);
+    padding: var(--nova-space-3) var(--nova-space-4);
+    overflow-y: auto;
+    outline: none;
+    font-size: var(--nova-font-size-base);
+    line-height: var(--nova-line-height-loose);
+    color: var(--nova-color-text-primary);
+    overflow-wrap: anywhere;
+}
+
+.rte__content:empty::before {
+    content: attr(data-placeholder);
+    color: var(--nova-color-text-muted);
+    pointer-events: none;
+}
+
+.rte__content> :first-child {
+    margin-top: 0;
+}
+
+.rte__content> :last-child {
+    margin-bottom: 0;
+}
+
+.rte__content p {
+    margin: 0 0 .6em;
+}
+
+.rte__content h3 {
+    margin: .8em 0 .4em;
+    font-size: var(--nova-font-size-md);
+    font-weight: var(--nova-font-weight-semibold);
+}
+
+.rte__content ul,
+.rte__content ol {
+    margin: 0 0 .6em;
+    padding-left: 1.5em;
+}
+
+.rte__content blockquote {
+    margin: 0 0 .6em;
+    padding-left: var(--nova-space-3);
+    border-left: 3px solid var(--nova-color-border-strong);
+    color: var(--nova-color-text-secondary);
+}
+
+.rte__content a {
+    color: var(--nova-color-brand-500);
+    text-decoration: underline;
+}
+
+.rte__linkbar {
+    display: flex;
+    align-items: center;
+    gap: var(--nova-space-2);
+    padding: var(--nova-space-2) var(--nova-space-3);
+    border-bottom: 1px solid var(--nova-color-border);
+    background: var(--nova-color-bg-surface);
+}
+
+.rte__linkbar[hidden] {
+    display: none;
+}
+
+.rte__linkbar input {
+    flex: 1;
+    min-width: 0;
+    height: 32px;
+    padding: 0 var(--nova-space-3);
+    border: 1px solid var(--nova-color-border-strong);
+    border-radius: var(--nova-radius-sm);
+    font: inherit;
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-text-primary);
+}
+
+.rte__linkbar input:focus {
+    outline: none;
+    border-color: var(--nova-color-brand-500);
+    box-shadow: 0 0 0 3px var(--nova-color-brand-100);
+}
+
+.rte__footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 4px var(--nova-space-3);
+    border-top: 1px solid var(--nova-color-border);
+    font-size: var(--nova-font-size-xs);
+    color: var(--nova-color-text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.rte.is-disabled {
+    background: var(--nova-color-bg-subtle);
+}
+
+.rte.is-disabled .rte__toolbar {
+    pointer-events: none;
+    opacity: .5;
+}
+
+/* =========================================================================
+   2. FILE UPLOAD / DRAG & DROP UPLOAD
+   <div class="upload" data-max-size="10" data-max-files="5">
+     <label class="upload__zone"><input type="file" class="upload__input" multiple accept>…</label>
+     <ul class="upload__list"></ul></div>
+   ========================================================================= */
+.upload {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nova-space-3);
+    width: 100%;
+    font-family: var(--nova-font-family);
+}
+
+.upload__input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.upload__zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--nova-space-2);
+    min-height: 148px;
+    margin: 0;
+    padding: var(--nova-space-6) var(--nova-space-5);
+    border: 1.5px dashed var(--nova-color-border-strong);
+    border-radius: var(--nova-radius-md);
+    background: var(--nova-color-bg-subtle);
+    font-weight: var(--nova-font-weight-regular);
+    text-align: center;
+    color: var(--nova-color-text-secondary);
+    cursor: pointer;
+    transition: border-color var(--nova-transition-fast), background var(--nova-transition-fast);
+}
+
+.upload__zone:hover {
+    border-color: var(--nova-color-brand-500);
+    background: var(--nova-selected-bg, #eef4fc);
+}
+
+.upload__zone:focus-within {
+    border-color: var(--nova-color-brand-500);
+    box-shadow: 0 0 0 3px var(--nova-color-brand-100);
+}
+
+.upload.is-dragover .upload__zone {
+    border-style: solid;
+    border-color: var(--nova-color-brand-500);
+    background: var(--nova-selected-bg, #eef4fc);
+}
+
+.upload.is-error .upload__zone {
+    border-color: var(--nova-danger-text);
+}
+
+.upload__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--nova-color-bg-surface);
+    color: var(--nova-color-brand-500);
+    box-shadow: var(--nova-shadow-sm);
+}
+
+.upload__icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.upload__icon .icon {
+    --icon-size: 22px;
+}
+
+.upload__title {
+    font-size: var(--nova-font-size-base);
+    color: var(--nova-color-text-primary);
+}
+
+.upload__title strong {
+    color: var(--nova-color-brand-500);
+    font-weight: var(--nova-font-weight-semibold);
+}
+
+.upload__hint {
+    font-size: var(--nova-font-size-xs);
+    color: var(--nova-color-text-muted);
+}
+
+/* compacto: só botão */
+.upload--button .upload__zone {
+    flex-direction: row;
+    align-self: flex-start;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+}
+
+.upload--button .upload__zone:hover,
+.upload--button .upload__zone:focus-within {
+    background: none;
+    box-shadow: none;
+}
+
+.upload--button .upload__zone .btn {
+    pointer-events: none;
+}
+
+.upload--button .upload__zone:focus-within .btn {
+    box-shadow: 0 0 0 3px var(--btn-ring, var(--nova-color-brand-100));
+}
+
+/* lista de arquivos */
+.upload__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nova-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.upload__list:empty {
+    display: none;
+}
+
+.upload__item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 2px var(--nova-space-3);
+    padding: var(--nova-space-3);
+    border: 1px solid var(--nova-color-border);
+    border-radius: var(--nova-radius-sm);
+    background: var(--nova-color-bg-surface);
+}
+
+.upload__file-icon {
+    grid-row: span 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--nova-radius-sm);
+    background: var(--nova-info-bg);
+    color: var(--nova-color-brand-700);
+    font-size: 10px;
+    font-weight: var(--nova-font-weight-bold);
+    text-transform: uppercase;
+}
+
+.upload__file-icon--pdf {
+    background: var(--nova-danger-bg);
+    color: var(--nova-danger-text);
+}
+
+.upload__file-icon--xls {
+    background: var(--nova-success-bg);
+    color: var(--nova-success-text);
+}
+
+.upload__file-icon--img {
+    background: var(--nova-accent-teal-bg, #dbf3f2);
+    color: var(--nova-accent-teal-text, #0b7a76);
+}
+
+.upload__name {
+    overflow: hidden;
+    font-size: var(--nova-font-size-sm);
+    font-weight: var(--nova-font-weight-medium);
+    color: var(--nova-color-text-primary);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.upload__meta {
+    grid-column: 2;
+    display: flex;
+    align-items: center;
+    gap: var(--nova-space-2);
+    min-width: 0;
+    font-size: var(--nova-font-size-xs);
+    color: var(--nova-color-text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.upload__progress {
+    flex: 1;
+    max-width: 200px;
+    height: 4px;
+    overflow: hidden;
+    border-radius: 2px;
+    background: var(--nova-color-border);
+}
+
+.upload__progress span {
+    display: block;
+    width: var(--upload-progress, 0%);
+    height: 100%;
+    background: var(--nova-color-brand-500);
+    transition: width var(--nova-transition-base);
+}
+
+.upload__remove {
+    grid-row: 1 / span 2;
+    grid-column: 3;
+}
+
+.upload__item.is-done .upload__meta {
+    color: var(--nova-success-text);
+}
+
+.upload__item.is-error {
+    border-color: rgba(198, 43, 43, .35);
+    background: var(--nova-danger-bg);
+}
+
+.upload__item.is-error .upload__meta {
+    color: var(--nova-danger-text);
+}
+
+.upload__item.is-done .upload__progress,
+.upload__item.is-error .upload__progress {
+    display: none;
+}
+
+/* =========================================================================
+   3. COLOR PICKER
+   ========================================================================= */
+.color-field {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nova-space-2);
+    height: 40px;
+    padding: 4px var(--nova-space-3) 4px 4px;
+    background: var(--nova-color-bg-surface);
+    border: 1px solid var(--nova-color-border-strong);
+    border-radius: var(--nova-radius-sm);
+    font-family: var(--nova-font-family);
+    transition: border-color var(--nova-transition-fast), box-shadow var(--nova-transition-fast);
+}
+
+.color-field:focus-within {
+    border-color: var(--nova-color-brand-500);
+    box-shadow: 0 0 0 3px var(--nova-color-brand-100);
+}
+
+.color-field__swatch {
+    position: relative;
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    border-radius: 4px;
+    box-shadow: inset 0 0 0 1px rgba(16, 24, 40, .15);
+    background: var(--color-value, var(--nova-color-brand-500));
+    cursor: pointer;
+}
+
+.color-field__native {
+    position: absolute;
+    inset: -4px;
+    width: calc(100% + 8px);
+    height: calc(100% + 8px);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.color-field__hex {
+    width: 76px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--nova-color-text-primary);
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: var(--nova-font-size-sm);
+    text-transform: uppercase;
+}
+
+.color-field.is-invalid {
+    border-color: var(--nova-danger-text);
+}
+
+.color-swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nova-space-2);
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.color-swatch {
+    position: relative;
+    width: 28px;
+    height: 28px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--swatch);
+    box-shadow: inset 0 0 0 1px rgba(16, 24, 40, .15);
+    cursor: pointer;
+    transition: transform var(--nova-transition-fast);
+}
+
+.color-swatch:hover {
+    transform: scale(1.08);
+}
+
+.color-swatch:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 1px rgba(16, 24, 40, .15), 0 0 0 3px var(--nova-color-brand-100);
+}
+
+.color-swatch[aria-pressed="true"] {
+    box-shadow: 0 0 0 2px var(--nova-color-bg-surface), 0 0 0 4px var(--swatch);
+}
+
+/* =========================================================================
+   4. SLIDER / RANGE SLIDER
+   ========================================================================= */
+.slider {
+    --slider-fill: var(--nova-color-brand-500);
+    --slider-track: var(--nova-color-border);
+    --slider-pos: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--nova-space-1);
+    width: 100%;
+    font-family: var(--nova-font-family);
+}
+
+.slider__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--nova-space-3);
+}
+
+.slider__output {
+    font-size: var(--nova-font-size-sm);
+    font-weight: var(--nova-font-weight-semibold);
+    color: var(--nova-color-text-primary);
+    font-variant-numeric: tabular-nums;
+}
+
+.slider__track {
+    position: relative;
+    height: 24px;
+}
+
+.slider__track::before,
+.slider__fill {
+    content: "";
+    position: absolute;
+    top: 50%;
+    height: 6px;
+    margin-top: -3px;
+    border-radius: 3px;
+}
+
+.slider__track::before {
+    right: 0;
+    left: 0;
+    background: var(--slider-track);
+}
+
+.slider__fill {
+    left: var(--slider-from, 0%);
+    width: calc(var(--slider-to, 50%) - var(--slider-from, 0%));
+    background: var(--slider-fill);
+}
+
+.slider__input {
+    -webkit-appearance: none;
+    appearance: none;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background: transparent;
+    pointer-events: none;
+}
+
+.slider__input:focus {
+    outline: none;
+}
+
+.slider__input::-webkit-slider-runnable-track {
+    height: 24px;
+    background: transparent;
+}
+
+.slider__input::-moz-range-track {
+    height: 24px;
+    background: transparent;
+}
+
+.slider__input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    border: 2px solid var(--slider-fill);
+    border-radius: 50%;
+    background: var(--nova-color-bg-surface);
+    box-shadow: var(--nova-shadow-sm);
+    cursor: grab;
+    pointer-events: auto;
+    transition: box-shadow var(--nova-transition-fast), transform var(--nova-transition-fast);
+}
+
+.slider__input::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--slider-fill);
+    border-radius: 50%;
+    background: var(--nova-color-bg-surface);
+    box-shadow: var(--nova-shadow-sm);
+    cursor: grab;
+    pointer-events: auto;
+}
+
+.slider__input:active::-webkit-slider-thumb {
+    cursor: grabbing;
+    transform: scale(1.1);
+}
+
+.slider__input:focus-visible::-webkit-slider-thumb {
+    box-shadow: 0 0 0 4px var(--nova-color-brand-100);
+}
+
+.slider__input:focus-visible::-moz-range-thumb {
+    box-shadow: 0 0 0 4px var(--nova-color-brand-100);
+}
+
+.slider__input:disabled::-webkit-slider-thumb {
+    border-color: var(--nova-color-border-strong);
+    cursor: not-allowed;
+}
+
+.slider.is-disabled {
+    --slider-fill: var(--nova-color-border-strong);
+    opacity: .6;
+}
+
+.slider__scale {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--nova-font-size-xs);
+    color: var(--nova-color-text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+/* marcas de passo */
+.slider__ticks {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    left: 10px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: -2px;
+    pointer-events: none;
+}
+
+.slider__ticks span {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--nova-color-bg-surface);
+    opacity: .9;
+}
+
+.slider--success {
+    --slider-fill: var(--nova-success-text);
+}
+
+.slider--teal {
+    --slider-fill: var(--nova-accent-teal, #13B2AC);
+}
+
+/* =========================================================================
+   5. RATING
+   Radios em ordem inversa (5 → 1) para funcionar só com CSS.
+   ========================================================================= */
+.rating {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.rating__input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+}
+
+.rating__star {
+    width: var(--rating-size, 28px);
+    height: var(--rating-size, 28px);
+    margin: 0;
+    background: var(--nova-color-border-strong);
+    cursor: pointer;
+    transition: transform var(--nova-transition-fast), background var(--nova-transition-fast);
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9L12 2.8z'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9L12 2.8z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.rating__input:checked~.rating__star,
+.rating:not(.rating--readonly) .rating__star:hover,
+.rating:not(.rating--readonly) .rating__star:hover~.rating__star {
+    background: #f2b01e;
+}
+
+.rating:not(.rating--readonly):hover .rating__input:checked~.rating__star:not(:hover):not(:hover~.rating__star) {
+    background: var(--nova-color-border-strong);
+}
+
+.rating:not(.rating--readonly) .rating__star:hover {
+    transform: scale(1.1);
+}
+
+.rating__input:focus-visible+.rating__star {
+    outline: 2px solid var(--nova-color-brand-500);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+.rating--sm {
+    --rating-size: 18px;
+}
+
+/* só leitura, com valor fracionado: style="--rating-value: 4.3" */
+.rating-display {
+    --rating-size: 18px;
+    --rating-max: 5;
+    position: relative;
+    display: inline-block;
+    width: calc(var(--rating-size) * var(--rating-max));
+    height: var(--rating-size);
+    vertical-align: middle;
+    background: linear-gradient(90deg, #f2b01e calc(var(--rating-value, 0) / var(--rating-max) * 100%), var(--nova-color-border-strong) 0);
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9L12 2.8z'/%3E%3C/svg%3E") left center / var(--rating-size) var(--rating-size) repeat-x;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9L12 2.8z'/%3E%3C/svg%3E") left center / var(--rating-size) var(--rating-size) repeat-x;
+}
+
+.rating-summary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nova-space-2);
+    font-family: var(--nova-font-family);
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-text-secondary);
+}
+
+.rating-summary strong {
+    font-size: var(--nova-font-size-md);
+    color: var(--nova-color-text-primary);
+    font-variant-numeric: tabular-nums;
+}
+
+/* =========================================================================
+   ACESSIBILIDADE
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+
+    .rte,
+    .upload__zone,
+    .upload__progress span,
+    .color-swatch,
+    .slider__input::-webkit-slider-thumb,
+    .rating__star {
+        transition: none;
+    }
+}

@@ -1,0 +1,955 @@
+/* =========================================================================
+   NOVA UI — INPUTS
+   Depende dos tokens definidos no :root principal (--nova-*).
+   Componente: .field (input, select, textarea, com addon, compacto)
+   Tipos:      texto, número, senha, busca, e-mail, URL, telefone, moeda,
+               data, hora, data e hora, máscara (inputs.js), OTP/PIN,
+               stepper numérico
+   Estados:    default | hover | foco | preenchido | erro | sucesso |
+               alerta | desabilitado | somente leitura
+   ========================================================================= */
+
+:root {
+    --nova-input-textarea-min-height: 112px;
+    --nova-input-ring: 0 0 0 3px;
+    /* espessura do anel de foco/estado */
+}
+
+/* ===== ESTRUTURA ===== */
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nova-space-1);
+    width: 100%;
+    font-family: var(--nova-font-family);
+}
+
+.field__control {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    min-height: var(--nova-input-height);
+    background: var(--nova-color-bg-surface);
+    border: 1px solid var(--nova-color-border-strong);
+    border-radius: var(--nova-radius-sm);
+    overflow: hidden;
+    transition: border-color var(--nova-transition-fast), box-shadow var(--nova-transition-fast), background var(--nova-transition-fast);
+}
+
+.field__control:hover {
+    border-color: var(--nova-color-text-muted);
+}
+
+.field__control:focus-within {
+    border-color: var(--nova-color-brand-500);
+    box-shadow: var(--nova-input-ring) var(--nova-color-brand-100);
+}
+
+.field__body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    padding: var(--nova-space-2) var(--nova-space-4);
+    cursor: text;
+}
+
+/* legenda interna (Input Caption) */
+.field__label {
+    margin: 0;
+    font-size: var(--nova-font-size-xs);
+    font-weight: var(--nova-font-weight-medium);
+    line-height: var(--nova-line-height-tight);
+    color: var(--nova-color-text-muted);
+    cursor: inherit;
+}
+
+.field--required .field__label::after {
+    content: " *";
+    color: var(--nova-danger-text);
+}
+
+/* campo em si — resets defensivos contra Bootstrap/Fluig */
+.field__input {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: auto;
+    min-height: 20px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    outline: 0;
+    box-shadow: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: var(--nova-font-size-base);
+    font-weight: var(--nova-font-weight-regular);
+    line-height: var(--nova-line-height-base);
+    color: var(--nova-color-text-primary);
+}
+
+.field__input::placeholder {
+    color: var(--nova-color-text-muted);
+    opacity: 1;
+}
+
+.field__input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 100px var(--nova-color-bg-surface) inset;
+    -webkit-text-fill-color: var(--nova-color-text-primary);
+}
+
+.field__input[type="number"]::-webkit-inner-spin-button,
+.field__input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* ===== ÍCONE À ESQUERDA ===== */
+.field__icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    padding-left: var(--nova-space-4);
+    color: var(--nova-color-text-muted);
+    transition: color var(--nova-transition-fast);
+}
+
+.field__icon+.field__body {
+    padding-left: var(--nova-space-3);
+}
+
+.field__control:focus-within .field__icon {
+    color: var(--nova-color-brand-500);
+}
+
+.field__icon svg,
+.field__status svg,
+.field__clear svg,
+.field__addon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.field__icon .icon,
+.field__status .icon,
+.field__clear .icon,
+.field__addon .icon {
+    --icon-size: 18px;
+}
+
+/* ===== AÇÕES À DIREITA (meta, limpar, status) ===== */
+.field__actions {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    gap: var(--nova-space-2);
+    padding-right: var(--nova-space-3);
+}
+
+.field__actions:empty {
+    display: none;
+}
+
+.field__meta {
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-text-secondary);
+    white-space: nowrap;
+}
+
+.field__clear {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--nova-radius-pill);
+    background: var(--nova-color-bg-subtle);
+    color: var(--nova-color-text-secondary);
+    cursor: pointer;
+    transition: background var(--nova-transition-fast), color var(--nova-transition-fast);
+}
+
+.field__clear:hover {
+    background: var(--nova-color-border);
+    color: var(--nova-color-text-primary);
+}
+
+.field__clear:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--nova-color-brand-500);
+}
+
+/* botão limpar aparece com valor + foco, ou sempre no erro */
+.field.has-value .field__control:focus-within .field__clear,
+.field--error.has-value .field__clear,
+.field__control:has(.field__input:not(:placeholder-shown)):focus-within .field__clear {
+    display: inline-flex;
+}
+
+.field__status {
+    display: none;
+    align-items: center;
+}
+
+/* ===== ADDON (botão acoplado) ===== */
+.field__addon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--nova-space-2);
+    flex-shrink: 0;
+    min-width: var(--nova-input-height);
+    padding: 0 var(--nova-space-4);
+    margin: 0;
+    border: 0;
+    border-left: 1px solid var(--nova-color-border-strong);
+    background: var(--nova-color-bg-subtle);
+    color: var(--nova-color-text-secondary);
+    font-family: inherit;
+    font-size: var(--nova-font-size-base);
+    font-weight: var(--nova-font-weight-semibold);
+    cursor: pointer;
+    transition: background var(--nova-transition-fast), color var(--nova-transition-fast);
+}
+
+.field__addon:hover {
+    background: var(--nova-color-hover);
+    color: var(--nova-color-brand-900);
+}
+
+.field__addon:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--nova-color-brand-500);
+}
+
+.field__addon--primary {
+    background: var(--nova-color-brand-500);
+    border-left-color: var(--nova-color-brand-500);
+    color: var(--nova-color-text-inverse);
+}
+
+.field__addon--primary:hover {
+    background: var(--nova-color-brand-700);
+    color: var(--nova-color-text-inverse);
+}
+
+/* ===== MENSAGEM / RODAPÉ ===== */
+.field__footer {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--nova-space-3);
+}
+
+.field__message {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    margin: 0;
+    font-size: var(--nova-font-size-sm);
+    line-height: var(--nova-line-height-base);
+    color: var(--nova-color-text-secondary);
+}
+
+.field__message svg {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+}
+
+.field__message .icon {
+    --icon-size: 16px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.field__counter {
+    margin-left: auto;
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-text-muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.field__counter-current {
+    color: var(--nova-color-brand-500);
+    font-weight: var(--nova-font-weight-semibold);
+}
+
+.field__counter.is-limit .field__counter-current {
+    color: var(--nova-danger-text);
+}
+
+/* ===== ESTADOS SEMÂNTICOS ===== */
+.field--error .field__control,
+.field--error .field__control:hover,
+.field--error .field__control:focus-within {
+    border-color: var(--nova-danger-text);
+    box-shadow: var(--nova-input-ring) var(--nova-danger-bg);
+}
+
+.field--error .field__message {
+    color: var(--nova-danger-text);
+}
+
+.field--success .field__control,
+.field--success .field__control:hover,
+.field--success .field__control:focus-within {
+    border-color: var(--nova-success-text);
+    box-shadow: var(--nova-input-ring) var(--nova-success-bg);
+}
+
+.field--success .field__message,
+.field--success .field__status {
+    color: var(--nova-success-text);
+}
+
+.field--warning .field__control,
+.field--warning .field__control:hover,
+.field--warning .field__control:focus-within {
+    border-color: var(--nova-warning-text);
+    box-shadow: var(--nova-input-ring) var(--nova-warning-bg);
+}
+
+.field--warning .field__message,
+.field--warning .field__status {
+    color: var(--nova-warning-text);
+}
+
+.field--success .field__status,
+.field--warning .field__status {
+    display: inline-flex;
+}
+
+/* ===== DESABILITADO ===== */
+.field.is-disabled .field__control,
+.field__control:has(.field__input:disabled) {
+    background: var(--nova-color-bg-subtle);
+    border-color: var(--nova-color-border);
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+.field.is-disabled .field__body,
+.field__control:has(.field__input:disabled) .field__body {
+    cursor: not-allowed;
+}
+
+.field.is-disabled .field__label,
+.field.is-disabled .field__input,
+.field.is-disabled .field__icon,
+.field__control:has(.field__input:disabled) .field__label,
+.field__control:has(.field__input:disabled) .field__input,
+.field__control:has(.field__input:disabled) .field__icon {
+    color: var(--nova-color-text-muted);
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.field.is-disabled .field__addon,
+.field__control:has(.field__input:disabled) .field__addon {
+    pointer-events: none;
+    opacity: .6;
+}
+
+/* ===== SOMENTE LEITURA ===== */
+.field.is-readonly .field__control,
+.field__control:has(.field__input[readonly]) {
+    background: var(--nova-color-bg-subtle);
+    border-color: var(--nova-color-border);
+    box-shadow: none;
+}
+
+.field.is-readonly .field__body,
+.field__control:has(.field__input[readonly]) .field__body {
+    cursor: default;
+}
+
+/* ===== PREENCHIDO AUTOMATICAMENTE =====
+   <div class="field field--auto" data-auto-from="Código do operador">
+     … <input class="field__input" readonly> …
+   O JS coloca a etiqueta "Automático" (com a origem no tooltip) e destaca
+   o campo quando ele é preenchido por NovaField.autofill(el, valor). */
+.field--auto .field__control,
+.field--auto .field__control:has(.field__input[readonly]) {
+    border-style: dashed;
+    border-color: color-mix(in srgb, var(--nova-accent-teal) 45%, var(--nova-color-border));
+    background: color-mix(in srgb, var(--nova-accent-teal-bg) 40%, var(--nova-color-bg-surface));
+    box-shadow: none;
+}
+
+.field--auto .field__input {
+    color: var(--nova-color-text-primary);
+    cursor: default;
+}
+
+.field--auto .field__input::placeholder {
+    color: var(--nova-color-text-muted);
+    font-style: italic;
+}
+
+.field--auto .field__body {
+    padding-right: 44px;
+}
+
+/* etiqueta: só o raio; o texto "Automático" aparece ao passar o mouse ou focar */
+.field__auto {
+    position: absolute;
+    top: 50%;
+    right: var(--nova-space-3);
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    min-width: 24px;
+    padding: 0 5px;
+    border-radius: var(--nova-radius-pill);
+    background: var(--nova-accent-teal-bg);
+    color: var(--nova-accent-teal-text);
+    font-family: var(--nova-font-family);
+    font-size: var(--nova-font-size-2xs);
+    font-weight: var(--nova-font-weight-semibold);
+    letter-spacing: var(--nova-letter-spacing-wide);
+    text-transform: uppercase;
+    white-space: nowrap;
+    transform: translateY(-50%);
+    cursor: help;
+    transition: padding var(--nova-transition-fast);
+}
+
+.field__auto .icon {
+    --icon-size: 14px;
+}
+
+.field__auto-text {
+    display: inline-block;
+    max-width: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-width var(--nova-transition-base), opacity var(--nova-transition-fast), margin var(--nova-transition-base);
+}
+
+.field__auto:hover,
+.field__auto:focus-visible {
+    padding: 0 8px 0 6px;
+}
+
+.field__auto:hover .field__auto-text,
+.field__auto:focus-visible .field__auto-text {
+    max-width: 120px;
+    margin-left: 4px;
+    opacity: 1;
+}
+
+.field__auto:focus-visible {
+    outline: none;
+    box-shadow: var(--nova-focus-ring);
+}
+
+.field--auto .field__control {
+    position: relative;
+}
+
+/* destaque rápido quando o valor chega */
+.field--auto.is-autofilled .field__control {
+    animation: nova-autofill 1.2s var(--nova-ease-standard);
+}
+
+@keyframes nova-autofill {
+    0% {
+        box-shadow: 0 0 0 0 color-mix(in srgb, var(--nova-accent-teal) 55%, transparent);
+        background: color-mix(in srgb, var(--nova-accent-teal-bg) 90%, var(--nova-color-bg-surface));
+    }
+
+    100% {
+        box-shadow: 0 0 0 6px transparent;
+    }
+}
+
+
+/* ===== TEXTAREA ===== */
+.field--textarea .field__body {
+    justify-content: flex-start;
+    padding-top: var(--nova-space-2);
+    padding-bottom: var(--nova-space-2);
+}
+
+.field--textarea .field__input {
+    min-height: var(--nova-input-textarea-min-height);
+    resize: vertical;
+}
+
+.field--textarea .field__actions {
+    align-items: flex-start;
+    padding-top: var(--nova-space-3);
+}
+
+/* ===== SELECT ===== */
+.field--select .field__body {
+    cursor: pointer;
+}
+
+.field--select .field__input {
+    padding-right: var(--nova-space-6);
+    cursor: pointer;
+}
+
+.field--select:not(.field--select-custom):not(.field--combobox) .field__body {
+    position: relative;
+}
+
+.field--select:not(.field--select-custom):not(.field--combobox) .field__body::after {
+    content: "expand_more";
+    font-family: var(--nova-icon-font);
+    font-size: 20px;
+    font-weight: normal;
+    font-style: normal;
+    font-variation-settings: 'FILL' 0, 'wght' var(--nova-icon-weight), 'GRAD' 0, 'opsz' 20;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: 'liga';
+    position: absolute;
+    right: var(--nova-space-3);
+    bottom: 9px;
+    color: var(--nova-color-text-secondary);
+    pointer-events: none;
+}
+
+.field--select .field__input::-ms-expand {
+    display: none;
+}
+
+/* ===== COMPACTO (40px, legenda oculta visualmente) ===== */
+.field--compact .field__control {
+    min-height: var(--nova-input-height-compact);
+}
+
+.field--compact .field__body {
+    padding: 0 var(--nova-space-3);
+}
+
+.field--compact .field__icon {
+    padding-left: var(--nova-space-3);
+}
+
+.field--compact .field__icon+.field__body {
+    padding-left: var(--nova-space-2);
+}
+
+.field--compact .field__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+}
+
+.field--compact .field__clear {
+    width: 24px;
+    height: 24px;
+}
+
+.field--compact .field__addon {
+    min-width: var(--nova-input-height-compact);
+    padding: 0 var(--nova-space-3);
+}
+
+/* =========================================================================
+   TIPOS DE INPUT
+   Texto, número, senha, busca, e-mail, URL, telefone, moeda, data, hora,
+   data e hora, máscara, OTP/PIN e stepper numérico.
+   ========================================================================= */
+
+/* ===== PREFIXO / SUFIXO (R$, https://, +55, kg) =====
+   <div class="field__body"><label …><div class="field__row">
+     <span class="field__affix">R$</span><input class="field__input">
+   </div></div> */
+.field__row {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    min-width: 0;
+}
+
+.field__row>.field__input {
+    flex: 1;
+    min-width: 0;
+}
+
+.field__affix {
+    flex-shrink: 0;
+    font-size: var(--nova-font-size-base);
+    line-height: var(--nova-line-height-base);
+    color: var(--nova-color-text-muted);
+    white-space: nowrap;
+    user-select: none;
+}
+
+.field__control:focus-within .field__affix {
+    color: var(--nova-color-text-secondary);
+}
+
+/* números e moeda alinham à direita */
+.field--numeric .field__input {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ===== BUSCA ===== */
+.field__input[type="search"]::-webkit-search-cancel-button,
+.field__input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+    display: none;
+}
+
+/* ===== DATA / HORA (nativos) ===== */
+.field__input[type="date"],
+.field__input[type="time"],
+.field__input[type="datetime-local"],
+.field__input[type="month"],
+.field__input[type="week"] {
+    min-height: 21px;
+    font-variant-numeric: tabular-nums;
+}
+
+.field__input::-webkit-calendar-picker-indicator {
+    margin-left: var(--nova-space-2);
+    opacity: .55;
+    cursor: pointer;
+}
+
+.field__input::-webkit-calendar-picker-indicator:hover {
+    opacity: .9;
+}
+
+.field__input::-webkit-datetime-edit-fields-wrapper {
+    padding: 0;
+}
+
+/* ===== SENHA ===== */
+.field__reveal {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--nova-radius-sm);
+    background: transparent;
+    color: var(--nova-color-text-secondary);
+    cursor: pointer;
+}
+
+.field__reveal:hover {
+    background: var(--nova-color-bg-subtle);
+    color: var(--nova-color-text-primary);
+}
+
+.field__reveal:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--nova-color-brand-500);
+}
+
+.field__reveal svg {
+    width: 18px;
+    height: 18px;
+}
+
+.field__reveal .icon {
+    --icon-size: 18px;
+}
+
+.field__reveal .icon-hide,
+.field__reveal[aria-pressed="true"] .icon-show {
+    display: none;
+}
+
+.field__reveal[aria-pressed="true"] .icon-hide {
+    display: block;
+}
+
+/* força da senha */
+.password-strength {
+    display: flex;
+    align-items: center;
+    gap: var(--nova-space-3);
+    font-size: var(--nova-font-size-xs);
+    color: var(--nova-color-text-secondary);
+}
+
+.password-strength__bars {
+    display: grid;
+    flex: 1;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+}
+
+.password-strength__bars span {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--nova-color-border);
+    transition: background var(--nova-transition-base);
+}
+
+.password-strength__text {
+    min-width: 72px;
+    text-align: right;
+    font-weight: var(--nova-font-weight-semibold);
+}
+
+.password-strength[data-score="1"] .password-strength__bars span:nth-child(-n+1) {
+    background: var(--nova-danger-text);
+}
+
+.password-strength[data-score="2"] .password-strength__bars span:nth-child(-n+2) {
+    background: var(--nova-warning-text);
+}
+
+.password-strength[data-score="3"] .password-strength__bars span:nth-child(-n+3) {
+    background: var(--nova-color-brand-500);
+}
+
+.password-strength[data-score="4"] .password-strength__bars span {
+    background: var(--nova-success-text);
+}
+
+.password-strength[data-score="1"] .password-strength__text {
+    color: var(--nova-danger-text);
+}
+
+.password-strength[data-score="2"] .password-strength__text {
+    color: var(--nova-warning-text);
+}
+
+.password-strength[data-score="3"] .password-strength__text {
+    color: var(--nova-color-brand-500);
+}
+
+.password-strength[data-score="4"] .password-strength__text {
+    color: var(--nova-success-text);
+}
+
+/* ===== STEPPER NUMÉRICO (− valor +) ===== */
+.stepper-input {
+    display: inline-flex;
+    align-items: stretch;
+    height: var(--nova-btn-height-md, 40px);
+    overflow: hidden;
+    background: var(--nova-color-bg-surface);
+    border: 1px solid var(--nova-color-border-strong);
+    border-radius: var(--nova-radius-sm);
+    font-family: var(--nova-font-family);
+    transition: border-color var(--nova-transition-fast), box-shadow var(--nova-transition-fast);
+}
+
+.stepper-input:focus-within {
+    border-color: var(--nova-color-brand-500);
+    box-shadow: 0 0 0 3px var(--nova-color-brand-100);
+}
+
+.stepper-input__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: var(--nova-color-bg-subtle);
+    color: var(--nova-color-text-secondary);
+    cursor: pointer;
+    transition: background var(--nova-transition-fast), color var(--nova-transition-fast);
+}
+
+.stepper-input__btn:hover {
+    background: var(--nova-color-hover);
+    color: var(--nova-color-brand-900);
+}
+
+.stepper-input__btn:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--nova-color-brand-500);
+}
+
+.stepper-input__btn:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+}
+
+.stepper-input__btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.stepper-input__btn .icon {
+    --icon-size: 16px;
+}
+
+.stepper-input__value {
+    -moz-appearance: textfield;
+    width: var(--stepper-input-width, 64px);
+    margin: 0;
+    padding: 0 var(--nova-space-2);
+    border: 0;
+    border-right: 1px solid var(--nova-color-border);
+    border-left: 1px solid var(--nova-color-border);
+    outline: 0;
+    background: transparent;
+    color: var(--nova-color-text-primary);
+    font: inherit;
+    font-size: var(--nova-font-size-base);
+    font-weight: var(--nova-font-weight-semibold);
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.stepper-input__value::-webkit-inner-spin-button,
+.stepper-input__value::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.stepper-input--sm {
+    height: var(--nova-btn-height-sm, 32px);
+}
+
+.stepper-input--sm .stepper-input__btn {
+    width: 32px;
+}
+
+.stepper-input--sm .stepper-input__value {
+    --stepper-input-width: 48px;
+    font-size: var(--nova-font-size-sm);
+}
+
+/* ===== OTP / PIN ===== */
+.otp {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nova-space-2);
+    font-family: var(--nova-font-family);
+}
+
+.otp__input {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 48px;
+    height: 56px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--nova-color-border-strong);
+    border-radius: var(--nova-radius-sm);
+    outline: 0;
+    background: var(--nova-color-bg-surface);
+    color: var(--nova-color-text-primary);
+    font-family: inherit;
+    font-size: 22px;
+    font-weight: var(--nova-font-weight-semibold);
+    text-align: center;
+    caret-color: var(--nova-color-brand-500);
+    font-variant-numeric: tabular-nums;
+    transition: border-color var(--nova-transition-fast), box-shadow var(--nova-transition-fast);
+}
+
+.otp__input:focus {
+    border-color: var(--nova-color-brand-500);
+    box-shadow: 0 0 0 3px var(--nova-color-brand-100);
+}
+
+.otp__input:not(:placeholder-shown),
+.otp__input.is-filled {
+    border-color: var(--nova-color-text-muted);
+}
+
+.otp__sep {
+    width: 12px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--nova-color-border-strong);
+}
+
+.otp--sm .otp__input {
+    width: 40px;
+    height: 44px;
+    font-size: 18px;
+}
+
+.otp.is-error .otp__input {
+    border-color: var(--nova-danger-text);
+    box-shadow: 0 0 0 3px var(--nova-danger-bg);
+}
+
+.otp.is-success .otp__input {
+    border-color: var(--nova-success-text);
+    box-shadow: 0 0 0 3px var(--nova-success-bg);
+}
+
+.otp.is-error {
+    animation: nova-shake .3s ease-in-out;
+}
+
+.otp__input:disabled {
+    background: var(--nova-color-bg-subtle);
+    opacity: .6;
+}
+
+@keyframes nova-shake {
+
+    25%,
+    75% {
+        transform: translateX(-4px);
+    }
+
+    50% {
+        transform: translateX(4px);
+    }
+}
+
+@media (max-width: 400px) {
+    .otp__input {
+        width: 40px;
+        height: 48px;
+        font-size: 18px;
+    }
+}
+
+/* ===== ACESSIBILIDADE ===== */
+@media (prefers-reduced-motion: reduce) {
+
+    .field--auto.is-autofilled .field__control {
+        animation: none;
+    }
+
+    .field__auto,
+    .field__auto-text {
+        transition: none;
+    }
+
+
+    .field__control,
+    .field__icon,
+    .field__clear,
+    .field__addon,
+    .otp__input,
+    .stepper-input {
+        transition: none;
+        animation: none;
+    }
+
+    .otp.is-error {
+        animation: none;
+    }
+}

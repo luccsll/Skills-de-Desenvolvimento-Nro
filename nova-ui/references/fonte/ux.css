@@ -1,0 +1,1511 @@
+/* =========================================================================
+   NOVA UI — EXPERIÊNCIA (UX)
+   Depende de tokens.css, base.css, buttons.css e accordion (data-display).
+   Comportamento em ux.js.
+
+   Seções:
+     1. Estados: Empty, Error, Success, Permission Required
+     2. Alert e Banner (avisos)
+     3. Dialog e Confirmation
+     4. Tooltip e Help Tooltip
+     5. Popover (base de Tour e Coachmark)
+     6. Tour
+     7. Coachmark
+     8. Help Panel
+     9. FAQ
+    10. Onboarding (checklist e boas-vindas)
+    11. Páginas de status: 404, 403, 500, Manutenção
+   ========================================================================= */
+
+/* =========================================================================
+   1. ESTADOS
+   <div class="empty-state [empty-state--error|--success|--compact]">
+     <span class="icon-tile empty-state__icon"><span class="icon">inbox</span></span>
+     <p class="empty-state__title">…</p><p class="empty-state__text">…</p>
+     <div class="empty-state__actions">…</div></div>
+   ========================================================================= */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--nova-space-2);
+    max-width: 440px;
+    margin: 0 auto;
+    padding: var(--nova-space-8) var(--nova-space-4);
+    text-align: center;
+    font-family: var(--nova-font-family);
+}
+
+/* ícone do estado: maior que o padrão */
+.empty-state__icon {
+    --icon-tile-size: 64px;
+    border-radius: 50%;
+}
+
+.empty-state .icon-tile {
+    margin-bottom: var(--nova-space-3);
+}
+
+.empty-state__title {
+    margin: 0;
+    font-size: var(--nova-font-size-md);
+    font-weight: var(--nova-font-weight-semibold);
+    line-height: var(--nova-line-height-snug);
+    color: var(--nova-color-text-primary);
+}
+
+.empty-state__text {
+    margin: 0 0 var(--nova-space-3);
+    font-size: var(--nova-font-size-sm);
+    line-height: var(--nova-line-height-relaxed);
+    color: var(--nova-color-text-secondary);
+}
+
+.empty-state__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--nova-space-2);
+}
+
+.empty-state__meta {
+    margin-top: var(--nova-space-3);
+    font-size: var(--nova-font-size-xs);
+    color: var(--nova-color-text-muted);
+}
+
+.empty-state--compact {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--nova-space-4);
+    max-width: none;
+    padding: var(--nova-space-4);
+    text-align: left;
+}
+
+.empty-state--compact .icon-tile {
+    margin: 0;
+}
+
+.empty-state--compact .empty-state__text {
+    margin: 2px 0 0;
+}
+
+.empty-state--compact .empty-state__actions {
+    margin-left: auto;
+    justify-content: flex-end;
+}
+
+.empty-state--bordered {
+    border: 1.5px dashed var(--nova-color-border-strong);
+    border-radius: var(--nova-radius-md);
+    background: var(--nova-color-bg-alt);
+}
+
+.empty-state--error .empty-state__title {
+    color: var(--nova-danger-text);
+}
+
+.empty-state--success .empty-state__title {
+    color: var(--nova-success-text);
+}
+
+/* detalhes técnicos do erro (código, id de rastreio) */
+.error-details {
+    width: 100%;
+    margin-top: var(--nova-space-2);
+    text-align: left;
+    font-family: var(--nova-font-family);
+    font-size: var(--nova-font-size-sm);
+}
+
+.error-details summary {
+    color: var(--nova-color-text-secondary);
+    cursor: pointer;
+}
+
+.error-details summary:hover {
+    color: var(--nova-color-text-primary);
+}
+
+.error-details summary:focus-visible {
+    outline: none;
+    border-radius: 4px;
+    box-shadow: var(--nova-focus-ring);
+}
+
+.error-details__box {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--nova-space-2);
+    margin-top: var(--nova-space-2);
+    padding: var(--nova-space-3);
+    border: var(--nova-border);
+    border-radius: var(--nova-radius-sm);
+    background: var(--nova-color-bg-subtle);
+}
+
+.error-details__box pre {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    overflow-x: auto;
+    font-family: var(--nova-font-family-mono);
+    font-size: var(--nova-font-size-xs);
+    line-height: var(--nova-line-height-relaxed);
+    color: var(--nova-color-text-secondary);
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+/* permissão necessária sobre um conteúdo (bloqueia a área) */
+.permission-gate {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--nova-radius-md);
+}
+
+.permission-gate__content {
+    filter: blur(3px);
+    opacity: .5;
+    pointer-events: none;
+    user-select: none;
+}
+
+.permission-gate__overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--nova-space-4);
+    background: color-mix(in srgb, var(--nova-color-bg-surface) 55%, transparent);
+}
+
+.permission-gate__overlay .empty-state {
+    padding: var(--nova-space-6);
+    border: var(--nova-border);
+    border-radius: var(--nova-radius-lg);
+    background: var(--nova-color-bg-surface);
+    box-shadow: var(--nova-shadow-lg);
+}
+
+/* =========================================================================
+   2. ALERT (dentro da página) E BANNER (faixa no topo)
+   ========================================================================= */
+.alert {
+    --alert-bg: var(--nova-info-bg);
+    --alert-fg: var(--nova-color-text-primary);
+    --alert-accent: var(--nova-color-brand-500);
+    --alert-title: var(--nova-color-brand-900);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--nova-space-3);
+    padding: var(--nova-space-3) var(--nova-space-4);
+    border: 1px solid color-mix(in srgb, var(--alert-accent) 30%, transparent);
+    border-left: 4px solid var(--alert-accent);
+    border-radius: var(--nova-radius-md);
+    background: color-mix(in srgb, var(--alert-bg) 55%, var(--nova-color-bg-surface));
+    color: var(--alert-fg);
+    font-family: var(--nova-font-family);
+    font-size: var(--nova-font-size-sm);
+    line-height: var(--nova-line-height-relaxed);
+}
+
+.alert[hidden] {
+    display: none;
+}
+
+.alert__icon {
+    display: flex;
+    flex-shrink: 0;
+    padding-top: 1px;
+    color: var(--alert-accent);
+}
+
+.alert__icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.alert__icon .icon {
+    --icon-size: 20px;
+}
+
+.alert__content {
+    flex: 1;
+    min-width: 0;
+}
+
+.alert__title {
+    margin: 0 0 2px;
+    font-size: var(--nova-font-size-base);
+    font-weight: var(--nova-font-weight-semibold);
+    color: var(--alert-title);
+}
+
+.alert__text {
+    margin: 0;
+    color: var(--nova-color-text-secondary);
+}
+
+.alert__text a,
+.banner a {
+    color: inherit;
+    font-weight: var(--nova-font-weight-semibold);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.alert__list {
+    margin: var(--nova-space-1) 0 0;
+    padding-left: var(--nova-space-5);
+    color: var(--nova-color-text-secondary);
+}
+
+.alert__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nova-space-2);
+    margin-top: var(--nova-space-3);
+}
+
+.alert__close {
+    flex-shrink: 0;
+    margin: -4px -8px -4px 0;
+}
+
+.alert--success {
+    --alert-bg: var(--nova-success-bg);
+    --alert-accent: var(--nova-success-text);
+    --alert-title: var(--nova-success-strong);
+}
+
+.alert--warning {
+    --alert-bg: var(--nova-warning-bg);
+    --alert-accent: var(--nova-warning-text);
+    --alert-title: var(--nova-warning-strong);
+}
+
+.alert--danger {
+    --alert-bg: var(--nova-danger-bg);
+    --alert-accent: var(--nova-danger-text);
+    --alert-title: var(--nova-danger-strong);
+}
+
+.alert--neutral {
+    --alert-bg: var(--nova-color-bg-subtle);
+    --alert-accent: var(--nova-color-text-muted);
+    --alert-title: var(--nova-color-text-primary);
+}
+
+.alert--compact {
+    align-items: center;
+    padding: var(--nova-space-2) var(--nova-space-3);
+    border-left-width: 1px;
+}
+
+.alert--compact .alert__icon {
+    padding: 0;
+}
+
+.alert--compact .alert__icon svg {
+    width: 16px;
+    height: 16px;
+}
+
+.alert--compact .alert__icon .icon {
+    --icon-size: 16px;
+}
+
+/* banner: faixa de largura total (manutenção programada, ambiente de teste) */
+.banner {
+    --banner-bg: var(--nova-color-brand-500);
+    --banner-fg: var(--nova-color-text-inverse);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--nova-space-2) var(--nova-space-4);
+    padding: var(--nova-space-2) var(--nova-space-12) var(--nova-space-2) var(--nova-space-4);
+    position: relative;
+    background: var(--banner-bg);
+    color: var(--banner-fg);
+    font-family: var(--nova-font-family);
+    font-size: var(--nova-font-size-sm);
+    text-align: center;
+}
+
+.banner[hidden] {
+    display: none;
+}
+
+.banner svg {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+}
+
+.banner .icon {
+    --icon-size: 16px;
+    flex-shrink: 0;
+}
+
+.banner__text {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nova-space-2);
+}
+
+.banner__close {
+    position: absolute;
+    top: 50%;
+    right: var(--nova-space-2);
+    transform: translateY(-50%);
+    --btn-fg: currentColor;
+    --btn-fg-hover: currentColor;
+    --btn-bg-hover: rgba(255, 255, 255, .15);
+}
+
+.banner--warning {
+    --banner-bg: var(--nova-warning-solid);
+    --banner-fg: #1a1f29;
+}
+
+.banner--warning .banner__close {
+    --btn-bg-hover: rgba(0, 0, 0, .08);
+}
+
+.banner--danger {
+    --banner-bg: var(--nova-danger-text);
+}
+
+.banner--neutral {
+    --banner-bg: var(--nova-color-bg-inverse);
+    --banner-fg: var(--nova-color-text-on-inverse);
+}
+
+/* ambiente de homologação: faixa listrada */
+.banner--env {
+    --banner-bg: repeating-linear-gradient(-45deg, #d8a200 0 12px, #c99500 12px 24px);
+    --banner-fg: #1a1f29;
+    font-weight: var(--nova-font-weight-semibold);
+}
+
+/* =========================================================================
+   3. DIALOG E CONFIRMATION  (<dialog> nativo)
+   ========================================================================= */
+.dialog {
+    width: min(var(--dialog-width, 480px), calc(100vw - 32px));
+    max-height: calc(100vh - 32px);
+    margin: auto;
+    padding: 0;
+    overflow: hidden;
+    border: var(--nova-border);
+    border-radius: var(--nova-radius-lg);
+    background: var(--nova-color-bg-surface);
+    color: var(--nova-color-text-primary);
+    box-shadow: var(--nova-shadow-xl);
+    font-family: var(--nova-font-family);
+}
+
+.dialog[open] {
+    display: flex;
+    flex-direction: column;
+    animation: nova-dialog-in var(--nova-duration-base) var(--nova-ease-enter);
+}
+
+.dialog::backdrop {
+    background: var(--nova-color-overlay);
+    animation: nova-fade-in var(--nova-duration-base) ease-out;
+}
+
+@keyframes nova-dialog-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(.98);
+    }
+}
+
+.dialog--sm {
+    --dialog-width: 400px;
+}
+
+.dialog--lg {
+    --dialog-width: 720px;
+}
+
+.dialog__header {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--nova-space-4);
+    padding: var(--nova-space-6) var(--nova-space-6) 0;
+}
+
+.dialog__icon {
+    --icon-tile-size: 44px;
+}
+
+.dialog__heading {
+    flex: 1;
+    min-width: 0;
+}
+
+.dialog__title {
+    margin: 0;
+    font-size: var(--nova-font-size-lg);
+    font-weight: var(--nova-font-weight-semibold);
+    line-height: var(--nova-line-height-snug);
+}
+
+.dialog__subtitle {
+    margin: 4px 0 0;
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-text-secondary);
+}
+
+.dialog__close {
+    flex-shrink: 0;
+    margin: -6px -10px 0 0;
+}
+
+.dialog__body {
+    flex: 1;
+    min-height: 0;
+    padding: var(--nova-space-4) var(--nova-space-6);
+    overflow-y: auto;
+    font-size: var(--nova-font-size-base);
+    line-height: var(--nova-line-height-relaxed);
+    color: var(--nova-color-text-secondary);
+}
+
+.dialog__body> :first-child {
+    margin-top: 0;
+}
+
+.dialog__body> :last-child {
+    margin-bottom: 0;
+}
+
+.dialog__header+.dialog__body {
+    padding-top: var(--nova-space-3);
+}
+
+.dialog__header--icon+.dialog__body {
+    padding-left: calc(var(--nova-space-6) + 44px + var(--nova-space-4));
+}
+
+.dialog__footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--nova-space-2);
+    padding: var(--nova-space-4) var(--nova-space-6) var(--nova-space-5);
+}
+
+.dialog__footer--divided {
+    border-top: var(--nova-border);
+    background: var(--nova-color-bg-subtle);
+}
+
+.dialog__footer-start {
+    margin-right: auto;
+}
+
+/* lista de consequências dentro da confirmação */
+.consequences {
+    margin: var(--nova-space-3) 0 0;
+    padding: var(--nova-space-3) var(--nova-space-4);
+    border-radius: var(--nova-radius-sm);
+    background: var(--nova-color-bg-subtle);
+    list-style: none;
+    font-size: var(--nova-font-size-sm);
+}
+
+.consequences li {
+    display: flex;
+    gap: var(--nova-space-2);
+    padding: 3px 0;
+    color: var(--nova-color-text-primary);
+}
+
+.consequences li::before {
+    content: "";
+    flex-shrink: 0;
+    width: 6px;
+    height: 6px;
+    margin-top: 8px;
+    border-radius: 50%;
+    background: var(--nova-color-text-muted);
+}
+
+.consequences--danger li::before {
+    background: var(--nova-danger-text);
+}
+
+.confirm-input {
+    margin-top: var(--nova-space-4);
+}
+
+.confirm-input label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-text-primary);
+}
+
+.confirm-input code {
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: var(--nova-danger-bg);
+    color: var(--nova-danger-text);
+    font-family: var(--nova-font-family-mono);
+    font-weight: var(--nova-font-weight-semibold);
+}
+
+.confirm-input input {
+    width: 100%;
+    height: 40px;
+    padding: 0 var(--nova-space-3);
+    border: 1px solid var(--nova-color-border-strong);
+    border-radius: var(--nova-radius-sm);
+    background: var(--nova-color-bg-surface);
+    color: var(--nova-color-text-primary);
+    font: inherit;
+}
+
+.confirm-input input:focus {
+    outline: none;
+    border-color: var(--nova-danger-text);
+    box-shadow: var(--nova-focus-ring-danger);
+}
+
+@media (max-width: 575.98px) {
+    .dialog {
+        width: 100%;
+        max-width: 100%;
+        margin: auto 0 0;
+        border-radius: var(--nova-radius-lg) var(--nova-radius-lg) 0 0;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .dialog__header--icon+.dialog__body {
+        padding-left: var(--nova-space-6);
+    }
+
+    .dialog__footer {
+        flex-direction: column-reverse;
+    }
+
+    .dialog__footer .btn {
+        width: 100%;
+    }
+}
+
+/* =========================================================================
+   4. TOOLTIP E HELP TOOLTIP
+   [data-tip="texto"] em qualquer elemento; .help-tip é o botão "?".
+   ========================================================================= */
+.tooltip {
+    position: fixed;
+    z-index: var(--nova-z-tooltip);
+    max-width: min(280px, calc(100vw - 16px));
+    padding: 6px 10px;
+    border-radius: var(--nova-radius-sm);
+    background: var(--nova-color-bg-inverse);
+    color: var(--nova-color-text-on-inverse);
+    font-family: var(--nova-font-family);
+    font-size: var(--nova-font-size-xs);
+    font-weight: var(--nova-font-weight-medium);
+    line-height: var(--nova-line-height-relaxed);
+    pointer-events: none;
+    box-shadow: var(--nova-shadow-md);
+    animation: nova-fade-in var(--nova-duration-fast) ease-out;
+}
+
+.tooltip[hidden] {
+    display: none;
+}
+
+.tooltip::after {
+    content: "";
+    position: absolute;
+    left: var(--arrow-x, 50%);
+    width: 8px;
+    height: 8px;
+    margin-left: -4px;
+    background: inherit;
+    transform: rotate(45deg);
+}
+
+.tooltip[data-placement="top"]::after {
+    bottom: -4px;
+}
+
+.tooltip[data-placement="bottom"]::after {
+    top: -4px;
+}
+
+.help-tip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    margin: 0 0 0 4px;
+    padding: 0;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--nova-color-text-muted);
+    font-family: var(--nova-font-family);
+    font-size: 11px;
+    font-weight: var(--nova-font-weight-bold);
+    line-height: 1;
+    vertical-align: middle;
+    cursor: help;
+    transition: color var(--nova-transition-fast);
+}
+
+.help-tip:hover,
+.help-tip[aria-expanded="true"] {
+    color: var(--nova-color-brand-500);
+}
+
+.help-tip:focus-visible {
+    outline: none;
+    box-shadow: var(--nova-focus-ring);
+}
+
+/* =========================================================================
+   5. POPOVER (base do tour e do coachmark)
+   ========================================================================= */
+.popover {
+    position: fixed;
+    z-index: var(--nova-z-menu);
+    width: min(var(--popover-width, 320px), calc(100vw - 16px));
+    background: var(--nova-color-bg-surface);
+    border: var(--nova-border);
+    border-radius: var(--nova-radius-md);
+    box-shadow: var(--nova-shadow-lg);
+    font-family: var(--nova-font-family);
+    color: var(--nova-color-text-primary);
+    animation: nova-scale-in var(--nova-duration-base) var(--nova-ease-enter);
+}
+
+.popover[hidden] {
+    display: none;
+}
+
+.popover__arrow {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: var(--nova-color-bg-surface);
+    border: var(--nova-border);
+    transform: rotate(45deg);
+}
+
+.popover[data-placement="bottom"] .popover__arrow {
+    top: -7px;
+    border-right: 0;
+    border-bottom: 0;
+}
+
+.popover[data-placement="top"] .popover__arrow {
+    bottom: -7px;
+    border-top: 0;
+    border-left: 0;
+}
+
+.popover[data-placement="right"] .popover__arrow {
+    left: -7px;
+    border-top: 0;
+    border-right: 0;
+}
+
+.popover[data-placement="left"] .popover__arrow {
+    right: -7px;
+    border-bottom: 0;
+    border-left: 0;
+}
+
+.popover__header {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--nova-space-2);
+    padding: var(--nova-space-4) var(--nova-space-4) 0;
+}
+
+.popover__title {
+    flex: 1;
+    margin: 0;
+    font-size: var(--nova-font-size-base);
+    font-weight: var(--nova-font-weight-semibold);
+    line-height: var(--nova-line-height-snug);
+}
+
+.popover__close {
+    margin: -6px -8px 0 0;
+}
+
+.popover__body {
+    padding: var(--nova-space-2) var(--nova-space-4) var(--nova-space-4);
+    font-size: var(--nova-font-size-sm);
+    line-height: var(--nova-line-height-relaxed);
+    color: var(--nova-color-text-secondary);
+}
+
+.popover__footer {
+    display: flex;
+    align-items: center;
+    gap: var(--nova-space-2);
+    padding: var(--nova-space-3) var(--nova-space-4);
+    border-top: var(--nova-border);
+}
+
+.popover__progress {
+    margin-right: auto;
+    font-size: var(--nova-font-size-xs);
+    color: var(--nova-color-text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.popover__dots {
+    display: flex;
+    gap: 4px;
+    margin-right: auto;
+}
+
+.popover__dots span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--nova-color-border-strong);
+    transition: width var(--nova-transition-fast), background var(--nova-transition-fast);
+}
+
+.popover__dots span.is-active {
+    width: 16px;
+    border-radius: 3px;
+    background: var(--nova-color-brand-500);
+}
+
+.popover--brand {
+    border-color: transparent;
+    background: var(--nova-color-bg-brand);
+    color: var(--nova-color-text-inverse);
+}
+
+.popover--brand .popover__arrow {
+    border-color: transparent;
+    background: var(--nova-color-bg-brand);
+}
+
+.popover--brand .popover__body {
+    color: var(--nova-nav-dark-fg);
+}
+
+.popover--brand .popover__footer {
+    border-top-color: rgba(255, 255, 255, .12);
+}
+
+.popover--brand .btn--tertiary,
+.popover--brand .btn--ghost {
+    --btn-fg: var(--nova-nav-dark-fg);
+    --btn-fg-hover: #fff;
+    --btn-bg-hover: rgba(255, 255, 255, .1);
+}
+
+/* =========================================================================
+   6. TOUR  (NovaTour.start(passos))
+   ========================================================================= */
+.tour-spotlight {
+    position: fixed;
+    z-index: calc(var(--nova-z-menu) - 1);
+    border-radius: var(--nova-radius-md);
+    box-shadow: 0 0 0 9999px var(--nova-color-overlay), 0 0 0 3px var(--nova-color-brand-500);
+    pointer-events: none;
+    transition: top var(--nova-duration-slow) var(--nova-ease-standard), left var(--nova-duration-slow) var(--nova-ease-standard), width var(--nova-duration-slow) var(--nova-ease-standard), height var(--nova-duration-slow) var(--nova-ease-standard);
+}
+
+.tour-spotlight[hidden] {
+    display: none;
+}
+
+/* bloqueia cliques fora do alvo durante o tour */
+.tour-blocker {
+    position: fixed;
+    inset: 0;
+    z-index: calc(var(--nova-z-menu) - 2);
+}
+
+.tour-blocker[hidden] {
+    display: none;
+}
+
+/* =========================================================================
+   7. COACHMARK  (ponto pulsante que abre uma dica)
+   ========================================================================= */
+.coachmark {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.coachmark::before,
+.coachmark::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    background: var(--coachmark-color, var(--nro-teal-500));
+}
+
+.coachmark::before {
+    width: 10px;
+    height: 10px;
+    box-shadow: 0 0 0 2px var(--nova-color-bg-surface);
+}
+
+.coachmark::after {
+    width: 10px;
+    height: 10px;
+    opacity: .6;
+    animation: nova-coachmark 1.8s ease-out infinite;
+}
+
+.coachmark:focus-visible {
+    outline: none;
+    box-shadow: var(--nova-focus-ring);
+}
+
+.coachmark[hidden] {
+    display: none;
+}
+
+/* posicionado sobre um elemento: coloque dentro de um pai com position:relative */
+.coachmark--corner {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    z-index: 2;
+}
+
+@keyframes nova-coachmark {
+    to {
+        width: 26px;
+        height: 26px;
+        opacity: 0;
+    }
+}
+
+/* =========================================================================
+   8. HELP PANEL  (painel lateral de ajuda)
+   ========================================================================= */
+.help-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: var(--nova-z-drawer);
+    display: flex;
+    flex-direction: column;
+    width: min(400px, 100vw);
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: var(--nova-color-bg-surface);
+    border-left: var(--nova-border);
+    box-shadow: var(--nova-shadow-xl);
+    font-family: var(--nova-font-family);
+    color: var(--nova-color-text-primary);
+    transform: translateX(105%);
+    visibility: hidden;
+    transition: transform var(--nova-duration-slow) var(--nova-ease-standard), visibility 0s linear var(--nova-duration-slow);
+}
+
+.help-panel.is-open {
+    transform: none;
+    visibility: visible;
+    transition: transform var(--nova-duration-slow) var(--nova-ease-standard), visibility 0s;
+}
+
+.help-panel__header {
+    display: flex;
+    align-items: center;
+    gap: var(--nova-space-3);
+    padding: var(--nova-space-4) var(--nova-space-4) var(--nova-space-3) var(--nova-space-5);
+    border-bottom: var(--nova-border);
+}
+
+.help-panel__title {
+    flex: 1;
+    margin: 0;
+    font-size: var(--nova-font-size-md);
+    font-weight: var(--nova-font-weight-semibold);
+}
+
+.help-panel__search {
+    padding: var(--nova-space-3) var(--nova-space-5);
+    border-bottom: var(--nova-border);
+}
+
+.help-panel__body {
+    flex: 1;
+    min-height: 0;
+    padding: var(--nova-space-4) var(--nova-space-5);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.help-panel__section+.help-panel__section {
+    margin-top: var(--nova-space-6);
+}
+
+.help-panel__section-title {
+    margin: 0 0 var(--nova-space-2);
+    font-size: var(--nova-font-size-xs);
+    font-weight: var(--nova-font-weight-semibold);
+    letter-spacing: var(--nova-letter-spacing-wide);
+    text-transform: uppercase;
+    color: var(--nova-color-text-muted);
+}
+
+.help-panel__article {
+    font-size: var(--nova-font-size-sm);
+    line-height: var(--nova-line-height-loose);
+    color: var(--nova-color-text-secondary);
+}
+
+.help-panel__article h4 {
+    margin: 0 0 var(--nova-space-2);
+    font-size: var(--nova-font-size-md);
+    color: var(--nova-color-text-primary);
+}
+
+.help-panel__article ol,
+.help-panel__article ul {
+    padding-left: var(--nova-space-5);
+}
+
+.help-panel__back {
+    margin-bottom: var(--nova-space-3);
+}
+
+.help-panel__footer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nova-space-2);
+    padding: var(--nova-space-4) var(--nova-space-5);
+    border-top: var(--nova-border);
+    background: var(--nova-color-bg-subtle);
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-text-secondary);
+}
+
+.help-panel__footer svg {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+}
+
+.help-panel__footer .icon {
+    --icon-size: 16px;
+    flex-shrink: 0;
+}
+
+.help-panel-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: calc(var(--nova-z-drawer) - 1);
+    background: var(--nova-color-overlay);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--nova-duration-slow), visibility var(--nova-duration-slow);
+}
+
+.help-panel-backdrop.is-visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* =========================================================================
+   9. FAQ
+   ========================================================================= */
+.faq {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nova-space-4);
+    font-family: var(--nova-font-family);
+}
+
+.faq__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nova-space-3);
+}
+
+.faq__toolbar .field {
+    flex: 1;
+    min-width: 220px;
+}
+
+.faq__item[hidden] {
+    display: none;
+}
+
+.faq__feedback {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nova-space-2);
+    margin-top: var(--nova-space-4);
+    padding-top: var(--nova-space-3);
+    border-top: var(--nova-border);
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-text-secondary);
+}
+
+.faq__feedback.is-answered .btn {
+    display: none;
+}
+
+.faq__empty[hidden] {
+    display: none;
+}
+
+.faq mark {
+    padding: 0 1px;
+    border-radius: 2px;
+    background: var(--nova-warning-bg);
+    color: inherit;
+}
+
+/* =========================================================================
+   10. ONBOARDING
+   ========================================================================= */
+/* checklist de primeiros passos */
+.onboarding {
+    overflow: hidden;
+    border: var(--nova-border);
+    border-radius: var(--nova-radius-lg);
+    background: var(--nova-color-bg-surface);
+    box-shadow: var(--nova-shadow-sm);
+    font-family: var(--nova-font-family);
+}
+
+.onboarding__header {
+    display: flex;
+    align-items: center;
+    gap: var(--nova-space-4);
+    padding: var(--nova-space-5) var(--nova-space-6);
+    background: var(--nova-color-bg-brand);
+    color: var(--nova-color-text-inverse);
+}
+
+.onboarding__title {
+    margin: 0;
+    font-size: var(--nova-font-size-md);
+    font-weight: var(--nova-font-weight-semibold);
+}
+
+.onboarding__subtitle {
+    margin: 2px 0 0;
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-nav-dark-fg);
+}
+
+.onboarding__ring {
+    --pct: 0;
+    position: relative;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    margin-left: auto;
+    border-radius: 50%;
+    background: conic-gradient(var(--nro-teal-500) calc(var(--pct) * 1%), rgba(255, 255, 255, .16) 0);
+    font-size: var(--nova-font-size-sm);
+    font-weight: var(--nova-font-weight-bold);
+    font-variant-numeric: tabular-nums;
+}
+
+.onboarding__ring::before {
+    content: "";
+    position: absolute;
+    inset: 5px;
+    border-radius: 50%;
+    background: var(--nova-color-bg-brand);
+}
+
+.onboarding__ring span {
+    position: relative;
+}
+
+.onboarding__steps {
+    margin: 0;
+    padding: var(--nova-space-2);
+    list-style: none;
+}
+
+.onboarding__step {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--nova-space-3);
+    padding: var(--nova-space-3) var(--nova-space-4);
+    border-radius: var(--nova-radius-md);
+}
+
+.onboarding__step+.onboarding__step {
+    margin-top: 2px;
+}
+
+.onboarding__check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    margin-top: 1px;
+    border: 2px solid var(--nova-color-border-strong);
+    border-radius: 50%;
+    color: transparent;
+    transition: background var(--nova-transition-base), border-color var(--nova-transition-base);
+}
+
+.onboarding__check svg {
+    width: 14px;
+    height: 14px;
+}
+
+.onboarding__check .icon {
+    --icon-size: 14px;
+}
+
+.onboarding__step.is-done .onboarding__check {
+    border-color: var(--nova-success-text);
+    background: var(--nova-success-text);
+    color: #fff;
+    animation: nova-pop var(--nova-duration-slow) var(--nova-ease-emphasized);
+}
+
+.onboarding__step.is-done .onboarding__step-title {
+    color: var(--nova-color-text-muted);
+    text-decoration: line-through;
+}
+
+.onboarding__step.is-current {
+    background: var(--nova-color-selected);
+}
+
+.onboarding__step-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.onboarding__step-title {
+    margin: 0;
+    font-size: var(--nova-font-size-base);
+    font-weight: var(--nova-font-weight-semibold);
+    color: var(--nova-color-text-primary);
+}
+
+.onboarding__step-text {
+    margin: 2px 0 0;
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-text-secondary);
+}
+
+.onboarding__step-action {
+    margin-top: var(--nova-space-2);
+}
+
+.onboarding__step:not(.is-current) .onboarding__step-action {
+    display: none;
+}
+
+.onboarding__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--nova-space-3) var(--nova-space-6);
+    border-top: var(--nova-border);
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-text-secondary);
+}
+
+/* boas-vindas em etapas (dentro de um .dialog) */
+.welcome {
+    text-align: center;
+}
+
+.welcome__slides {
+    position: relative;
+}
+
+.welcome__slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--nova-space-2);
+    padding: var(--nova-space-8) var(--nova-space-8) var(--nova-space-4);
+}
+
+.welcome__slide[hidden] {
+    display: none;
+}
+
+.welcome__slide:not([hidden]) {
+    animation: nova-slide-in-right var(--nova-duration-slow) var(--nova-ease-enter);
+}
+
+.welcome__slide .icon-tile {
+    --icon-tile-size: 88px;
+    border-radius: var(--nova-radius-xl);
+    margin-bottom: var(--nova-space-4);
+}
+
+.welcome__title {
+    margin: 0;
+    font-size: var(--nova-font-size-lg);
+    font-weight: var(--nova-font-weight-semibold);
+    color: var(--nova-color-text-primary);
+}
+
+.welcome__text {
+    max-width: 38ch;
+    margin: 0;
+    font-size: var(--nova-font-size-base);
+    line-height: var(--nova-line-height-relaxed);
+    color: var(--nova-color-text-secondary);
+}
+
+.welcome .dialog__footer {
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* =========================================================================
+   11. PÁGINAS DE STATUS: 404, 403, 500, MANUTENÇÃO
+   ========================================================================= */
+.status-page {
+    display: flex;
+    flex-direction: column;
+    min-height: var(--status-page-height, 100vh);
+    background: var(--nova-color-bg-page);
+    font-family: var(--nova-font-family);
+    color: var(--nova-color-text-primary);
+}
+
+.status-page__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nova-space-4);
+    padding: var(--nova-space-5) var(--nova-space-8);
+}
+
+.status-page__logo {
+    display: block;
+    height: 36px;
+    width: auto;
+}
+
+.status-page__main {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    padding: var(--nova-space-8) var(--nova-space-6);
+}
+
+.status-page__card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--nova-space-12);
+    width: 100%;
+    max-width: 880px;
+}
+
+.status-page__code {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nova-space-2);
+    margin: 0 0 var(--nova-space-3);
+    padding: 4px 10px;
+    border-radius: var(--nova-radius-pill);
+    background: var(--nova-color-bg-surface);
+    border: var(--nova-border);
+    font-size: var(--nova-font-size-xs);
+    font-weight: var(--nova-font-weight-semibold);
+    letter-spacing: var(--nova-letter-spacing-wide);
+    color: var(--nova-color-text-secondary);
+    font-variant-numeric: tabular-nums;
+}
+
+.status-page__code::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--status-color, var(--nova-color-brand-500));
+}
+
+.status-page--danger {
+    --status-color: var(--nova-danger-text);
+}
+
+.status-page--warning {
+    --status-color: var(--nova-warning-text);
+}
+
+.status-page__title {
+    margin: 0 0 var(--nova-space-3);
+    font-size: var(--nova-font-size-2xl);
+    font-weight: var(--nova-font-weight-bold);
+    line-height: var(--nova-line-height-tight);
+    letter-spacing: var(--nova-letter-spacing-tight);
+}
+
+.status-page__text {
+    max-width: 46ch;
+    margin: 0 0 var(--nova-space-6);
+    font-size: var(--nova-font-size-md);
+    line-height: var(--nova-line-height-relaxed);
+    color: var(--nova-color-text-secondary);
+}
+
+.status-page__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nova-space-2);
+}
+
+.status-page__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nova-space-2) var(--nova-space-5);
+    margin: var(--nova-space-6) 0 0;
+    padding: var(--nova-space-4) 0 0;
+    border-top: var(--nova-border);
+    list-style: none;
+    font-size: var(--nova-font-size-sm);
+}
+
+.status-page__links a {
+    color: var(--nova-color-link);
+    text-decoration: none;
+}
+
+.status-page__links a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* ícone grande no lugar de imagem */
+.status-page__icon {
+    --icon-tile-size: 200px;
+    border-radius: 50%;
+}
+
+.status-page__icon .icon {
+    --icon-opsz: 48;
+    --icon-weight: 300;
+}
+
+.status-page__footer {
+    padding: var(--nova-space-5) var(--nova-space-8);
+    font-size: var(--nova-font-size-xs);
+    color: var(--nova-color-text-muted);
+}
+
+/* manutenção: previsão de retorno */
+.maintenance-eta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nova-space-3);
+    margin: 0 0 var(--nova-space-6);
+    padding: var(--nova-space-3) var(--nova-space-4);
+    border: var(--nova-border);
+    border-radius: var(--nova-radius-md);
+    background: var(--nova-color-bg-surface);
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-text-secondary);
+}
+
+.maintenance-eta strong {
+    display: block;
+    font-size: var(--nova-font-size-md);
+    color: var(--nova-color-text-primary);
+    font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 767.98px) {
+    .status-page__top {
+        padding: var(--nova-space-4);
+    }
+
+    .status-page__card {
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--nova-space-6);
+        text-align: center;
+    }
+
+    .status-page__icon {
+        --icon-tile-size: 120px;
+        order: -1;
+        margin: 0 auto;
+    }
+
+    .status-page__text {
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .status-page__actions,
+    .status-page__links {
+        justify-content: center;
+    }
+
+    .status-page__title {
+        font-size: var(--nova-font-size-xl);
+    }
+}
+
+/* =========================================================================
+   ACESSIBILIDADE
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+
+    .dialog[open],
+    .dialog::backdrop,
+    .tooltip,
+    .popover,
+    .tour-spotlight,
+    .help-panel,
+    .help-panel-backdrop,
+    .welcome__slide:not([hidden]),
+    .onboarding__step.is-done .onboarding__check {
+        animation: none;
+        transition: none;
+    }
+
+    .coachmark::after {
+        animation: none;
+        opacity: 0;
+    }
+}

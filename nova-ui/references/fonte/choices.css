@@ -1,0 +1,1161 @@
+/* =========================================================================
+   NOVA UI — SELEÇÃO
+   Depende dos tokens --nova-*, de inputs.css, buttons.css e badges.css.
+   Comportamento em choices.js.
+
+   Seções:
+     1. Checkbox / Radio (e cartões de escolha)
+     2. Switch
+     3. Toggle (botão liga/desliga)
+     4. Select personalizado / Dropdown / Multi Select
+     5. Combobox / Autocomplete
+     6. Listbox
+     7. Tags (etiquetas, filtros e campo de tags)
+   O select nativo estilizado continua em inputs.css (.field--select).
+   ========================================================================= */
+
+/* =========================================================================
+   1. CHECKBOX / RADIO
+   <label class="check"><input type="checkbox" class="check__input">
+     <span class="check__text"><span class="check__label">…</span>
+     <span class="check__desc">…</span></span></label>
+   ========================================================================= */
+.check {
+    position: relative;
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 10px;
+    min-width: 0;
+    margin: 0;
+    font-family: var(--nova-font-family);
+    font-weight: var(--nova-font-weight-regular);
+    color: var(--nova-color-text-primary);
+    cursor: pointer;
+}
+
+.check__input {
+    -webkit-appearance: none;
+    appearance: none;
+    display: inline-grid;
+    place-content: center;
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    margin: 1px 0 0;
+    border: 1.5px solid var(--nova-color-border-strong);
+    border-radius: 4px;
+    background: var(--nova-color-bg-surface);
+    cursor: pointer;
+    transition: background var(--nova-transition-fast), border-color var(--nova-transition-fast), box-shadow var(--nova-transition-fast);
+}
+
+.check__input::before {
+    content: "";
+    width: 12px;
+    height: 12px;
+    background: var(--nova-color-text-inverse);
+    transform: scale(0);
+    transition: transform 100ms ease-out;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.check__input[type="radio"] {
+    border-radius: 50%;
+}
+
+.check__input[type="radio"]::before {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    -webkit-mask: none;
+    mask: none;
+}
+
+.check__input:hover {
+    border-color: var(--nova-color-brand-500);
+}
+
+.check__input:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--nova-color-brand-100);
+}
+
+.check__input:checked,
+.check__input:indeterminate {
+    border-color: var(--nova-color-brand-500);
+    background: var(--nova-color-brand-500);
+}
+
+.check__input:checked::before,
+.check__input:indeterminate::before {
+    transform: scale(1);
+}
+
+.check__input:indeterminate::before {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3.5' stroke-linecap='round'%3E%3Cpath d='M6 12h12'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3.5' stroke-linecap='round'%3E%3Cpath d='M6 12h12'/%3E%3C/svg%3E");
+}
+
+.check__input:disabled {
+    background: var(--nova-color-bg-subtle);
+    border-color: var(--nova-color-border);
+    cursor: not-allowed;
+}
+
+.check__input:disabled:checked {
+    background: var(--nova-color-border-strong);
+    border-color: var(--nova-color-border-strong);
+}
+
+.check:has(.check__input:disabled) {
+    cursor: not-allowed;
+    color: var(--nova-color-text-muted);
+}
+
+.check--error .check__input,
+.has-error .check__input:not(:checked) {
+    border-color: var(--nova-danger-text);
+}
+
+.check__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.check__label {
+    font-size: var(--nova-font-size-base);
+    line-height: var(--nova-line-height-base);
+}
+
+.check__desc {
+    font-size: var(--nova-font-size-sm);
+    line-height: var(--nova-line-height-base);
+    color: var(--nova-color-text-secondary);
+}
+
+.check--sm .check__input {
+    width: 16px;
+    height: 16px;
+    margin-top: 1px;
+}
+
+.check--sm .check__label {
+    font-size: var(--nova-font-size-sm);
+}
+
+/* grupo */
+.check-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nova-space-3);
+}
+
+.check-group--inline {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--nova-space-3) var(--nova-space-6);
+}
+
+.check-group--cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(var(--check-card-min, 200px), 1fr));
+    gap: var(--nova-space-3);
+    width: 100%;
+}
+
+/* cartão de escolha */
+.check--card {
+    width: 100%;
+    padding: var(--nova-space-4);
+    border: 1px solid var(--nova-color-border);
+    border-radius: var(--nova-radius-md);
+    background: var(--nova-color-bg-surface);
+    transition: border-color var(--nova-transition-fast), background var(--nova-transition-fast), box-shadow var(--nova-transition-fast);
+}
+
+.check--card:hover {
+    border-color: var(--nova-color-border-strong);
+}
+
+.check--card:has(.check__input:checked) {
+    border-color: var(--nova-color-brand-500);
+    background: var(--nova-selected-bg, #eef4fc);
+    box-shadow: 0 0 0 1px var(--nova-color-brand-500);
+}
+
+.check--card:has(.check__input:focus-visible) {
+    box-shadow: 0 0 0 3px var(--nova-color-brand-100);
+}
+
+.check--card .check__input:focus-visible {
+    box-shadow: none;
+}
+
+.check--card .check__label {
+    font-weight: var(--nova-font-weight-semibold);
+}
+
+.check__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    margin-left: auto;
+    border-radius: var(--nova-radius-sm);
+    background: var(--nova-color-bg-subtle);
+    color: var(--nova-color-brand-500);
+    order: 3;
+}
+
+.check__icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.check__icon .icon {
+    --icon-size: 18px;
+}
+
+/* =========================================================================
+   2. SWITCH
+   <label class="switch"><input type="checkbox" role="switch" class="switch__input">
+     <span class="switch__label">…</span></label>
+   ========================================================================= */
+.switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    font-family: var(--nova-font-family);
+    font-size: var(--nova-font-size-base);
+    font-weight: var(--nova-font-weight-regular);
+    color: var(--nova-color-text-primary);
+    cursor: pointer;
+}
+
+.switch__input {
+    -webkit-appearance: none;
+    appearance: none;
+    position: relative;
+    flex-shrink: 0;
+    width: 40px;
+    height: 24px;
+    margin: 0;
+    border: 0;
+    border-radius: var(--nova-radius-pill);
+    background: var(--nova-color-border-strong);
+    cursor: pointer;
+    transition: background var(--nova-transition-base), box-shadow var(--nova-transition-fast);
+}
+
+.switch__input::before {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--nova-color-bg-surface);
+    box-shadow: 0 1px 3px rgba(16, 24, 40, .2);
+    transition: transform var(--nova-transition-base);
+}
+
+.switch__input:hover {
+    background: var(--nova-color-text-muted);
+}
+
+.switch__input:checked {
+    background: var(--nova-color-brand-500);
+}
+
+.switch__input:checked:hover {
+    background: var(--nova-color-brand-700);
+}
+
+.switch__input:checked::before {
+    transform: translateX(16px);
+}
+
+.switch__input:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--nova-color-brand-100);
+}
+
+.switch__input:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+.switch:has(.switch__input:disabled) {
+    color: var(--nova-color-text-muted);
+    cursor: not-allowed;
+}
+
+.switch--success .switch__input:checked {
+    background: var(--nova-success-text);
+}
+
+.switch--sm .switch__input {
+    width: 32px;
+    height: 18px;
+}
+
+.switch--sm .switch__input::before {
+    top: 2px;
+    left: 2px;
+    width: 14px;
+    height: 14px;
+}
+
+.switch--sm .switch__input:checked::before {
+    transform: translateX(14px);
+}
+
+.switch--sm {
+    font-size: var(--nova-font-size-sm);
+}
+
+.switch__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.switch__desc {
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-text-secondary);
+}
+
+/* linha de configuração: texto à esquerda, switch à direita */
+.switch--row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: var(--nova-space-3) 0;
+}
+
+.switch--row .switch__input {
+    order: 2;
+}
+
+.switch-list>.switch--row+.switch--row {
+    border-top: 1px solid var(--nova-color-border);
+}
+
+/* =========================================================================
+   3. TOGGLE (botão que fica pressionado)
+   <button class="btn btn--secondary btn--toggle" aria-pressed="false">
+   Em grupo, use .btn-segmented (buttons.css).
+   ========================================================================= */
+.btn--toggle[aria-pressed="true"] {
+    --btn-bg: var(--nova-info-bg);
+    --btn-bg-hover: var(--nova-info-bg);
+    --btn-fg: var(--nova-color-brand-900);
+    --btn-fg-hover: var(--nova-color-brand-900);
+    --btn-border: var(--nova-color-brand-500);
+    --btn-border-hover: var(--nova-color-brand-500);
+}
+
+.btn--toggle.btn--tertiary[aria-pressed="true"] {
+    --btn-border: transparent;
+    --btn-border-hover: transparent;
+}
+
+/* =========================================================================
+   4. SELECT PERSONALIZADO / DROPDOWN / MULTI SELECT
+   Parte de um <select data-enhance> dentro de um .field; o <select> nativo
+   continua no DOM (oculto) e recebe os valores, para o Fluig gravar.
+   ========================================================================= */
+.select-native {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    margin: -1px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    border: 0 !important;
+    white-space: nowrap !important;
+}
+
+.select-trigger {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    min-height: 21px;
+    padding-right: var(--nova-space-6);
+    font-size: var(--nova-font-size-base);
+    line-height: var(--nova-line-height-base);
+    color: var(--nova-color-text-primary);
+    cursor: pointer;
+    outline: none;
+}
+
+.select-trigger::after {
+    content: "expand_more";
+    font-family: var(--nova-icon-font);
+    font-size: 20px;
+    font-weight: normal;
+    font-style: normal;
+    font-variation-settings: 'FILL' 0, 'wght' var(--nova-icon-weight), 'GRAD' 0, 'opsz' 20;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: 'liga';
+    position: absolute;
+    top: 50%;
+    right: -2px;
+    color: var(--nova-color-text-secondary);
+    transform: translateY(-50%);
+    transition: transform var(--nova-transition-fast);
+}
+
+.select-trigger[aria-expanded="true"]::after {
+    color: var(--nova-color-brand-500);
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.select-trigger__placeholder {
+    color: var(--nova-color-text-muted);
+}
+
+.select-trigger__value {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.field--select-custom .field__body {
+    cursor: pointer;
+}
+
+.field--select-custom .field__control:has(.select-trigger[aria-disabled="true"]) {
+    background: var(--nova-color-bg-subtle);
+    cursor: not-allowed;
+}
+
+.select-trigger[aria-disabled="true"] {
+    color: var(--nova-color-text-muted);
+    cursor: not-allowed;
+}
+
+/* chips do multi select */
+.select-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    max-width: 100%;
+    height: 22px;
+    padding: 0 2px 0 8px;
+    border-radius: var(--nova-radius-pill);
+    background: var(--nova-info-bg);
+    color: var(--nova-color-brand-900);
+    font-size: var(--nova-font-size-xs);
+    font-weight: var(--nova-font-weight-semibold);
+    white-space: nowrap;
+}
+
+.select-chip__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.select-chip__remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    color: var(--nova-color-brand-700);
+    cursor: pointer;
+}
+
+.select-chip__remove:hover {
+    background: rgba(22, 48, 92, .12);
+}
+
+.select-chip__remove svg {
+    width: 12px;
+    height: 12px;
+}
+
+.select-chip__remove .icon {
+    --icon-size: 12px;
+}
+
+.select-chip--more {
+    padding-right: 8px;
+    background: var(--nova-color-bg-subtle);
+    color: var(--nova-color-text-secondary);
+    border: 1px solid var(--nova-color-border);
+}
+
+/* painel de opções (select, combobox, autocomplete) */
+.select-panel {
+    position: fixed;
+    z-index: var(--nova-z-menu, 1000);
+    display: flex;
+    flex-direction: column;
+    max-height: var(--select-panel-max-height, 300px);
+    overflow: hidden;
+    background: var(--nova-color-bg-surface);
+    border: 1px solid var(--nova-color-border);
+    border-radius: var(--nova-radius-md);
+    box-shadow: var(--nova-shadow-lg);
+    font-family: var(--nova-font-family);
+    animation: nova-select-in 100ms ease-out;
+}
+
+.select-panel[hidden] {
+    display: none;
+}
+
+@keyframes nova-select-in {
+    from {
+        opacity: 0;
+        transform: translateY(-2px);
+    }
+}
+
+.select-panel__search {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    gap: var(--nova-space-2);
+    padding: var(--nova-space-2) var(--nova-space-3);
+    border-bottom: 1px solid var(--nova-color-border);
+    color: var(--nova-color-text-muted);
+}
+
+.select-panel__search svg {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+}
+
+.select-panel__search .icon {
+    --icon-size: 16px;
+    flex-shrink: 0;
+}
+
+.select-panel__search input {
+    flex: 1;
+    min-width: 0;
+    height: 30px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    box-shadow: none;
+    color: var(--nova-color-text-primary);
+    font: inherit;
+    font-size: var(--nova-font-size-sm);
+}
+
+.select-panel__list {
+    flex: 1;
+    min-height: 0;
+    margin: 0;
+    padding: var(--nova-space-1);
+    overflow-y: auto;
+    list-style: none;
+    overscroll-behavior: contain;
+}
+
+.select-panel__group {
+    padding: var(--nova-space-2) var(--nova-space-3) var(--nova-space-1);
+    font-size: var(--nova-font-size-xs);
+    font-weight: var(--nova-font-weight-semibold);
+    color: var(--nova-color-text-muted);
+}
+
+.select-option {
+    display: flex;
+    align-items: center;
+    gap: var(--nova-space-2);
+    min-height: 36px;
+    padding: 6px var(--nova-space-3);
+    border-radius: var(--nova-radius-sm);
+    color: var(--nova-color-text-primary);
+    font-size: var(--nova-font-size-sm);
+    line-height: 1.35;
+    cursor: pointer;
+    scroll-margin: var(--nova-space-1);
+}
+
+.select-option.is-active {
+    background: var(--nova-color-hover);
+}
+
+.select-option[aria-selected="true"] {
+    color: var(--nova-color-brand-900);
+    font-weight: var(--nova-font-weight-semibold);
+}
+
+.select-option[aria-disabled="true"] {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+.select-option__check {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    background: transparent;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.select-option[aria-selected="true"] .select-option__check {
+    background: var(--nova-color-brand-500);
+}
+
+/* multi: caixinha em vez de visto */
+.select-panel--multi .select-option__check {
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--nova-color-border-strong);
+    border-radius: 4px;
+    background: var(--nova-color-bg-surface);
+    -webkit-mask: none;
+    mask: none;
+    position: relative;
+}
+
+.select-panel--multi .select-option[aria-selected="true"] .select-option__check {
+    border-color: var(--nova-color-brand-500);
+    background: var(--nova-color-brand-500) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / 11px no-repeat;
+}
+
+.select-option__text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.select-option__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.select-option__label mark {
+    padding: 0;
+    background: none;
+    color: var(--nova-color-brand-500);
+    font-weight: var(--nova-font-weight-semibold);
+}
+
+.select-option__desc {
+    font-size: var(--nova-font-size-xs);
+    font-weight: var(--nova-font-weight-regular);
+    color: var(--nova-color-text-secondary);
+}
+
+.select-option__meta {
+    flex-shrink: 0;
+    font-size: var(--nova-font-size-xs);
+    font-weight: var(--nova-font-weight-regular);
+    color: var(--nova-color-text-muted);
+}
+
+.select-panel__status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--nova-space-2);
+    padding: var(--nova-space-5) var(--nova-space-4);
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-text-secondary);
+    text-align: center;
+}
+
+.select-panel__spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--nova-color-border);
+    border-top-color: var(--nova-color-brand-500);
+    border-radius: 50%;
+    animation: nova-spin .6s linear infinite;
+}
+
+@keyframes nova-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.select-panel__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    gap: var(--nova-space-2);
+    padding: var(--nova-space-2) var(--nova-space-3);
+    border-top: 1px solid var(--nova-color-border);
+    background: var(--nova-color-bg-subtle);
+    font-size: var(--nova-font-size-xs);
+    color: var(--nova-color-text-secondary);
+}
+
+.select-panel__link {
+    margin: 0;
+    padding: 2px 4px;
+    border: 0;
+    border-radius: 4px;
+    background: none;
+    color: var(--nova-color-brand-500);
+    font: inherit;
+    font-weight: var(--nova-font-weight-semibold);
+    cursor: pointer;
+}
+
+.select-panel__link:hover {
+    text-decoration: underline;
+}
+
+.select-panel__link:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--nova-color-brand-500);
+}
+
+/* =========================================================================
+   5. COMBOBOX / AUTOCOMPLETE
+   Input de texto dentro de .field; o painel é o mesmo .select-panel.
+   ========================================================================= */
+.field--combobox .field__input {
+    padding-right: var(--nova-space-6);
+}
+
+.field--combobox .field__body {
+    position: relative;
+}
+
+.field--combobox .field__body::after {
+    content: "unfold_more";
+    font-family: var(--nova-icon-font);
+    font-size: 20px;
+    font-weight: normal;
+    font-style: normal;
+    font-variation-settings: 'FILL' 0, 'wght' var(--nova-icon-weight), 'GRAD' 0, 'opsz' 20;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: 'liga';
+    position: absolute;
+    right: var(--nova-space-4);
+    bottom: 10px;
+    color: var(--nova-color-text-secondary);
+    pointer-events: none;
+}
+
+.field--autocomplete .field__body::after {
+    display: none;
+}
+
+.field__spinner {
+    display: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--nova-color-border);
+    border-top-color: var(--nova-color-brand-500);
+    border-radius: 50%;
+    animation: nova-spin .6s linear infinite;
+}
+
+.field.is-loading .field__spinner {
+    display: block;
+}
+
+/* =========================================================================
+   6. LISTBOX (lista sempre visível)
+   <ul class="listbox" role="listbox" aria-multiselectable="true?">
+     <li class="listbox__option" role="option" data-value>…</li></ul>
+   ========================================================================= */
+.listbox {
+    display: flex;
+    flex-direction: column;
+    max-height: var(--listbox-max-height, 280px);
+    margin: 0;
+    padding: var(--nova-space-1);
+    overflow-y: auto;
+    list-style: none;
+    background: var(--nova-color-bg-surface);
+    border: 1px solid var(--nova-color-border-strong);
+    border-radius: var(--nova-radius-sm);
+    font-family: var(--nova-font-family);
+    outline: none;
+    transition: border-color var(--nova-transition-fast), box-shadow var(--nova-transition-fast);
+}
+
+.listbox:focus-visible,
+.listbox:focus {
+    border-color: var(--nova-color-brand-500);
+    box-shadow: 0 0 0 3px var(--nova-color-brand-100);
+}
+
+.listbox__group {
+    padding: var(--nova-space-2) var(--nova-space-3) var(--nova-space-1);
+    font-size: var(--nova-font-size-xs);
+    font-weight: var(--nova-font-weight-semibold);
+    color: var(--nova-color-text-muted);
+}
+
+.listbox__option {
+    display: flex;
+    align-items: center;
+    gap: var(--nova-space-2);
+    min-height: 36px;
+    padding: 6px var(--nova-space-3);
+    border-radius: var(--nova-radius-sm);
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-text-primary);
+    cursor: pointer;
+    user-select: none;
+    scroll-margin: var(--nova-space-1);
+}
+
+.listbox__option:hover {
+    background: var(--nova-color-hover);
+}
+
+.listbox__option.is-active {
+    box-shadow: inset 0 0 0 2px var(--nova-color-brand-500);
+}
+
+.listbox:not(:focus) .listbox__option.is-active {
+    box-shadow: none;
+}
+
+.listbox__option[aria-selected="true"] {
+    background: var(--nova-selected-bg, #eef4fc);
+    color: var(--nova-color-brand-900);
+    font-weight: var(--nova-font-weight-semibold);
+}
+
+.listbox__option[aria-disabled="true"] {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+.listbox__option::before {
+    content: "";
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    background: transparent;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.listbox__option[aria-selected="true"]::before {
+    background: var(--nova-color-brand-500);
+}
+
+/* =========================================================================
+   7. TAGS
+   .tag: etiqueta (estática, removível ou de filtro)
+   Tag input: <input class="field__input" data-tags> dentro de um .field;
+   o input original guarda os valores separados por vírgula (para o Fluig).
+   ========================================================================= */
+.tag {
+    --tag-bg: var(--nova-color-bg-subtle);
+    --tag-fg: var(--nova-color-text-primary);
+    --tag-border: var(--nova-color-border-strong);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 100%;
+    height: 28px;
+    margin: 0;
+    padding: 0 10px;
+    border: 1px solid var(--tag-border);
+    border-radius: var(--nova-radius-pill);
+    background: var(--tag-bg);
+    color: var(--tag-fg);
+    font-family: var(--nova-font-family);
+    font-size: var(--nova-font-size-sm);
+    font-weight: var(--nova-font-weight-medium);
+    line-height: 1;
+    white-space: nowrap;
+    vertical-align: middle;
+    transition: background var(--nova-transition-fast), border-color var(--nova-transition-fast), color var(--nova-transition-fast), box-shadow var(--nova-transition-fast);
+}
+
+.tag__label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tag .icon {
+    --icon-size: 16px;
+}
+
+.tag .avatar {
+    --avatar-size: 20px;
+    margin-left: -6px;
+}
+
+.tag__dot {
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--dot-color, currentColor);
+}
+
+.tag__remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin: 0 -6px 0 -2px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    opacity: .7;
+    cursor: pointer;
+}
+
+.tag__remove .icon {
+    --icon-size: 16px;
+}
+
+.tag__remove:hover {
+    background: color-mix(in srgb, currentColor 14%, transparent);
+    opacity: 1;
+}
+
+.tag__remove:focus-visible {
+    outline: none;
+    opacity: 1;
+    box-shadow: 0 0 0 2px var(--nova-color-brand-500);
+}
+
+.tag--sm {
+    gap: 4px;
+    height: 22px;
+    padding: 0 8px;
+    font-size: var(--nova-font-size-xs);
+}
+
+.tag--sm .tag__remove {
+    width: 16px;
+    height: 16px;
+    margin-right: -4px;
+}
+
+.tag--brand {
+    --tag-bg: var(--nova-info-bg);
+    --tag-fg: var(--nova-color-brand-900);
+    --tag-border: transparent;
+}
+
+.tag--success {
+    --tag-bg: var(--nova-success-bg);
+    --tag-fg: var(--nova-success-strong);
+    --tag-border: transparent;
+}
+
+.tag--warning {
+    --tag-bg: var(--nova-warning-bg);
+    --tag-fg: var(--nova-warning-strong);
+    --tag-border: transparent;
+}
+
+.tag--danger {
+    --tag-bg: var(--nova-danger-bg);
+    --tag-fg: var(--nova-danger-strong);
+    --tag-border: transparent;
+}
+
+.tag--teal {
+    --tag-bg: var(--nova-accent-teal-bg);
+    --tag-fg: var(--nova-accent-teal-text);
+    --tag-border: transparent;
+}
+
+.tag--outline {
+    --tag-bg: var(--nova-color-bg-surface);
+}
+
+/* tag de filtro (liga/desliga) */
+button.tag,
+.tag--selectable {
+    cursor: pointer;
+}
+
+button.tag:hover,
+.tag--selectable:hover {
+    --tag-border: var(--nova-color-brand-500);
+}
+
+button.tag:focus-visible,
+.tag--selectable:focus-visible {
+    outline: none;
+    box-shadow: var(--nova-focus-ring);
+}
+
+.tag[aria-pressed="true"] {
+    --tag-bg: var(--nova-color-selected);
+    --tag-fg: var(--nova-color-brand-900);
+    --tag-border: var(--nova-color-brand-500);
+}
+
+.tag[aria-pressed]::before {
+    content: "check";
+    display: none;
+    font-family: var(--nova-icon-font);
+    font-size: 16px;
+    font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 20;
+    line-height: 1;
+    font-feature-settings: 'liga';
+    margin-left: -2px;
+}
+
+.tag[aria-pressed="true"]::before {
+    display: inline;
+}
+
+.tag:disabled,
+.tag.is-disabled {
+    opacity: var(--nova-opacity-disabled);
+    pointer-events: none;
+}
+
+/* tag inválida (ex.: e-mail mal digitado) e destaque de duplicada */
+.tag.is-invalid {
+    --tag-bg: var(--nova-danger-bg);
+    --tag-fg: var(--nova-danger-strong);
+    --tag-border: var(--nova-danger-text);
+    border-style: dashed;
+}
+
+.tag.is-selected {
+    box-shadow: 0 0 0 2px var(--nova-color-brand-500);
+}
+
+.tag.is-flash {
+    animation: nova-tag-flash .6s ease;
+}
+
+@keyframes nova-tag-flash {
+
+    0%,
+    100% {
+        transform: none;
+    }
+
+    30% {
+        transform: scale(1.08);
+        box-shadow: 0 0 0 3px var(--nova-warning-bg);
+    }
+}
+
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* campo de tags */
+.field--tags .field__control {
+    height: auto;
+}
+
+.field--tags .field__body {
+    padding-top: var(--nova-space-2);
+    padding-bottom: var(--nova-space-2);
+}
+
+.tag-input {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    min-height: 24px;
+    margin-top: 2px;
+}
+
+.tag-input .tag {
+    height: 24px;
+    padding: 0 8px;
+    font-size: var(--nova-font-size-xs);
+}
+
+.tag-input .tag__remove {
+    width: 18px;
+    height: 18px;
+}
+
+.tag-input__field {
+    flex: 1;
+    min-width: 120px;
+    height: 24px;
+    margin: 0;
+    padding: 0 2px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    box-shadow: none;
+    color: var(--nova-color-text-primary);
+    font: inherit;
+    font-size: var(--nova-font-size-base);
+}
+
+.tag-input__field::placeholder {
+    color: var(--nova-color-text-muted);
+}
+
+.field--tags.is-full .tag-input__field {
+    display: none;
+}
+
+.field--tags.is-disabled .tag__remove,
+.field--tags:has(.tag-input__field:disabled) .tag__remove {
+    display: none;
+}
+
+/* =========================================================================
+   ACESSIBILIDADE
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+
+    .check__input,
+    .check__input::before,
+    .switch__input,
+    .switch__input::before,
+    .select-panel,
+    .tag,
+    .tag.is-flash {
+        transition: none;
+        animation: none;
+    }
+}

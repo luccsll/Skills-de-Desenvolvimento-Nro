@@ -1,0 +1,621 @@
+<html>
+	<head>
+		<link type="text/css" rel="stylesheet" href="/style-guide/css/fluig-style-guide.min.css" />
+		<script type="text/javascript" src="/portal/resources/js/jquery/jquery.js"></script>
+		<script type="text/javascript" src="/portal/resources/js/jquery/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="/portal/resources/js/mustache/mustache-min.js"></script>
+		<script type="text/javascript" src="/style-guide/js/fluig-style-guide.min.js" charset="utf-8"></script>
+		<!-- consulta a datasets pelo formulário -->
+		<script type="text/javascript" src="/webdesk/vcXMLRPC.js"></script>
+		<!-- Nova UI -->
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..600,0..1,0&display=block"
+		/>
+		<link
+			type="text/css"
+			rel="stylesheet"
+			href="https://nova-ui.novarotadooeste.com.br/v1/min/nova-ui.min.css"
+		/>
+		<!-- layout próprio deste formulário -->
+		<link type="text/css" rel="stylesheet" href="solicitacao-abono.css" />
+	</head>
+	<body>
+		<div class="fluig-style-guide">
+			<form name="form" role="form">
+				<div class="request-app" id="request-app">
+					<input type="hidden" id="tipo-solicitacao" name="tipo-solicitacao" />
+					<div class="request-screen" id="tela-escolha">
+						<div class="request-choice">
+							<span class="icon-tile icon-tile--xl">
+								<span aria-hidden="true" class="icon">receipt_long</span>
+							</span>
+							<h3 class="text-h2 margin-top-3 margin-bottom-0">Solicitação de abono</h3>
+							<p class="text-body text-secondary margin-top-0 margin-bottom-5">Selecione uma opção</p>
+							<div class="request-choice__options">
+								<button class="request-option" data-request-type="abono" type="button">
+									<span class="icon-tile icon-tile--teal">
+										<span aria-hidden="true" class="icon">volunteer_activism</span>
+									</span>
+									<span class="request-option__text">
+										<strong>Abono</strong>
+										<span>A diferença é abonada pela empresa</span>
+									</span>
+									<span aria-hidden="true" class="icon">chevron_right</span>
+								</button>
+								<span class="request-choice__separator">ou</span>
+								<button class="request-option" data-request-type="desconto" type="button">
+									<span class="icon-tile icon-tile--warning">
+										<span aria-hidden="true" class="icon">payments</span>
+									</span>
+									<span class="request-option__text">
+										<strong>Desconto em folha</strong>
+										<span>O valor é descontado no salário</span>
+									</span>
+									<span aria-hidden="true" class="icon">chevron_right</span>
+								</button>
+							</div>
+						</div>
+					</div>
+					<div class="request-screen" hidden="" id="tela-formulario">
+						<header class="request-header" id="request-header">
+							<div class="request-header__content">
+								<div class="request-header__top">
+									<span class="icon-tile icon-tile--lg">
+										<span aria-hidden="true" class="icon">receipt_long</span>
+									</span>
+									<div class="request-header__title">
+										<p class="text-overline margin-0">Nova solicitação</p>
+										<h3 class="text-h3 margin-bottom-0 margin-top-1">Solicitação de abono</h3>
+									</div>
+									<div class="request-header__badges">
+										<span class="badge badge--info" id="tipo-badge">Abono</span>
+										<span class="badge badge--neutral">
+											<span class="badge__dot"></span>
+											Rascunho
+										</span>
+									</div>
+									<div class="request-header__actions">
+										<button class="btn btn--tertiary btn--sm" id="trocar-tipo" type="button">
+											<span aria-hidden="true" class="icon">swap_horiz</span>
+											<span>Trocar tipo</span>
+										</button>
+										<button class="btn btn--tertiary btn--sm" id="ver-tutorial" type="button">
+											<span aria-hidden="true" class="icon">school</span>
+											<span>Tutorial</span>
+										</button>
+									</div>
+								</div>
+								<div class="request-header__requester" id="solicitante">
+									<span class="avatar">LL</span>
+									<div>
+										<p class="request-header__requester-label">Solicitante</p>
+										<p class="request-header__requester-name">Lucas da Silva Lima</p>
+									</div>
+									<dl class="request-header__meta">
+										<div>
+											<dt>Cargo</dt>
+											<dd>Desenvolvedor de Fluig Pleno</dd>
+										</div>
+										<div>
+											<dt>Matrícula</dt>
+											<dd>445154</dd>
+										</div>
+										<div>
+											<dt>Aberta em</dt>
+											<dd id="data-abertura">—</dd>
+										</div>
+									</dl>
+									<span
+										class="request-header__source"
+										data-tip="Dados do solicitante vêm do RM pelo usuário logado no Fluig."
+										tabindex="0"
+									>
+										<span aria-hidden="true" class="icon">bolt</span>
+										RM
+									</span>
+								</div>
+								<div class="request-header__steps" id="etapas">
+									<p class="request-header__steps-label">Etapas</p>
+									<div class="request-steps-scroll">
+										<div class="request-steps-scroll">
+											<ol class="stepper stepper--compact" id="stepper-etapas">
+												<li aria-current="step" class="stepper__step is-current">
+													<span class="stepper__link">
+														<span aria-hidden="true" class="stepper__marker"></span>
+														<span class="stepper__text">
+															<span class="stepper__title">Início</span>
+															<span class="stepper__desc">Solicitante</span>
+														</span>
+													</span>
+												</li>
+												<li class="stepper__step">
+													<span class="stepper__link">
+														<span aria-hidden="true" class="stepper__marker"></span>
+														<span class="stepper__text">
+															<span class="stepper__title">Reajuste</span>
+															<span class="stepper__desc">Solicitante</span>
+														</span>
+													</span>
+												</li>
+												<li class="stepper__step">
+													<span class="stepper__link">
+														<span aria-hidden="true" class="stepper__marker"></span>
+														<span class="stepper__text">
+															<span class="stepper__title">Supervisão</span>
+															<span class="stepper__desc">Supervisor</span>
+														</span>
+													</span>
+												</li>
+												<li class="stepper__step">
+													<span class="stepper__link">
+														<span aria-hidden="true" class="stepper__marker"></span>
+														<span class="stepper__text">
+															<span class="stepper__title">CCA</span>
+															<span class="stepper__desc">Analista CCA</span>
+														</span>
+													</span>
+												</li>
+												<li class="stepper__step">
+													<span class="stepper__link">
+														<span aria-hidden="true" class="stepper__marker"></span>
+														<span class="stepper__text">
+															<span class="stepper__title">Coordenação</span>
+															<span class="stepper__desc">Coordenador</span>
+														</span>
+													</span>
+												</li>
+												<li class="stepper__step">
+													<span class="stepper__link">
+														<span aria-hidden="true" class="stepper__marker"></span>
+														<span class="stepper__text">
+															<span class="stepper__title">Gerência</span>
+															<span class="stepper__desc">Gerente</span>
+														</span>
+													</span>
+												</li>
+												<li class="stepper__step">
+													<span class="stepper__link">
+														<span aria-hidden="true" class="stepper__marker"></span>
+														<span class="stepper__text">
+															<span class="stepper__title">Concluído</span>
+															<span class="stepper__desc"></span>
+														</span>
+													</span>
+												</li>
+											</ol>
+										</div>
+									</div>
+								</div>
+							</div>
+						</header>
+						<div class="request-layout">
+							<div id="formulario-abono">
+								<div class="form-error-summary" hidden="" id="resumo-erros" role="alert" tabindex="-1">
+									<span class="form-error-summary__icon">
+										<span aria-hidden="true" class="icon">error</span>
+									</span>
+									<div>
+										<p class="form-error-summary__title">Corrija os campos abaixo para enviar</p>
+										<ul class="form-error-summary__list" id="resumo-erros-lista"></ul>
+									</div>
+								</div>
+								<section class="request-section" id="parte-operador">
+									<div class="request-section__header">
+										<span aria-hidden="true" class="request-section__number">1</span>
+										<div class="request-section__title">
+											<h4>Operador</h4>
+											<p>Quem fez o fechamento do caixa</p>
+										</div>
+										<span class="badge badge--success badge--sm request-section__complete" hidden="">
+											<span aria-hidden="true" class="icon">check</span>
+											Completo
+										</span>
+									</div>
+									<div class="request-section__body">
+										<div class="form-grid">
+											<div class="field field--required form-col-12 form-col-md-4">
+												<div class="field__control">
+													<div class="field__body">
+														<label class="field__label" for="operador-codigo">Código do operador</label>
+														<input
+															autocomplete="off"
+															class="field__input"
+															id="operador-codigo"
+															name="operador-codigo"
+															placeholder="Código ou nome"
+														/>
+													</div>
+												</div>
+												<div class="field__footer">
+													<p class="field__message">Busque pelo código ou pelo nome.</p>
+												</div>
+											</div>
+											<input id="operador-id" name="operador-id" type="hidden" />
+											<div
+												class="field field--auto form-col-12 form-col-md-5"
+												data-auto-from="Código do operador"
+											>
+												<div class="field__control">
+													<div class="field__body">
+														<label class="field__label" for="operador-nome">Nome</label>
+														<input
+															class="field__input"
+															id="operador-nome"
+															name="operador-nome"
+															placeholder="Aguardando o código"
+															readonly=""
+														/>
+													</div>
+												</div>
+											</div>
+											<div
+												class="field field--auto form-col-12 form-col-md-3"
+												data-auto-from="Código do operador"
+											>
+												<div class="field__control">
+													<div class="field__body">
+														<label class="field__label" for="operador-matricula">Matrícula</label>
+														<input
+															class="field__input"
+															id="operador-matricula"
+															name="operador-matricula"
+															placeholder="Aguardando o código"
+															readonly=""
+														/>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</section>
+								<section class="request-section" id="parte-coordenador">
+									<div class="request-section__header">
+										<span aria-hidden="true" class="request-section__number">2</span>
+										<div class="request-section__title">
+											<h4>Coordenador</h4>
+											<p>Quem responde pelo turno</p>
+										</div>
+										<span class="badge badge--success badge--sm request-section__complete" hidden="">
+											<span aria-hidden="true" class="icon">check</span>
+											Completo
+										</span>
+									</div>
+									<div class="request-section__body">
+										<div class="form-grid">
+											<div class="field field--required form-col-12 form-col-md-4">
+												<div class="field__control">
+													<div class="field__body">
+														<label class="field__label" for="coordenador-codigo">Código do coordenador</label>
+														<input
+															autocomplete="off"
+															class="field__input"
+															id="coordenador-codigo"
+															name="coordenador-codigo"
+															placeholder="Código ou nome"
+														/>
+													</div>
+												</div>
+												<div class="field__footer"><p class="field__message"></p></div>
+											</div>
+											<input id="coordenador-id" name="coordenador-id" type="hidden" />
+											<div
+												class="field field--auto form-col-12 form-col-md-5"
+												data-auto-from="Código do coordenador"
+											>
+												<div class="field__control">
+													<div class="field__body">
+														<label class="field__label" for="coordenador-nome">Nome do coordenador</label>
+														<input
+															class="field__input"
+															id="coordenador-nome"
+															name="coordenador-nome"
+															placeholder="Aguardando o código"
+															readonly=""
+														/>
+													</div>
+												</div>
+											</div>
+											<div
+												class="field field--auto form-col-12 form-col-md-3"
+												data-auto-from="Código do coordenador"
+											>
+												<div class="field__control">
+													<div class="field__body">
+														<label class="field__label" for="coordenador-matricula">Matrícula</label>
+														<input
+															class="field__input"
+															id="coordenador-matricula"
+															name="coordenador-matricula"
+															placeholder="Aguardando o código"
+															readonly=""
+														/>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</section>
+								<section class="request-section" id="parte-fechamento">
+									<div class="request-section__header">
+										<span aria-hidden="true" class="request-section__number">3</span>
+										<div class="request-section__title">
+											<h4>Fechamento</h4>
+											<p>Turno, data e praça do caixa</p>
+										</div>
+										<span class="badge badge--success badge--sm request-section__complete" hidden="">
+											<span aria-hidden="true" class="icon">check</span>
+											Completo
+										</span>
+									</div>
+									<div class="request-section__body">
+										<div class="form-grid">
+											<div class="field field--select field--required form-col-12 form-col-md-4">
+												<div class="field__control">
+													<div class="field__body">
+														<label class="field__label" for="turno">Turno</label>
+														<select class="field__input" data-enhance="" id="turno" name="turno" required="">
+															<option value="">Selecione</option>
+															<option value="manha">Manhã (06h–14h)</option>
+															<option value="tarde">Tarde (14h–22h)</option>
+															<option value="noite">Noite (22h–06h)</option>
+														</select>
+													</div>
+												</div>
+												<div class="field__footer"><p class="field__message"></p></div>
+											</div>
+											<div class="field field--required form-col-12 form-col-md-4">
+												<div class="field__control">
+													<div class="field__body">
+														<label class="field__label" for="data-fechamento">
+															Data e hora do fechamento
+														</label>
+														<input
+															class="field__input"
+															data-mask="datetime"
+															id="data-fechamento"
+															inputmode="numeric"
+															name="data-fechamento"
+															placeholder="dd/mm/aaaa hh:mm"
+														/>
+													</div>
+												</div>
+												<div class="field__footer"><p class="field__message"></p></div>
+											</div>
+											<div class="field field--select field--required form-col-12 form-col-md-4">
+												<div class="field__control">
+													<div class="field__body">
+														<label class="field__label" for="praca">Praça de pedágio</label>
+														<select
+															class="field__input"
+															data-enhance=""
+															data-search=""
+															id="praca"
+															name="praca"
+															required=""
+														>
+															<option value="">Selecione</option>
+															<option value="p1">P1 · Sorriso</option>
+															<option value="p2">P2 · Lucas do Rio Verde</option>
+															<option value="p3">P3 · Nova Mutum</option>
+															<option value="p4">P4 · Jangada</option>
+															<option value="p5">P5 · Rondonópolis</option>
+															<option value="p6">P6 · Itiquira</option>
+														</select>
+													</div>
+												</div>
+												<div class="field__footer"><p class="field__message"></p></div>
+											</div>
+										</div>
+									</div>
+								</section>
+								<section class="request-section" id="parte-valores">
+									<div class="request-section__header">
+										<span aria-hidden="true" class="request-section__number">4</span>
+										<div class="request-section__title">
+											<h4>Valores</h4>
+											<p>Quanto foi apurado e quanto abonar</p>
+										</div>
+										<span class="badge badge--success badge--sm request-section__complete" hidden="">
+											<span aria-hidden="true" class="icon">check</span>
+											Completo
+										</span>
+									</div>
+									<div class="request-section__body">
+										<div class="form-grid">
+											<div class="field field--required form-col-12 form-col-md-3">
+												<div class="field__control">
+													<span class="field__addon">R$</span>
+													<div class="field__body">
+														<label class="field__label" for="valor-qcx">Valor do QCX original</label>
+														<input
+															class="field__input"
+															data-mask="currency"
+															id="valor-qcx"
+															inputmode="numeric"
+															name="valor-qcx"
+															placeholder="0,00"
+														/>
+													</div>
+												</div>
+												<div class="field__footer"><p class="field__message"></p></div>
+											</div>
+											<div class="field field--required form-col-12 form-col-md-3">
+												<div class="field__control">
+													<span class="field__addon">R$</span>
+													<div class="field__body">
+														<label class="field__label" for="valor-abono">Valor a abonar</label>
+														<input
+															class="field__input"
+															data-mask="currency"
+															id="valor-abono"
+															inputmode="numeric"
+															name="valor-abono"
+															placeholder="0,00"
+														/>
+													</div>
+												</div>
+												<div class="field__footer"><p class="field__message"></p></div>
+											</div>
+											<div class="field field--select field--required form-col-12 form-col-md-6">
+												<div class="field__control">
+													<div class="field__body">
+														<label class="field__label" for="motivo">Motivo do abono</label>
+														<select
+															class="field__input"
+															data-enhance=""
+															id="motivo"
+															name="motivo"
+															required=""
+														>
+															<option value="">Selecione</option>
+															<option value="caixa">Diferença de caixa</option>
+															<option value="cedula">Cédula falsa</option>
+															<option value="troco">Erro de troco</option>
+															<option value="sistema">Falha no sistema de arrecadação</option>
+															<option value="outros">Outros</option>
+														</select>
+													</div>
+												</div>
+												<div class="field__footer"><p class="field__message"></p></div>
+											</div>
+											<div class="field field--textarea field--required form-col-12">
+												<div class="field__control">
+													<div class="field__body">
+														<label class="field__label" for="observacao">Observação</label>
+														<textarea
+															class="field__input"
+															id="observacao"
+															maxlength="500"
+															name="observacao"
+															placeholder="Faça uma observação"
+															rows="4"
+														></textarea>
+													</div>
+												</div>
+												<div class="field__footer">
+													<p class="field__message"></p>
+													<span aria-live="polite" class="field__counter"></span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</section>
+							</div>
+							<aside aria-label="Resumo da solicitação" class="request-summary" id="resumo">
+								<div class="request-summary__box">
+									<div class="request-summary__header">
+										<p class="text-h4 margin-0">Resumo</p>
+										<span class="request-summary__count" id="resumo-progresso-texto">0 de 4 partes</span>
+									</div>
+									<div
+										aria-label="Preenchimento"
+										aria-valuemax="100"
+										aria-valuemin="0"
+										aria-valuenow="0"
+										class="progress progress--sm"
+										id="resumo-progresso"
+										role="progressbar"
+									>
+										<span class="progress__bar"></span>
+									</div>
+									<ol class="request-summary-sections" id="request-summary-sections">
+										<li data-sec="parte-operador">
+											<a href="#parte-operador">
+												<span class="request-summary-sections__mark">1</span>
+												Operador
+											</a>
+										</li>
+										<li data-sec="parte-coordenador">
+											<a href="#parte-coordenador">
+												<span class="request-summary-sections__mark">2</span>
+												Coordenador
+											</a>
+										</li>
+										<li data-sec="parte-fechamento">
+											<a href="#parte-fechamento">
+												<span class="request-summary-sections__mark">3</span>
+												Fechamento
+											</a>
+										</li>
+										<li data-sec="parte-valores">
+											<a href="#parte-valores">
+												<span class="request-summary-sections__mark">4</span>
+												Valores
+											</a>
+										</li>
+									</ol>
+									<dl class="desc-list desc-list--horizontal desc-list--divided request-summary-values">
+										<div class="desc-list__item">
+											<dt>Tipo</dt>
+											<dd id="resumo-tipo">Abono</dd>
+										</div>
+										<div class="desc-list__item">
+											<dt>Operador</dt>
+											<dd id="resumo-operador">—</dd>
+										</div>
+										<div class="desc-list__item">
+											<dt>Praça</dt>
+											<dd id="resumo-praca">—</dd>
+										</div>
+										<div class="desc-list__item">
+											<dt>QCX original</dt>
+											<dd id="resumo-qcx">—</dd>
+										</div>
+										<div class="desc-list__item">
+											<dt id="resumo-valor-rotulo">A abonar</dt>
+											<dd class="request-summary-values__total" id="resumo-valor">—</dd>
+										</div>
+									</dl>
+									<p class="request-summary__next-step">
+										<span aria-hidden="true" class="icon">arrow_forward</span>
+										<span>
+											Próxima etapa:
+											<strong>Avaliação Supervisão</strong>
+										</span>
+									</p>
+								</div>
+							</aside>
+						</div>
+					</div>
+					<dialog aria-labelledby="boas-vindas-titulo" class="dialog dialog--sm" id="request-welcome">
+						<div class="dialog__body request-welcome">
+							<span class="icon-tile icon-tile--2xl icon-tile--round">
+								<span aria-hidden="true" class="icon">school</span>
+							</span>
+							<h2 class="dialog__title" id="boas-vindas-titulo">Olá, Lucas!</h2>
+							<p>
+								Boas-vindas ao processo de
+								<strong>Solicitação de Abono</strong>
+								.
+							</p>
+							<p>
+								Este é o seu primeiro acesso. Preparamos um tutorial rápido com o passo a passo do processo.
+							</p>
+							<label class="check justify-center">
+								<input class="check__input" id="boas-vindas-ocultar" type="checkbox" />
+								<span class="check__label">Não mostrar novamente</span>
+							</label>
+						</div>
+						<div class="dialog__footer">
+							<button class="btn btn--secondary" data-dialog-close="later" type="button">Depois</button>
+							<button class="btn btn--primary" data-dialog-close="confirm" type="button">
+								<span aria-hidden="true" class="icon">school</span>
+								<span>Ir para o tutorial</span>
+							</button>
+						</div>
+					</dialog>
+				</div>
+			</form>
+		</div>
+		<script
+			type="text/javascript"
+			src="https://nova-ui.novarotadooeste.com.br/v1/min/nova-ui.min.js"
+		></script>
+		<script type="text/javascript" src="solicitacao-abono.js"></script>
+	</body>
+</html>

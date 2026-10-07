@@ -1,0 +1,957 @@
+/* =========================================================================
+   NOVA UI — LOADERS
+   Depende de tokens.css. Comportamento em loaders.js.
+
+   1. .loader           marca animada (bolinhas nas cores da marca)
+   2. .loader-overlay   cobre um elemento enquanto carrega (NovaLoader.show)
+   3. .loader-screen    tela de abertura de widget/dashboard
+   4. .loader-dots      três pontos
+   5. .spinner          círculo girando, para uso em linha
+   6. .top-loader       barra fina no topo da página
+   7. .skeleton         forma do conteúdo enquanto carrega (peças, modelos
+                        prontos e data-sk no próprio layout)
+   Carregamento de botão (.btn.is-loading) fica em buttons.css.
+   ========================================================================= */
+
+:root {
+    --nova-loader-c1: var(--nro-blue-500);
+    --nova-loader-c2: var(--nro-teal-500);
+    --nova-loader-c3: var(--nro-lime-400);
+    --nova-loader-c4: var(--nro-blue-600);
+    --nova-loader-overlay: var(--nova-color-overlay);
+}
+
+/* =========================================================================
+   1. LOADER DA MARCA
+   Quatro bolinhas que se cruzam girando. Escala por --loader-size.
+   <span class="loader" aria-hidden="true"></span>
+   ========================================================================= */
+.loader {
+    --loader-size: 50px;
+    --b: calc(var(--loader-size) * .4);
+    /* diâmetro da bolinha */
+    --o: calc(var(--loader-size) * .6);
+    /* distância entre as duas bolinhas de cada linha */
+    --g: calc(var(--loader-size) * .2);
+    /* espaço entre as linhas */
+    display: inline-block;
+    flex-shrink: 0;
+    width: var(--loader-size);
+    height: var(--loader-size);
+    animation: nova-loader-rotate 1s infinite;
+}
+
+.loader::before,
+.loader::after {
+    content: "";
+    display: block;
+    width: var(--b);
+    height: var(--b);
+    border-radius: 50%;
+}
+
+.loader::before {
+    margin-bottom: var(--g);
+    background: var(--nova-loader-c1);
+    box-shadow: var(--o) 0 0 var(--nova-loader-c2);
+    animation: nova-loader-ball1 1s infinite;
+}
+
+.loader::after {
+    background: var(--nova-loader-c3);
+    box-shadow: var(--o) 0 0 var(--nova-loader-c4);
+    animation: nova-loader-ball2 1s infinite;
+}
+
+.loader--sm {
+    --loader-size: 28px;
+}
+
+.loader--lg {
+    --loader-size: 72px;
+}
+
+/* versão monocromática (em fundo de cor ou para impressão) */
+.loader--mono {
+    --nova-loader-c1: currentColor;
+    --nova-loader-c2: currentColor;
+    --nova-loader-c3: currentColor;
+    --nova-loader-c4: currentColor;
+}
+
+@keyframes nova-loader-rotate {
+    0% {
+        transform: rotate(0deg) scale(.8);
+    }
+
+    50% {
+        transform: rotate(360deg) scale(1.2);
+    }
+
+    100% {
+        transform: rotate(720deg) scale(.8);
+    }
+}
+
+@keyframes nova-loader-ball1 {
+    0% {
+        box-shadow: var(--o) 0 0 var(--nova-loader-c2);
+    }
+
+    50% {
+        margin-bottom: 0;
+        box-shadow: 0 0 0 var(--nova-loader-c2);
+        transform: translate(calc(var(--o) / 2), calc(var(--o) / 2));
+    }
+
+    100% {
+        margin-bottom: var(--g);
+        box-shadow: var(--o) 0 0 var(--nova-loader-c2);
+    }
+}
+
+@keyframes nova-loader-ball2 {
+    0% {
+        box-shadow: var(--o) 0 0 var(--nova-loader-c4);
+    }
+
+    50% {
+        margin-top: calc(var(--b) * -1);
+        box-shadow: 0 0 0 var(--nova-loader-c4);
+        transform: translate(calc(var(--o) / 2), calc(var(--o) / 2));
+    }
+
+    100% {
+        margin-top: 0;
+        box-shadow: var(--o) 0 0 var(--nova-loader-c4);
+    }
+}
+
+/* =========================================================================
+   2. OVERLAY (cobre um formulário, card ou a página inteira)
+   ========================================================================= */
+.loader-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: var(--nova-z-sticky);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--nova-space-4);
+    border-radius: inherit;
+    background: var(--nova-loader-overlay);
+    font-family: var(--nova-font-family);
+    opacity: 0;
+    cursor: progress;
+    transition: opacity var(--nova-duration-base) ease;
+}
+
+.loader-overlay.is-visible {
+    opacity: 1;
+}
+
+.loader-overlay--blur {
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+}
+
+/* página inteira */
+.loader-overlay--fixed {
+    position: fixed;
+    z-index: var(--nova-z-modal);
+    border-radius: 0;
+}
+
+.loader-overlay__box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--nova-space-3);
+    max-width: 320px;
+    text-align: center;
+}
+
+/* caixa destacada quando há texto */
+.loader-overlay--card .loader-overlay__box {
+    padding: var(--nova-space-6) var(--nova-space-8);
+    border: var(--nova-border);
+    border-radius: var(--nova-radius-lg);
+    background: var(--nova-color-bg-surface);
+    box-shadow: var(--nova-shadow-lg);
+}
+
+.loader-overlay__text {
+    margin: 0;
+    font-size: var(--nova-font-size-sm);
+    font-weight: var(--nova-font-weight-medium);
+    line-height: var(--nova-line-height-base);
+    color: var(--nova-color-text-secondary);
+}
+
+.loader-overlay__text:empty {
+    display: none;
+}
+
+/* =========================================================================
+   3. TELA DE ABERTURA (widget, dashboard, relatório)
+   <div class="loader-screen" role="status">
+     <p class="loader-screen__title">Abono</p>
+     <p class="loader-screen__subtitle">Relatório de Abono</p>
+     <div class="loader-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+     <p class="loader-screen__message" aria-live="polite"></p>
+     <p class="loader-screen__footer">Nova Rota do Oeste</p></div>
+   ========================================================================= */
+.loader-screen {
+    position: absolute;
+    inset: 0;
+    z-index: var(--nova-z-sticky);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--nova-space-8) var(--nova-space-6) var(--nova-space-16);
+    overflow: hidden;
+    border-radius: inherit;
+    background: var(--nova-color-bg-alt);
+    font-family: var(--nova-font-family);
+    text-align: center;
+    transition: opacity var(--nova-duration-slow) ease, visibility var(--nova-duration-slow) ease;
+}
+
+/* ocupa a janela toda (página de widget sozinha) */
+.loader-screen--fixed {
+    position: fixed;
+    z-index: var(--nova-z-modal);
+    border-radius: 0;
+}
+
+/* formas da marca ao fundo, bem suaves */
+.loader-screen--brand::before,
+.loader-screen--brand::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.loader-screen--brand::before {
+    top: -120px;
+    right: -120px;
+    width: 280px;
+    height: 280px;
+    border: 40px solid color-mix(in srgb, var(--nro-blue-600) 7%, transparent);
+}
+
+.loader-screen--brand::after {
+    bottom: -140px;
+    left: -140px;
+    width: 300px;
+    height: 300px;
+    border: 44px solid color-mix(in srgb, var(--nro-teal-500) 8%, transparent);
+}
+
+.loader-screen.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.loader-screen__logo {
+    width: 44px;
+    height: auto;
+    margin-bottom: var(--nova-space-4);
+}
+
+.loader-screen__title {
+    margin: 0;
+    font-size: var(--nova-font-size-xl);
+    font-weight: var(--nova-font-weight-bold);
+    line-height: var(--nova-line-height-tight);
+    letter-spacing: var(--nova-letter-spacing-tight);
+    color: var(--nova-color-brand-900);
+}
+
+.loader-screen__subtitle {
+    margin: var(--nova-space-1) 0 var(--nova-space-6);
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-text-secondary);
+}
+
+.loader-screen .loader {
+    margin-bottom: var(--nova-space-2);
+}
+
+.loader-screen__message {
+    min-height: 1.4em;
+    margin: var(--nova-space-4) 0 0;
+    font-size: var(--nova-font-size-xs);
+    color: var(--nova-color-text-muted);
+    transition: opacity var(--nova-duration-fast);
+}
+
+/* barra de progresso opcional (indeterminada até receber um valor) */
+.loader-screen__progress {
+    position: relative;
+    width: min(220px, 70%);
+    height: 4px;
+    margin-top: var(--nova-space-4);
+    overflow: hidden;
+    border-radius: var(--nova-radius-pill);
+    background: var(--nova-color-border);
+}
+
+.loader-screen__progress>span {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: var(--progress, 30%);
+    border-radius: inherit;
+    background: var(--nova-color-brand-500);
+    transition: width var(--nova-duration-base) var(--nova-ease-standard);
+}
+
+.loader-screen__progress:not([data-value])>span {
+    animation: nova-indeterminate 1.4s var(--nova-ease-standard) infinite;
+}
+
+.loader-screen__footer {
+    position: absolute;
+    bottom: var(--nova-space-6);
+    left: 0;
+    right: 0;
+    margin: 0;
+    font-size: var(--nova-font-size-xs);
+    font-weight: var(--nova-font-weight-semibold);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--nova-color-text-muted);
+}
+
+/* erro: para as animações e mostra a mensagem e a ação */
+.loader-screen__error {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--nova-space-3);
+    max-width: 320px;
+}
+
+.loader-screen__error p {
+    margin: 0;
+    font-size: var(--nova-font-size-sm);
+    line-height: var(--nova-line-height-relaxed);
+    color: var(--nova-color-text-secondary);
+}
+
+.loader-screen.is-error .loader-dots,
+.loader-screen.is-error .loader,
+.loader-screen.is-error .loader-screen__progress,
+.loader-screen.is-error .loader-screen__message {
+    display: none;
+}
+
+.loader-screen.is-error .loader-screen__error {
+    display: flex;
+}
+
+.loader-screen.is-error .loader-screen__title {
+    color: var(--nova-color-text-primary);
+}
+
+/* =========================================================================
+   4. TRÊS PONTOS
+   ========================================================================= */
+.loader-dots {
+    --dot-size: 8px;
+    --dot-color: var(--nova-color-brand-500);
+    display: inline-flex;
+    align-items: center;
+    gap: calc(var(--dot-size) * .9);
+    height: calc(var(--dot-size) * 2);
+    vertical-align: middle;
+}
+
+.loader-dots>span {
+    width: var(--dot-size);
+    height: var(--dot-size);
+    border-radius: var(--nova-radius-pill);
+    background: var(--dot-color);
+    animation: nova-dots-bounce 1s ease-in-out infinite;
+}
+
+.loader-dots>span:nth-child(2) {
+    animation-delay: .15s;
+}
+
+.loader-dots>span:nth-child(3) {
+    animation-delay: .3s;
+}
+
+/* cores da marca, uma por ponto */
+.loader-dots--brand>span:nth-child(1) {
+    --dot-color: var(--nova-loader-c1);
+}
+
+.loader-dots--brand>span:nth-child(2) {
+    --dot-color: var(--nova-loader-c2);
+}
+
+.loader-dots--brand>span:nth-child(3) {
+    --dot-color: var(--nova-loader-c3);
+}
+
+.loader-dots--sm {
+    --dot-size: 5px;
+}
+
+.loader-dots--current {
+    --dot-color: currentColor;
+}
+
+@keyframes nova-dots-bounce {
+
+    0%,
+    80%,
+    100% {
+        opacity: .45;
+        transform: translateY(0);
+    }
+
+    40% {
+        opacity: 1;
+        transform: translateY(calc(var(--dot-size) * -.75));
+    }
+}
+
+/* =========================================================================
+   5. SPINNER (em linha: dentro de campo, botão, célula)
+   ========================================================================= */
+.spinner {
+    --spinner-size: 20px;
+    display: inline-block;
+    flex-shrink: 0;
+    width: var(--spinner-size);
+    height: var(--spinner-size);
+    border: calc(var(--spinner-size) * .12) solid color-mix(in srgb, currentColor 22%, transparent);
+    border-top-color: currentColor;
+    border-radius: 50%;
+    color: var(--nova-color-brand-500);
+    vertical-align: middle;
+    animation: nova-spin .7s linear infinite;
+}
+
+.spinner--sm {
+    --spinner-size: 14px;
+}
+
+.spinner--lg {
+    --spinner-size: 32px;
+}
+
+.spinner--current {
+    color: inherit;
+}
+
+@keyframes nova-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* texto ao lado: <span class="loading-inline"><span class="spinner spinner--sm"></span>Buscando…</span> */
+.loading-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nova-space-2);
+    font-family: var(--nova-font-family);
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-text-secondary);
+}
+
+/* =========================================================================
+   6. BARRA NO TOPO (troca de tela, salvamento em segundo plano)
+   ========================================================================= */
+.top-loader {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: var(--nova-z-toast);
+    height: 3px;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--nova-duration-base) ease;
+}
+
+.top-loader.is-active {
+    opacity: 1;
+}
+
+.top-loader__bar {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: var(--progress, 0%);
+    background: linear-gradient(90deg, var(--nova-loader-c1), var(--nova-loader-c2));
+    box-shadow: 0 0 8px color-mix(in srgb, var(--nova-loader-c2) 60%, transparent);
+    transition: width var(--nova-duration-slow) var(--nova-ease-standard);
+}
+
+/* barra dentro de um container (card, tabela) */
+.top-loader--inline {
+    position: absolute;
+    z-index: var(--nova-z-raised);
+}
+
+@keyframes nova-indeterminate {
+    0% {
+        left: -35%;
+        width: 35%;
+    }
+
+    60% {
+        left: 100%;
+        width: 60%;
+    }
+
+    100% {
+        left: 100%;
+        width: 60%;
+    }
+}
+
+/* =========================================================================
+   7. SKELETON
+   Mostra a forma do conteúdo enquanto ele carrega.
+
+   Três jeitos de usar:
+   a) Peças soltas:   <span class="skeleton skeleton--text"></span>
+   b) Modelos prontos: <div class="skeleton-list" data-rows="4"></div>
+                       ou NovaSkeleton.show(el, 'list', { rows: 4 })
+   c) No próprio layout: marque com data-sk os elementos que recebem dado
+      e coloque .is-loading no container. Eles viram skeleton no tamanho
+      real e voltam ao normal quando a classe sai.
+   ========================================================================= */
+:root {
+    /* derivados do texto sobre a superfície: visíveis no claro e no escuro */
+    --nova-skeleton-base: color-mix(in srgb, var(--nova-color-text-primary) 9%, var(--nova-color-bg-surface));
+    --nova-skeleton-shine: color-mix(in srgb, var(--nova-color-text-primary) 3%, var(--nova-color-bg-surface));
+}
+
+.skeleton {
+    display: block;
+    flex-shrink: 0;
+    width: var(--skeleton-width, 100%);
+    height: var(--skeleton-height, 12px);
+    border-radius: var(--nova-radius-xs);
+    background-color: var(--nova-skeleton-base);
+    /* brilho único para todos os skeletons da tela (attachment fixed) */
+    background-image: linear-gradient(100deg, transparent 30%, var(--nova-skeleton-shine) 50%, transparent 70%);
+    background-size: 200vw 100%;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    animation: nova-skeleton-shimmer 1.6s linear infinite;
+}
+
+@keyframes nova-skeleton-shimmer {
+    from {
+        background-position: 100vw 0;
+    }
+
+    to {
+        background-position: -100vw 0;
+    }
+}
+
+/* pulso (alternativa mais calma ao brilho) */
+.skeleton--pulse,
+.skeleton-pulse .skeleton,
+.skeleton-pulse [data-sk] {
+    background-image: none !important;
+    animation: nova-skeleton-pulse 1.4s ease-in-out infinite !important;
+}
+
+@keyframes nova-skeleton-pulse {
+    50% {
+        opacity: .5;
+    }
+}
+
+/* ----- formas ----- */
+.skeleton--text {
+    --skeleton-height: 12px;
+    margin: 4px 0;
+    border-radius: var(--nova-radius-pill);
+}
+
+.skeleton--text-sm {
+    --skeleton-height: 9px;
+    margin: 3px 0;
+    border-radius: var(--nova-radius-pill);
+}
+
+.skeleton--title {
+    --skeleton-height: 20px;
+    --skeleton-width: 55%;
+    margin: 4px 0 8px;
+    border-radius: var(--nova-radius-sm);
+}
+
+.skeleton--kpi {
+    --skeleton-height: 30px;
+    --skeleton-width: 40%;
+    border-radius: var(--nova-radius-sm);
+}
+
+.skeleton--circle {
+    --skeleton-size: 36px;
+    width: var(--skeleton-size);
+    height: var(--skeleton-size);
+    border-radius: 50%;
+}
+
+.skeleton--circle-sm {
+    --skeleton-size: 28px;
+}
+
+.skeleton--circle-lg {
+    --skeleton-size: 48px;
+}
+
+.skeleton--button {
+    --skeleton-width: 112px;
+    --skeleton-height: var(--nova-btn-height-md);
+    border-radius: var(--nova-radius-sm);
+}
+
+.skeleton--input {
+    --skeleton-height: var(--nova-input-height);
+    border-radius: var(--nova-radius-sm);
+}
+
+.skeleton--badge {
+    --skeleton-width: 64px;
+    --skeleton-height: 22px;
+    border-radius: var(--nova-radius-pill);
+}
+
+.skeleton--icon {
+    --skeleton-width: 20px;
+    --skeleton-height: 20px;
+    border-radius: var(--nova-radius-xs);
+}
+
+.skeleton--block {
+    --skeleton-height: auto;
+    aspect-ratio: var(--skeleton-ratio, 16 / 9);
+    border-radius: var(--nova-radius-md);
+}
+
+/* larguras prontas */
+.skeleton--w-25 {
+    --skeleton-width: 25%;
+}
+
+.skeleton--w-40 {
+    --skeleton-width: 40%;
+}
+
+.skeleton--w-60 {
+    --skeleton-width: 60%;
+}
+
+.skeleton--w-75 {
+    --skeleton-width: 75%;
+}
+
+.skeleton--w-90 {
+    --skeleton-width: 90%;
+}
+
+/* compatibilidade: dois skeletons seguidos ganham espaço */
+.skeleton+.skeleton:not(.skeleton--text):not(.skeleton--text-sm) {
+    margin-top: 6px;
+}
+
+/* ----- modelos prontos ----- */
+.skeleton-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nova-space-2);
+    min-width: 0;
+}
+
+.skeleton-row {
+    display: flex;
+    align-items: center;
+    gap: var(--nova-space-3);
+    min-width: 0;
+}
+
+.skeleton-row>.skeleton-stack {
+    flex: 1;
+    gap: 0;
+}
+
+/* parágrafo: última linha mais curta */
+.skeleton-paragraph .skeleton--text:last-child {
+    --skeleton-width: 60%;
+}
+
+/* lista: avatar + duas linhas */
+.skeleton-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.skeleton-list>.skeleton-row {
+    padding: var(--nova-space-3) var(--nova-space-4);
+}
+
+.skeleton-list>.skeleton-row+.skeleton-row {
+    border-top: var(--nova-border);
+}
+
+/* card */
+.skeleton-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nova-space-3);
+    padding: var(--nova-padding-card);
+    border: var(--nova-border);
+    border-radius: var(--nova-radius-md);
+    background: var(--nova-color-bg-surface);
+}
+
+.skeleton-card__footer {
+    display: flex;
+    gap: var(--nova-space-2);
+    margin-top: var(--nova-space-2);
+}
+
+/* card com foto (produto) — combina com .card--product */
+.skeleton-product {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: var(--nova-border);
+    border-radius: var(--nova-radius-md);
+    background: var(--nova-color-bg-surface);
+}
+
+.skeleton-product__media {
+    --skeleton-height: auto;
+    aspect-ratio: var(--skeleton-ratio, 1 / 1);
+    border-radius: 0;
+}
+
+.skeleton-product__tag {
+    position: absolute;
+    top: var(--nova-space-3);
+    left: var(--nova-space-3);
+    width: 40px;
+    height: 22px;
+    border: var(--nova-border);
+    border-radius: var(--nova-radius-pill);
+    background: var(--nova-color-bg-surface);
+}
+
+.skeleton-product__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nova-space-2);
+    padding: var(--nova-space-4) var(--nova-space-5);
+}
+
+.skeleton-product__price {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nova-space-3);
+    margin-top: var(--nova-space-3);
+}
+
+.skeleton-product .skeleton-product__price .skeleton.skeleton,
+.skeleton-product .skeleton-product__footer .skeleton.skeleton {
+    margin: 0;
+}
+
+.skeleton-product__price .skeleton--kpi {
+    --skeleton-height: 24px;
+}
+
+.skeleton-product__footer {
+    display: flex;
+    gap: var(--nova-space-2);
+    padding: var(--nova-space-3) var(--nova-space-5) var(--nova-space-4);
+    border-top: var(--nova-border);
+}
+
+.skeleton-product__footer .skeleton--button {
+    --skeleton-width: auto;
+    flex: 1;
+    --skeleton-height: var(--nova-btn-height-sm, 32px);
+}
+
+.skeleton-products {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--card-min, 220px), 1fr));
+    gap: var(--nova-space-4);
+}
+
+/* indicador (stat) */
+.skeleton-stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nova-space-3);
+    padding: var(--nova-padding-card);
+    border: var(--nova-border);
+    border-radius: var(--nova-radius-md);
+    background: var(--nova-color-bg-surface);
+}
+
+/* formulário: rótulo + campo */
+.skeleton-form {
+    display: grid;
+    grid-template-columns: repeat(var(--skeleton-cols, 2), minmax(0, 1fr));
+    gap: var(--nova-form-gap-y) var(--nova-form-gap-x);
+}
+
+.skeleton-form>.skeleton--input:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 767.98px) {
+    .skeleton-form {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* tabela: use dentro de <table class="data-table">, no <tbody> */
+.skeleton-table td {
+    padding: var(--nova-table-cell-padding);
+}
+
+.skeleton-table tr:hover>td {
+    background: transparent !important;
+}
+
+/* gráfico de barras */
+.skeleton-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 6%;
+    height: var(--skeleton-chart-height, 160px);
+    padding: var(--nova-space-3) var(--nova-space-2) 0;
+    border-bottom: 2px solid var(--nova-skeleton-base);
+}
+
+.skeleton-chart>.skeleton {
+    flex: 1;
+    --skeleton-height: var(--h, 60%);
+    border-radius: var(--nova-radius-xs) var(--nova-radius-xs) 0 0;
+}
+
+/* ----- no próprio layout (data-sk) ----- */
+.is-loading [data-sk] {
+    position: relative;
+    border-radius: var(--nova-radius-xs);
+    color: transparent !important;
+    background-color: var(--nova-skeleton-base) !important;
+    background-image: linear-gradient(100deg, transparent 30%, var(--nova-skeleton-shine) 50%, transparent 70%) !important;
+    background-size: 200vw 100% !important;
+    background-attachment: fixed !important;
+    background-repeat: no-repeat !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    animation: nova-skeleton-shimmer 1.6s linear infinite;
+    user-select: none;
+    pointer-events: none;
+}
+
+.is-loading [data-sk]>* {
+    visibility: hidden;
+}
+
+/* texto vazio ainda precisa de altura e largura */
+.is-loading [data-sk]:empty::before {
+    content: "\00a0";
+    display: inline-block;
+    min-width: var(--sk-width, 8em);
+}
+
+.is-loading [data-sk="block"] {
+    display: block;
+}
+
+.is-loading [data-sk="circle"] {
+    border-radius: 50% !important;
+}
+
+.is-loading [data-sk="pill"] {
+    border-radius: var(--nova-radius-pill) !important;
+}
+
+/* recalcula as cores quando o tema é aplicado num container */
+[data-theme] {
+    --nova-skeleton-base: color-mix(in srgb, var(--nova-color-text-primary) 9%, var(--nova-color-bg-surface));
+    --nova-skeleton-shine: color-mix(in srgb, var(--nova-color-text-primary) 3%, var(--nova-color-bg-surface));
+}
+
+/* NovaSkeleton.show(): esconde o conteúdo e mostra o skeleton no lugar */
+.is-skeleton-active> :not([data-skeleton-host]) {
+    display: none !important;
+}
+
+/* conteúdo entra suavemente ao trocar o skeleton pelo real */
+.skeleton-reveal {
+    animation: nova-fade-in var(--nova-duration-base) ease-out;
+}
+
+/* =========================================================================
+   ACESSIBILIDADE
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+
+    /* marca: para de girar e só pulsa, bem devagar */
+    .loader {
+        animation: nova-loader-pulse 2s ease-in-out infinite;
+    }
+
+    .loader::before,
+    .loader::after {
+        animation: none;
+    }
+
+    .loader-dots>span {
+        animation-duration: 2s;
+    }
+
+    .spinner {
+        animation-duration: 1.6s;
+    }
+
+    /* skeleton: sem brilho correndo, só um pulso lento */
+    .skeleton,
+    .is-loading [data-sk] {
+        background-image: none !important;
+        animation: nova-skeleton-pulse 2.4s ease-in-out infinite !important;
+    }
+
+    .loader-overlay,
+    .loader-screen,
+    .top-loader,
+    .top-loader__bar {
+        transition: none;
+    }
+}
+
+@keyframes nova-loader-pulse {
+    50% {
+        opacity: .5;
+    }
+}

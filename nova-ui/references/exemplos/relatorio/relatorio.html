@@ -1,0 +1,318 @@
+<#--
+  Relatório de abono · view.ftl da widget (sugestão de estrutura, não é regra)
+  Nova UI: carregue no layout da página ou como recurso da widget:
+    https://nova-ui.novarotadooeste.com.br/v1/min/nova-ui.min.css
+    https://nova-ui.novarotadooeste.com.br/v1/min/nova-ui.min.js
+  relatorio-abono.css e relatorio-abono.js: recursos desta widget.
+-->
+<div id="RelatorioAbono_${instanceId}" class="super-widget wcm-widget-class fluig-style-guide" data-params="RelatorioAbono.instance()">
+  <div class="report" data-report-root>
+    <header class="card card--flat report-header">
+      <div class="card__body">
+        <nav aria-label="Você está aqui">
+          <ol class="breadcrumb">
+            <li class="breadcrumb__item"><span class="breadcrumb__link">Início</span></li>
+            <li class="breadcrumb__item"><span class="breadcrumb__link">Relatórios</span></li>
+            <li class="breadcrumb__item"><span class="breadcrumb__current" aria-current="page">Abono</span></li>
+          </ol>
+        </nav>
+        <div class="report-header__row">
+          <span class="icon-tile icon-tile--lg"><span class="icon" aria-hidden="true">receipt_long</span></span>
+          <div class="report-header__title">
+            <h1 class="text-h2 margin-0">Relatório de abono</h1>
+            <p class="text-body-sm text-secondary margin-bottom-0 margin-top-1">
+              Arrecadação ·
+              <span data-report="atualizado">carregando…</span>
+            </p>
+          </div>
+          <div class="report-header__actions">
+            <div class="field field--compact field--select report-month">
+              <div class="field__control">
+                <span class="field__icon"><span class="icon" aria-hidden="true">calendar_month</span></span>
+                <div class="field__body">
+                  <label class="field__label" for="report-month">Mês de referência</label>
+                  <select class="field__input" id="report-month" data-enhance>
+                    <option value="2026-09">Setembro de 2026</option>
+                    <option value="2026-08" selected>Agosto de 2026</option>
+                    <option value="2026-07">Julho de 2026</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn--secondary btn--icon"
+              data-report="recarregar"
+              data-tip="Recarregar"
+              aria-label="Recarregar"
+            >
+              <span class="icon" aria-hidden="true">refresh</span>
+            </button>
+            <button
+              type="button"
+              class="btn btn--primary"
+              data-menu="menu-exportar"
+              aria-haspopup="menu"
+              aria-expanded="false"
+            >
+              <span class="icon" aria-hidden="true">download</span>
+              <span>Exportar</span>
+              <span class="icon" aria-hidden="true">expand_more</span>
+            </button>
+            <div class="menu" id="menu-exportar" hidden>
+              <button type="button" class="menu__item" data-value="excel">
+                <span class="icon" aria-hidden="true">table_view</span>
+                <span class="menu__label">Planilha (Excel)</span>
+              </button>
+              <button type="button" class="menu__item" data-value="csv">
+                <span class="icon" aria-hidden="true">description</span>
+                <span class="menu__label">CSV</span>
+              </button>
+              <div class="menu__separator" role="separator"></div>
+              <button type="button" class="menu__item" data-value="pdf">
+                <span class="icon" aria-hidden="true">print</span>
+                <span class="menu__label">Imprimir</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="tabs report-header__tabs">
+          <div class="tabs__list" role="tablist" aria-label="Tipo de relatório">
+            <button type="button" class="tabs__tab" role="tab" aria-selected="true" data-tipo="abono">
+              <span class="icon" aria-hidden="true">volunteer_activism</span>
+              Abono
+              <span class="tabs__count" data-report="n-abono">0</span>
+            </button>
+            <button type="button" class="tabs__tab" role="tab" aria-selected="false" data-tipo="desconto">
+              <span class="icon" aria-hidden="true">payments</span>
+              Desconto em folha
+              <span class="tabs__count" data-report="n-desconto">0</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="stat-group report-kpis">
+      <div class="stat">
+        <div class="stat__header">
+          <p class="stat__label" data-report="qtd-label">Solicitações</p>
+          <span class="stat__icon"><span class="icon" aria-hidden="true">receipt_long</span></span>
+        </div>
+        <p class="stat__value" data-report="qtd">—</p>
+        <div class="stat__footer" data-report="qtd-foot"></div>
+      </div>
+      <div class="stat">
+        <div class="stat__header">
+          <p class="stat__label" data-report="qcx-label">Soma do QCX original</p>
+          <span class="stat__icon stat__icon--teal">
+            <span class="icon" aria-hidden="true">account_balance_wallet</span>
+          </span>
+        </div>
+        <p class="stat__value" data-report="qcx">—</p>
+        <div class="stat__footer" data-report="qcx-foot"></div>
+      </div>
+      <div class="stat">
+        <div class="stat__header">
+          <p class="stat__label" data-report="valor-label">Valor abonado</p>
+          <span class="stat__icon stat__icon--success">
+            <span class="icon" aria-hidden="true">check_circle</span>
+          </span>
+        </div>
+        <p class="stat__value" data-report="valor">—</p>
+        <div
+          class="progress progress--sm progress--success"
+          role="progressbar"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-label="Valor abonado em relação ao QCX"
+          data-report="valor-prog"
+        >
+          <span class="progress__bar"></span>
+        </div>
+        <div class="stat__footer" data-report="valor-foot"></div>
+      </div>
+      <div class="stat">
+        <div class="stat__header">
+          <p class="stat__label" data-report="resto-label">Remanescente</p>
+          <span class="stat__icon stat__icon--warning">
+            <span class="icon" aria-hidden="true">pending</span>
+          </span>
+        </div>
+        <p class="stat__value" data-report="resto">—</p>
+        <div
+          class="progress progress--sm progress--warning"
+          role="progressbar"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-label="Remanescente em relação ao QCX"
+          data-report="resto-prog"
+        >
+          <span class="progress__bar"></span>
+        </div>
+        <div class="stat__footer" data-report="resto-foot"></div>
+      </div>
+    </div>
+
+    <div class="card-group card-group--2 report-insights">
+      <section class="card card--flat">
+        <div class="card__header">
+          <span class="icon-tile icon-tile--teal"><span class="icon" aria-hidden="true">toll</span></span>
+          <div class="card__heading">
+            <h2 class="card__title">Por praça</h2>
+            <p class="card__subtitle">Valor e participação no total</p>
+          </div>
+        </div>
+        <div class="card__body"><ul class="list list--divided" data-report="pracas"></ul></div>
+      </section>
+      <section class="card card--flat">
+        <div class="card__header">
+          <span class="icon-tile"><span class="icon" aria-hidden="true">leaderboard</span></span>
+          <div class="card__heading">
+            <h2 class="card__title">Principais motivos</h2>
+            <p class="card__subtitle">Os mais frequentes no período</p>
+          </div>
+        </div>
+        <div class="card__body"><ul class="list list--divided" data-report="motivos"></ul></div>
+      </section>
+    </div>
+
+    <section class="table-card" aria-label="Solicitações">
+      <div class="table-card__header">
+        <div>
+          <h2 class="table-card__title">
+            Solicitações
+            <span class="badge badge--neutral badge--sm" data-report="total">0</span>
+          </h2>
+          <p class="table-card__subtitle">Clique numa linha para ver o detalhe</p>
+        </div>
+        <div class="table-card__actions">
+          <div class="field field--compact report-search">
+            <div class="field__control">
+              <span class="field__icon"><span class="icon" aria-hidden="true">search</span></span>
+              <div class="field__body">
+                <label class="field__label" for="report-search">Buscar</label>
+                <input
+                  class="field__input"
+                  id="report-search"
+                  type="search"
+                  placeholder="Nome, código ou nº do processo"
+                  autocomplete="off"
+                />
+              </div>
+              <div class="field__actions">
+                <button type="button" class="field__clear" aria-label="Limpar busca">
+                  <span class="icon" aria-hidden="true">close</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="report-filters">
+        <span class="text-caption text-secondary">Atividade:</span>
+        <div class="tag-list" data-report="status">
+          <button type="button" class="tag" aria-pressed="false" data-value="aberta">Aberta</button>
+          <button type="button" class="tag" aria-pressed="false" data-value="analise">Em análise</button>
+          <button type="button" class="tag" aria-pressed="false" data-value="concluida">Concluída</button>
+          <button type="button" class="tag" aria-pressed="false" data-value="cancelada">Cancelada</button>
+        </div>
+        <button type="button" class="btn btn--ghost btn--sm" data-report="limpar-filtros" hidden>
+          <span class="icon" aria-hidden="true">filter_alt_off</span>
+          <span>Limpar filtros</span>
+        </button>
+      </div>
+      <div class="table-bulk" data-bulk-for="tabela-solicitacoes" hidden>
+        <span class="table-bulk__count" data-bulk-count></span>
+        <button type="button" class="btn btn--ghost btn--sm" data-bulk-clear>Limpar seleção</button>
+        <div class="table-bulk__actions">
+          <button type="button" class="btn btn--secondary btn--sm" data-report="exportar-sel">
+            <span class="icon" aria-hidden="true">download</span>
+            <span>Exportar selecionadas</span>
+          </button>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table class="data-table data-table--stack" id="tabela-solicitacoes" data-sort="server">
+          <thead>
+            <tr>
+              <th class="cell-check" scope="col">
+                <input
+                  type="checkbox"
+                  class="data-table__check"
+                  data-select-all
+                  aria-label="Selecionar todas"
+                />
+              </th>
+              <th scope="col" aria-sort="none" data-key="proc">
+                <button type="button" class="data-table__sort">Processo</button>
+              </th>
+              <th scope="col" aria-sort="none" data-key="solicitante">
+                <button type="button" class="data-table__sort">Solicitante</button>
+              </th>
+              <th scope="col" aria-sort="none" data-key="operador">
+                <button type="button" class="data-table__sort">Operador</button>
+              </th>
+              <th scope="col" aria-sort="none" data-key="data">
+                <button type="button" class="data-table__sort">Fechamento</button>
+              </th>
+              <th scope="col" aria-sort="none" data-key="praca">
+                <button type="button" class="data-table__sort">Praça</button>
+              </th>
+              <th scope="col" aria-sort="none" data-key="qcx" class="cell-num">
+                <button type="button" class="data-table__sort">QCX original</button>
+              </th>
+              <th scope="col" aria-sort="none" data-key="valor" class="cell-num">
+                <button type="button" class="data-table__sort">Abono</button>
+              </th>
+              <th scope="col" aria-sort="none" data-key="resto" class="cell-num">
+                <button type="button" class="data-table__sort">Remanescente</button>
+              </th>
+              <th scope="col" aria-sort="none" data-key="status">
+                <button type="button" class="data-table__sort">Atividade</button>
+              </th>
+            </tr>
+          </thead>
+          <tbody data-report="linhas"></tbody>
+        </table>
+      </div>
+      <div class="table-empty" data-report="vazio" hidden>
+        <span class="icon-tile icon-tile--neutral table-empty__icon">
+          <span class="icon" aria-hidden="true">search_off</span>
+        </span>
+        <p class="table-empty__title">Nenhuma solicitação encontrada</p>
+        <p class="table-empty__text">Mude o mês, os filtros de atividade ou o termo da busca.</p>
+      </div>
+      <div class="table-card__footer">
+        <span data-report="mostrando"></span>
+        <nav aria-label="Paginação"><ul class="pagination" data-report="paginas"></ul></nav>
+      </div>
+    </section>
+
+    <dialog class="dialog dialog--drawer" id="detalhe-processo" aria-labelledby="detalhe-processo-titulo">
+      <div class="dialog__header">
+        <span class="avatar" data-report="det-avatar"></span>
+        <div class="dialog__heading">
+          <h2 class="dialog__title" id="detalhe-processo-titulo">Processo</h2>
+          <p class="dialog__subtitle" data-report="det-sub"></p>
+        </div>
+        <button
+          type="button"
+          class="btn btn--tertiary btn--sm btn--icon dialog__close"
+          data-dialog-close
+          aria-label="Fechar"
+        >
+          <span class="icon" aria-hidden="true">close</span>
+        </button>
+      </div>
+      <div class="dialog__body" data-report="det-corpo"></div>
+      <div class="dialog__footer">
+        <button type="button" class="btn btn--secondary" data-dialog-close>Fechar</button>
+        <button type="button" class="btn btn--primary" data-report="det-abrir">
+          <span class="icon" aria-hidden="true">open_in_new</span>
+          <span>Abrir no Fluig</span>
+        </button>
+      </div>
+    </dialog>
+  </div>
+</div>

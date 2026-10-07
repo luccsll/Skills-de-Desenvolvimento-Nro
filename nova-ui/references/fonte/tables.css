@@ -1,0 +1,744 @@
+/* =========================================================================
+   NOVA UI — TABELAS
+   Depende dos tokens --nova-*, de buttons.css e badges.css.
+   O estado de carregamento (skeleton) fica em loaders.css.
+
+   Classe .data-table (e não .table) para não herdar o .table do Bootstrap 3
+   carregado pelo Fluig, cujos seletores (.table>thead>tr>th) têm
+   especificidade maior e sobrescreveriam padding, bordas e alinhamento.
+
+   Estrutura:
+     .table-card                 container com borda (opcional)
+       .table-card__header       título, contador e ações
+       .table-bulk               barra de ações em lote (aparece ao selecionar)
+       .table-scroll             rolagem horizontal/vertical
+         table.data-table
+       .table-card__footer       paginação
+   ========================================================================= */
+
+:root {
+    --nova-table-header-bg: var(--nova-color-bg-subtle);
+    --nova-table-cell-padding-compact: var(--nova-space-2) var(--nova-space-3);
+    --nova-table-cell-padding-relaxed: var(--nova-space-4) var(--nova-space-5);
+}
+
+/* ===== CARD ===== */
+.table-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background: var(--nova-color-bg-surface);
+    border: 1px solid var(--nova-color-border);
+    border-radius: var(--nova-radius-md);
+    box-shadow: var(--nova-shadow-sm);
+    font-family: var(--nova-font-family);
+    overflow: hidden;
+}
+
+.table-card__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nova-space-3);
+    padding: var(--nova-space-4) var(--nova-space-5);
+    border-bottom: 1px solid var(--nova-color-border);
+}
+
+.table-card__title {
+    display: flex;
+    align-items: center;
+    gap: var(--nova-space-2);
+    margin: 0;
+    font-size: var(--nova-font-size-md);
+    font-weight: var(--nova-font-weight-semibold);
+    line-height: var(--nova-line-height-tight);
+    color: var(--nova-color-text-primary);
+}
+
+.table-card__subtitle {
+    margin: 2px 0 0;
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-text-secondary);
+}
+
+.table-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nova-space-2);
+    margin-left: auto;
+}
+
+.table-card__actions .field--compact {
+    width: 260px;
+    max-width: 100%;
+}
+
+.table-card__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nova-space-3);
+    padding: var(--nova-space-3) var(--nova-space-5);
+    border-top: 1px solid var(--nova-color-border);
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-text-secondary);
+}
+
+/* ===== AÇÕES EM LOTE ===== */
+.table-bulk {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nova-space-3);
+    padding: var(--nova-space-2) var(--nova-space-5);
+    background: var(--nova-table-row-selected);
+    border-bottom: 1px solid var(--nova-color-brand-100);
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-brand-900);
+}
+
+.table-bulk[hidden] {
+    display: none;
+}
+
+.table-bulk__count {
+    font-weight: var(--nova-font-weight-semibold);
+}
+
+.table-bulk__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nova-space-2);
+    margin-left: auto;
+}
+
+/* ===== ROLAGEM ===== */
+/* --table-min-width na tabela força rolagem horizontal abaixo dessa largura */
+.table-scroll {
+    position: relative;
+    width: 100%;
+    overflow: auto;
+    max-height: var(--table-max-height, none);
+    -webkit-overflow-scrolling: touch;
+}
+
+/* ===== TABELA BASE ===== */
+.data-table {
+    width: 100%;
+    min-width: var(--table-min-width, 0);
+    margin: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--nova-color-bg-surface);
+    font-family: var(--nova-font-family);
+    font-size: var(--nova-font-size-base);
+    line-height: var(--nova-line-height-base);
+    color: var(--nova-color-text-primary);
+    text-align: left;
+}
+
+.data-table caption {
+    padding: var(--nova-space-3) var(--nova-space-4);
+    caption-side: top;
+    text-align: left;
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-text-secondary);
+}
+
+.data-table th,
+.data-table td {
+    padding: var(--nova-table-cell-padding);
+    border-bottom: 1px solid var(--nova-color-border);
+    vertical-align: middle;
+    text-align: left;
+}
+
+.data-table thead th {
+    background: var(--nova-table-header-bg);
+    font-size: var(--nova-font-size-sm);
+    font-weight: var(--nova-font-weight-semibold);
+    line-height: var(--nova-line-height-tight);
+    color: var(--nova-color-text-secondary);
+    white-space: nowrap;
+}
+
+.data-table tbody tr:last-child>* {
+    border-bottom: 0;
+}
+
+.data-table tbody th {
+    font-weight: var(--nova-font-weight-medium);
+}
+
+/* hover de linha (padrão). Desligue com .data-table--static */
+.data-table tbody tr {
+    transition: background var(--nova-transition-fast);
+}
+
+.data-table:not(.data-table--static) tbody tr:hover>* {
+    background: var(--nova-table-row-hover);
+}
+
+/* linha clicável */
+.data-table tr.is-clickable {
+    cursor: pointer;
+}
+
+/* linha selecionada */
+.data-table tbody tr.is-selected>*,
+.data-table tbody tr[aria-selected="true"]>* {
+    background: var(--nova-table-row-selected);
+}
+
+.data-table:not(.data-table--static) tbody tr.is-selected:hover>*,
+.data-table:not(.data-table--static) tbody tr[aria-selected="true"]:hover>* {
+    background: var(--nova-table-row-selected-hover);
+}
+
+/* linha desativada / inativa */
+.data-table tbody tr.is-muted>* {
+    color: var(--nova-color-text-muted);
+}
+
+/* rodapé de totais */
+.data-table tfoot th,
+.data-table tfoot td {
+    border-top: 1px solid var(--nova-color-border-strong);
+    border-bottom: 0;
+    background: var(--nova-table-header-bg);
+    font-weight: var(--nova-font-weight-semibold);
+}
+
+/* ===== MODIFICADORES ===== */
+.data-table--striped tbody tr:nth-child(even)>* {
+    background: var(--nova-color-bg-subtle);
+}
+
+.data-table--compact {
+    --nova-table-cell-padding: var(--nova-table-cell-padding-compact);
+    font-size: var(--nova-font-size-sm);
+}
+
+.data-table--relaxed {
+    --nova-table-cell-padding: var(--nova-table-cell-padding-relaxed);
+}
+
+.data-table--bordered th+th,
+.data-table--bordered td+td,
+.data-table--bordered th+td,
+.data-table--bordered td+th {
+    border-left: 1px solid var(--nova-color-border);
+}
+
+/* cabeçalho fixo — use dentro de .table-scroll com --table-max-height */
+.data-table--sticky thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    box-shadow: inset 0 -1px 0 var(--nova-color-border);
+    border-bottom: 0;
+}
+
+/* primeira coluna fixa na rolagem horizontal */
+.data-table--sticky-first tr>*:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: var(--nova-color-bg-surface);
+    box-shadow: inset -1px 0 0 var(--nova-color-border);
+}
+
+.data-table--sticky-first thead tr>*:first-child {
+    z-index: 3;
+    background: var(--nova-table-header-bg);
+}
+
+/* ===== TIPOS DE CÉLULA ===== */
+.data-table .cell-num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.data-table .cell-center {
+    text-align: center;
+}
+
+.data-table .cell-nowrap {
+    white-space: nowrap;
+}
+
+.data-table .cell-mono {
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: var(--nova-font-size-sm);
+}
+
+/* texto longo cortado com reticências (use title="" com o texto completo) */
+.data-table .cell-truncate {
+    max-width: var(--cell-max-width, 240px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* coluna de checkbox */
+.data-table .cell-check {
+    width: 48px;
+    padding-right: 0;
+    text-align: center;
+}
+
+/* coluna de ações: encolhe ao conteúdo e alinha à direita */
+.data-table .cell-actions {
+    width: 1%;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.cell-actions__group {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nova-space-1);
+}
+
+/* texto secundário embaixo do principal */
+.cell-sub {
+    display: block;
+    margin-top: 2px;
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-text-secondary);
+    font-weight: var(--nova-font-weight-regular);
+}
+
+/* avatar + nome + cargo */
+.cell-user {
+    display: flex;
+    align-items: center;
+    gap: var(--nova-space-3);
+    min-width: 0;
+}
+
+.cell-user__avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--nova-radius-pill);
+    background: var(--nova-info-bg);
+    color: var(--nova-color-brand-700);
+    font-size: var(--nova-font-size-sm);
+    font-weight: var(--nova-font-weight-semibold);
+    overflow: hidden;
+}
+
+.cell-user__avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.data-table--compact .cell-user__avatar {
+    width: 28px;
+    height: 28px;
+    font-size: var(--nova-font-size-xs);
+}
+
+.cell-user__name {
+    display: block;
+    white-space: nowrap;
+    font-weight: var(--nova-font-weight-semibold);
+    color: var(--nova-color-text-primary);
+}
+
+.cell-link {
+    color: var(--nova-color-brand-500);
+    font-weight: var(--nova-font-weight-medium);
+    text-decoration: none;
+}
+
+.cell-link:hover {
+    color: var(--nova-color-brand-700);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* badges lado a lado na célula (no modo empilhado voltam a quebrar linha) */
+.data-table .badge-list {
+    flex-wrap: nowrap;
+}
+
+/* ===== ORDENAÇÃO ===== */
+.data-table__sort {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nova-space-1);
+    margin: -4px -6px;
+    padding: 4px 6px;
+    border: 0;
+    border-radius: var(--nova-radius-sm);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.data-table__sort:hover {
+    background: var(--nova-color-hover);
+    color: var(--nova-color-text-primary);
+}
+
+.data-table__sort:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--nova-color-brand-500);
+}
+
+.data-table__sort::after {
+    content: "unfold_more";
+    font-family: var(--nova-icon-font);
+    font-size: 16px;
+    font-weight: normal;
+    font-style: normal;
+    font-variation-settings: 'FILL' 0, 'wght' var(--nova-icon-weight), 'GRAD' 0, 'opsz' 20;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: 'liga';
+    flex-shrink: 0;
+    width: 16px;
+    overflow: hidden;
+    opacity: .45;
+}
+
+th[aria-sort="ascending"] .data-table__sort,
+th[aria-sort="descending"] .data-table__sort {
+    color: var(--nova-color-brand-500);
+}
+
+th[aria-sort="ascending"] .data-table__sort::after,
+th[aria-sort="descending"] .data-table__sort::after {
+    content: "arrow_upward";
+    opacity: 1;
+}
+
+th[aria-sort="descending"] .data-table__sort::after {
+    transform: rotate(180deg);
+}
+
+.data-table th.cell-num .data-table__sort {
+    flex-direction: row-reverse;
+}
+
+/* ===== CHECKBOX DA TABELA ===== */
+.data-table__check {
+    -webkit-appearance: none;
+    appearance: none;
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    vertical-align: middle;
+    border: 1.5px solid var(--nova-color-border-strong);
+    border-radius: 4px;
+    background: var(--nova-color-bg-surface) center / 14px no-repeat;
+    cursor: pointer;
+    transition: background-color var(--nova-transition-fast), border-color var(--nova-transition-fast);
+}
+
+.data-table__check:hover {
+    border-color: var(--nova-color-brand-500);
+}
+
+.data-table__check:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--nova-color-brand-100);
+}
+
+.data-table__check:checked,
+.data-table__check:indeterminate {
+    border-color: var(--nova-color-brand-500);
+    background-color: var(--nova-color-brand-500);
+}
+
+.data-table__check:checked {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+}
+
+.data-table__check:indeterminate {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 12h12'/%3E%3C/svg%3E");
+}
+
+.data-table__check:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+/* ===== ESTADO VAZIO ===== */
+.data-table .cell-empty {
+    padding: var(--nova-space-12) var(--nova-space-6);
+    text-align: center;
+    border-bottom: 0;
+}
+
+.data-table:not(.data-table--static) tbody tr:hover>.cell-empty {
+    background: var(--nova-color-bg-surface);
+}
+
+.table-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--nova-space-2);
+    max-width: 360px;
+    margin: 0 auto;
+}
+
+.table-empty__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    margin-bottom: var(--nova-space-1);
+    border-radius: var(--nova-radius-pill);
+    background: var(--nova-color-bg-subtle);
+    color: var(--nova-color-text-muted);
+}
+
+.table-empty__icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.table-empty__icon .icon {
+    --icon-size: 22px;
+}
+
+.table-empty__title {
+    margin: 0;
+    font-size: var(--nova-font-size-md);
+    font-weight: var(--nova-font-weight-semibold);
+    color: var(--nova-color-text-primary);
+}
+
+.table-empty__text {
+    margin: 0 0 var(--nova-space-2);
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-text-secondary);
+}
+
+/* Carregando: use o skeleton de loaders.css (.skeleton-table ou .skeleton) */
+
+/* ===== PAGINAÇÃO ===== */
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: var(--nova-space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pagination__page {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 var(--nova-space-2);
+    border: 1px solid transparent;
+    border-radius: var(--nova-radius-sm);
+    background: transparent;
+    color: var(--nova-color-text-secondary);
+    font-family: inherit;
+    font-size: var(--nova-font-size-sm);
+    font-weight: var(--nova-font-weight-medium);
+    font-variant-numeric: tabular-nums;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background var(--nova-transition-fast), color var(--nova-transition-fast);
+}
+
+.pagination__page:hover {
+    background: var(--nova-color-hover);
+    color: var(--nova-color-text-primary);
+    text-decoration: none;
+}
+
+.pagination__page:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--nova-color-brand-100);
+}
+
+.pagination__page[aria-current="page"] {
+    border-color: var(--nova-color-brand-500);
+    background: var(--nova-table-row-selected);
+    color: var(--nova-color-brand-500);
+    font-weight: var(--nova-font-weight-semibold);
+}
+
+.pagination__page:disabled,
+.pagination__page[aria-disabled="true"] {
+    opacity: .4;
+    pointer-events: none;
+}
+
+.pagination__page svg {
+    width: 16px;
+    height: 16px;
+}
+
+.pagination__page .icon {
+    --icon-size: 16px;
+}
+
+.pagination__gap {
+    padding: 0 var(--nova-space-1);
+    color: var(--nova-color-text-muted);
+}
+
+.pagination-size {
+    display: flex;
+    align-items: center;
+    gap: var(--nova-space-2);
+    white-space: nowrap;
+}
+
+.pagination-size .field {
+    width: 80px;
+}
+
+.pagination-size .field--compact .field__control {
+    min-height: 32px;
+}
+
+/* ===== EMPILHADA NO CELULAR =====
+   .data-table--stack vira lista de cards abaixo de 768px.
+   Cada td usa data-label (tables.js preenche a partir do cabeçalho). */
+@media (max-width: 767.98px) {
+    .data-table--stack thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+    }
+
+    .data-table--stack,
+    .data-table--stack tbody,
+    .data-table--stack tr,
+    .data-table--stack td,
+    .data-table--stack tbody th {
+        display: block;
+        width: 100%;
+    }
+
+    .data-table--stack tbody tr {
+        position: relative;
+        padding: var(--nova-space-3) var(--nova-space-4);
+        border-bottom: 1px solid var(--nova-color-border);
+    }
+
+    .data-table--stack tbody tr:last-child {
+        border-bottom: 0;
+    }
+
+    .data-table--stack tbody tr>* {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--nova-space-3);
+        padding: var(--nova-space-1) 0;
+        border: 0;
+        text-align: right;
+        background: transparent !important;
+    }
+
+    .data-table--stack tbody tr>*[data-label]::before {
+        content: attr(data-label);
+        flex-shrink: 0;
+        font-family: var(--nova-font-family);
+        font-size: var(--nova-font-size-sm);
+        font-weight: var(--nova-font-weight-medium);
+        color: var(--nova-color-text-secondary);
+        text-align: left;
+    }
+
+    /* célula principal (ex: integrante) ocupa a linha sem rótulo */
+    .data-table--stack tbody tr>.cell-primary {
+        justify-content: flex-start;
+        padding-bottom: var(--nova-space-2);
+        text-align: left;
+    }
+
+    .data-table--stack tbody tr>.cell-primary::before {
+        display: none;
+    }
+
+    .data-table--stack .cell-check {
+        position: absolute;
+        top: var(--nova-space-4);
+        right: var(--nova-space-4);
+        width: auto;
+        padding: 0;
+    }
+
+    .data-table--stack .cell-check::before {
+        display: none;
+    }
+
+    .data-table--stack .cell-actions {
+        width: 100%;
+        justify-content: flex-end;
+        padding-top: var(--nova-space-2);
+    }
+
+    .data-table--stack .cell-actions::before {
+        display: none;
+    }
+
+    .data-table--stack .badge-list {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    .data-table--stack {
+        min-width: 0;
+    }
+
+    .data-table--stack .cell-truncate {
+        max-width: none;
+        white-space: normal;
+    }
+
+    .data-table--stack tbody tr.is-selected {
+        background: var(--nova-table-row-selected);
+    }
+
+    .data-table--stack .cell-empty {
+        justify-content: center;
+    }
+
+    .table-card__actions {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .table-card__actions .field--compact {
+        width: 100%;
+    }
+}
+
+/* ===== ACESSIBILIDADE ===== */
+@media (prefers-reduced-motion: reduce) {
+    .data-table tbody tr {
+        transition: none;
+    }
+}

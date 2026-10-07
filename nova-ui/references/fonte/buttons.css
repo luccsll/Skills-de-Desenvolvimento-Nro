@@ -1,0 +1,428 @@
+/* =========================================================================
+   NOVA UI — BOTÕES
+   Depende dos tokens --nova-* do :root principal.
+
+   Cada variante só define variáveis (--btn-*); os estados (hover, active,
+   foco, desabilitado, carregando) são tratados uma vez no .btn base.
+   Isso também evita que o .btn do Bootstrap 3 (carregado pelo Fluig) troque
+   a cor do texto no hover/foco — carregue este arquivo DEPOIS do CSS do Fluig.
+
+   Variantes:  primary | secondary | tertiary | ghost | danger |
+               secondary-danger | success | soft-info | soft-success |
+               soft-warning | soft-danger
+   Tamanhos:   --sm (32px) | padrão (40px) | --lg (48px)
+   Extras:     --icon (só ícone) | --block | __badge | .btn-segmented
+   ========================================================================= */
+
+:root {
+
+    --nova-btn-icon-sm: 16px;
+    --nova-btn-icon-md: 18px;
+    --nova-btn-icon-lg: 20px;
+
+}
+
+/* ===== BASE ===== */
+.btn {
+    /* variáveis da variante (padrão = secundário neutro) */
+    --btn-bg: var(--nova-color-bg-surface);
+    --btn-fg: var(--nova-color-brand-900);
+    --btn-border: var(--nova-color-border-strong);
+    --btn-bg-hover: var(--btn-bg);
+    --btn-fg-hover: var(--btn-fg);
+    --btn-border-hover: var(--btn-border);
+    --btn-bg-active: var(--btn-bg-hover);
+    --btn-filter-hover: none;
+    --btn-ring: var(--nova-color-brand-100);
+    --btn-badge-bg: var(--nova-color-brand-500);
+    --btn-badge-fg: var(--nova-color-text-inverse);
+
+    /* variáveis de tamanho (padrão = md) */
+    --btn-height: var(--nova-btn-height-md);
+    --btn-padding-x: var(--nova-space-5);
+    --btn-font-size: var(--nova-font-size-base);
+    --btn-icon: var(--nova-btn-icon-md);
+
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--nova-space-2);
+    height: var(--btn-height);
+    margin: 0;
+    padding: 0 var(--btn-padding-x);
+    border: 1px solid var(--btn-border);
+    border-radius: var(--nova-radius-sm);
+    background: var(--btn-bg);
+    background-image: none;
+    color: var(--btn-fg);
+    font-family: var(--nova-font-family);
+    font-size: var(--btn-font-size);
+    font-weight: var(--nova-font-weight-semibold);
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    box-shadow: none;
+    transition: background var(--nova-transition-fast), border-color var(--nova-transition-fast), color var(--nova-transition-fast), filter var(--nova-transition-fast), box-shadow var(--nova-transition-fast), transform .04s ease, opacity var(--nova-transition-fast);
+}
+
+.btn:focus {
+    color: var(--btn-fg);
+    outline: none;
+    text-decoration: none;
+}
+
+.btn:hover {
+    background: var(--btn-bg-hover);
+    border-color: var(--btn-border-hover);
+    color: var(--btn-fg-hover);
+    filter: var(--btn-filter-hover);
+    text-decoration: none;
+}
+
+.btn:active,
+.btn.is-active {
+    background: var(--btn-bg-active);
+    border-color: var(--btn-border-hover);
+    color: var(--btn-fg-hover);
+    box-shadow: none;
+    transform: translateY(1px);
+}
+
+.btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--btn-ring);
+}
+
+.btn[hidden] {
+    display: none;
+}
+
+.btn:disabled,
+.btn.is-disabled,
+.btn[aria-disabled="true"] {
+    opacity: .45;
+    cursor: not-allowed;
+    pointer-events: none;
+    box-shadow: none;
+}
+
+/* ===== ÍCONES ===== */
+.btn svg,
+.btn .btn__icon {
+    flex-shrink: 0;
+    width: var(--btn-icon);
+    height: var(--btn-icon);
+}
+
+/* ===== ÍCONES ===== */
+.btn .icon {
+    --icon-size: var(--btn-icon);
+    flex-shrink: 0;
+}
+
+.btn svg {
+    display: block;
+}
+
+/* ===== TAMANHOS ===== */
+.btn--sm {
+    --btn-height: var(--nova-btn-height-sm);
+    --btn-padding-x: var(--nova-space-3);
+    --btn-font-size: var(--nova-font-size-sm);
+    --btn-icon: var(--nova-btn-icon-sm);
+    gap: 6px;
+}
+
+.btn--lg {
+    --btn-height: var(--nova-btn-height-lg);
+    --btn-padding-x: var(--nova-space-6);
+    --btn-font-size: var(--nova-font-size-md);
+    --btn-icon: var(--nova-btn-icon-lg);
+}
+
+/* só ícone: quadrado, exige aria-label */
+.btn--icon {
+    width: var(--btn-height);
+    padding: 0;
+}
+
+.btn--block {
+    display: flex;
+    width: 100%;
+}
+
+/* ===== VARIANTES ===== */
+.btn--primary {
+    --btn-bg: var(--nova-color-brand-500);
+    --btn-fg: var(--nova-color-text-inverse);
+    --btn-border: var(--nova-color-brand-500);
+    --btn-bg-hover: var(--nova-color-brand-700);
+    --btn-border-hover: var(--nova-color-brand-700);
+    --btn-bg-active: var(--nova-color-brand-800);
+    --btn-badge-bg: var(--nova-color-text-inverse);
+    --btn-badge-fg: var(--nova-color-brand-500);
+}
+
+.btn--secondary {
+    --btn-bg: var(--nova-color-bg-surface);
+    --btn-fg: var(--nova-color-brand-900);
+    --btn-border: var(--nova-color-border-strong);
+    --btn-bg-hover: var(--nova-color-bg-subtle);
+    --btn-border-hover: var(--nova-color-brand-500);
+    --btn-bg-active: var(--nova-color-border);
+}
+
+/* texto com fundo no hover — ações de menor peso, barras de ferramentas */
+.btn--tertiary {
+    --btn-bg: transparent;
+    --btn-fg: var(--nova-color-brand-500);
+    --btn-border: transparent;
+    --btn-bg-hover: var(--nova-color-hover);
+    --btn-fg-hover: var(--nova-color-brand-700);
+    --btn-bg-active: var(--nova-color-border);
+}
+
+/* estilo link — ações inline, "Ver detalhes", "Limpar filtros" */
+.btn--ghost {
+    --btn-bg: transparent;
+    --btn-fg: var(--nova-color-brand-500);
+    --btn-border: transparent;
+    --btn-fg-hover: var(--nova-color-brand-700);
+    height: auto;
+    min-height: var(--nova-btn-height-sm);
+    padding: 0 var(--nova-space-1);
+}
+
+.btn--ghost:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.btn--ghost:active {
+    transform: none;
+}
+
+.btn--danger,
+.btn--danger-solid {
+    --btn-bg: var(--nova-danger-text);
+    --btn-fg: var(--nova-color-text-inverse);
+    --btn-border: var(--nova-danger-text);
+    --btn-bg-hover: var(--nova-danger-hover);
+    --btn-border-hover: var(--nova-danger-hover);
+    --btn-bg-active: var(--nova-danger-active);
+    --btn-ring: var(--nova-danger-bg);
+    --btn-badge-bg: var(--nova-color-text-inverse);
+    --btn-badge-fg: var(--nova-danger-text);
+}
+
+.btn--secondary-danger {
+    --btn-bg: var(--nova-color-bg-surface);
+    --btn-fg: var(--nova-danger-text);
+    --btn-border: var(--nova-danger-text);
+    --btn-bg-hover: var(--nova-danger-bg);
+    --btn-ring: var(--nova-danger-bg);
+    --btn-badge-bg: var(--nova-danger-text);
+}
+
+.btn--success {
+    --btn-bg: var(--nova-success-text);
+    --btn-fg: var(--nova-color-text-inverse);
+    --btn-border: var(--nova-success-text);
+    --btn-bg-hover: var(--nova-success-hover);
+    --btn-border-hover: var(--nova-success-hover);
+    --btn-bg-active: var(--nova-success-active);
+    --btn-ring: var(--nova-success-bg);
+    --btn-badge-bg: var(--nova-color-text-inverse);
+    --btn-badge-fg: var(--nova-success-text);
+}
+
+.btn--soft-info,
+.btn--soft-success,
+.btn--soft-warning,
+.btn--soft-danger {
+    --btn-border: transparent;
+    --btn-filter-hover: brightness(.96);
+}
+
+.btn--soft-info {
+    --btn-bg: var(--nova-info-bg);
+    --btn-fg: var(--nova-info-text);
+    --btn-badge-bg: var(--nova-info-text);
+}
+
+.btn--soft-success {
+    --btn-bg: var(--nova-success-bg);
+    --btn-fg: var(--nova-success-text);
+    --btn-ring: var(--nova-success-bg);
+    --btn-badge-bg: var(--nova-success-text);
+}
+
+.btn--soft-warning {
+    --btn-bg: var(--nova-warning-bg);
+    --btn-fg: var(--nova-warning-text);
+    --btn-ring: var(--nova-warning-bg);
+    --btn-badge-bg: var(--nova-warning-text);
+}
+
+.btn--soft-danger {
+    --btn-bg: var(--nova-danger-bg);
+    --btn-fg: var(--nova-danger-text);
+    --btn-ring: var(--nova-danger-bg);
+    --btn-badge-bg: var(--nova-danger-text);
+}
+
+/* ===== BADGE (contador dentro do botão) ===== */
+.btn__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: var(--nova-radius-pill);
+    background: var(--btn-badge-bg);
+    color: var(--btn-badge-fg);
+    font-size: var(--nova-font-size-xs);
+    font-weight: var(--nova-font-weight-bold);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
+
+.btn--sm .btn__badge {
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+}
+
+/* badge flutuante no canto de botão só-ícone */
+.btn--icon .btn__badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    box-shadow: 0 0 0 2px var(--nova-color-bg-surface);
+}
+
+/* ===== CARREGANDO ===== */
+.btn.is-loading {
+    color: transparent !important;
+    pointer-events: none;
+}
+
+.btn.is-loading>* {
+    visibility: hidden;
+}
+
+.btn.is-loading::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 2px solid transparent;
+    border-top-color: var(--btn-fg);
+    border-left-color: var(--btn-fg);
+    border-radius: 50%;
+    animation: nova-spin .6s linear infinite;
+}
+
+@keyframes nova-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ===== SEGMENTADO (botões unidos / alternância) ===== */
+/* Nome diferente de .btn-group para não herdar o float do Bootstrap 3 */
+.btn-segmented {
+    display: inline-flex;
+    align-items: stretch;
+    vertical-align: middle;
+}
+
+.btn-segmented>.btn {
+    border-radius: 0;
+}
+
+.btn-segmented>.btn+.btn {
+    margin-left: -1px;
+}
+
+.btn-segmented>.btn:first-child {
+    border-top-left-radius: var(--nova-radius-sm);
+    border-bottom-left-radius: var(--nova-radius-sm);
+}
+
+.btn-segmented>.btn:last-child {
+    border-top-right-radius: var(--nova-radius-sm);
+    border-bottom-right-radius: var(--nova-radius-sm);
+}
+
+.btn-segmented>.btn:hover,
+.btn-segmented>.btn:focus-visible {
+    z-index: 1;
+}
+
+/* item selecionado (use aria-pressed="true" em alternâncias) */
+.btn-segmented>.btn[aria-pressed="true"],
+.btn-segmented>.btn.is-selected {
+    --btn-bg: var(--nova-info-bg);
+    --btn-bg-hover: var(--nova-info-bg);
+    --btn-fg: var(--nova-color-brand-900);
+    --btn-border: var(--nova-color-brand-500);
+    --btn-border-hover: var(--nova-color-brand-500);
+    z-index: 2;
+}
+
+/* ===== LEGADO =====
+   .btn-icon da primeira versão. Prefira .btn .btn--secondary .btn--icon. */
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--nova-btn-height-md);
+    height: var(--nova-btn-height-md);
+    padding: 0;
+    border: 1px solid var(--nova-color-border-strong);
+    border-radius: var(--nova-radius-sm);
+    background: var(--nova-color-bg-surface);
+    color: var(--nova-color-text-secondary);
+    cursor: pointer;
+    transition: background var(--nova-transition-fast), color var(--nova-transition-fast);
+}
+
+.btn-icon:hover {
+    background: var(--nova-color-bg-subtle);
+    color: var(--nova-color-brand-900);
+}
+
+.btn-icon:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--nova-color-brand-100);
+}
+
+.btn-icon--sm {
+    width: var(--nova-btn-height-sm);
+    height: var(--nova-btn-height-sm);
+}
+
+/* ===== ACESSIBILIDADE ===== */
+@media (prefers-reduced-motion: reduce) {
+    .btn {
+        transition: none;
+    }
+
+    .btn:active {
+        transform: none;
+    }
+
+    .btn.is-loading::after {
+        animation-duration: 1.5s;
+    }
+}
