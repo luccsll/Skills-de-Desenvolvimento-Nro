@@ -10,7 +10,7 @@ Funções que conversam com sistemas e dados (sem relação com layout). Ficam e
 | Fluig | `NOVAUI.integration.fluig` | Usuário logado, processos, tarefas, GED, anexos |
 | Utilitários | `NOVAUI.integration.util` | Formatação, datas, conversões |
 
-**Situação atual:** as categorias estão criadas e vazias. Antes de usar uma função de integração num código entregue, confira em `fonte/integrations.js` se ela existe. Se não existir, não invente a chamada: escreva a função no formulário (ou proponha incluí-la em `integrations.js`) e documente com o modelo abaixo.
+**Situação atual:** as categorias estão criadas e vazias (`integrations.js` não entra no `nova-ui.min.js`; quando tiver funções, é carregado à parte). Antes de usar uma função de integração num código entregue, confira em `fonte/integrations.js` se ela existe. Se não existir, não invente a chamada: escreva a função no formulário (ou proponha incluí-la em `integrations.js`) e documente com o modelo abaixo.
 
 ## Criar uma função
 

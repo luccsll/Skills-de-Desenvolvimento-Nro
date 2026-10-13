@@ -818,6 +818,25 @@
     --btn-bg-hover: rgba(255, 255, 255, .1);
 }
 
+/* coachmark: popover mais estreito, selo "Novidade" e botão "Depois" à esquerda */
+.popover--coach {
+    --popover-width: 280px;
+}
+
+.popover--coach .badge--new {
+    --badge-bg: rgba(19, 178, 172, .2);
+    --badge-fg: #5fd4ce;
+    --badge-border: transparent;
+}
+
+.popover__header--tight {
+    padding-top: var(--nova-space-2);
+}
+
+.popover--coach [data-coach="later"] {
+    margin-right: auto;
+}
+
 /* =========================================================================
    6. TOUR  (NovaTour.start(passos))
    ========================================================================= */
@@ -828,6 +847,14 @@
     box-shadow: 0 0 0 9999px var(--nova-color-overlay), 0 0 0 3px var(--nova-color-brand-500);
     pointer-events: none;
     transition: top var(--nova-duration-slow) var(--nova-ease-standard), left var(--nova-duration-slow) var(--nova-ease-standard), width var(--nova-duration-slow) var(--nova-ease-standard), height var(--nova-duration-slow) var(--nova-ease-standard);
+}
+
+/* passo sem alvo: foco no centro da tela */
+.tour-spotlight--center {
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
 }
 
 .tour-spotlight[hidden] {
@@ -847,7 +874,14 @@
 
 /* =========================================================================
    7. COACHMARK  (ponto pulsante que abre uma dica)
+   <span class="coachmark-host"> <button class="btn">…</button>
+     <button class="coachmark coachmark--corner" …></button> </span>
    ========================================================================= */
+.coachmark-host {
+    position: relative;
+    display: inline-flex;
+}
+
 .coachmark {
     position: relative;
     display: inline-flex;
@@ -1011,6 +1045,27 @@
     background: var(--nova-color-bg-subtle);
     font-size: var(--nova-font-size-sm);
     color: var(--nova-color-text-secondary);
+}
+
+.help-panel__footer-title {
+    color: var(--nova-color-text-primary);
+}
+
+.help-panel__contacts {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nova-space-4);
+}
+
+.help-panel__contact {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.help-panel__empty {
+    padding: var(--nova-space-3) 0;
 }
 
 .help-panel__footer svg {

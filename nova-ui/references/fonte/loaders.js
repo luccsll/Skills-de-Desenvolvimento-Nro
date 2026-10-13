@@ -64,7 +64,7 @@
         var $el = $(el), page = el === document.body;
         st = el._novaLoader = { count: 1, shownAt: 0, timer: null, minTime: opts.minTime != null ? opts.minTime : 400 };
         if (!page && $el.css('position') === 'static') {
-            $el.css('position', 'relative');
+            $el.addClass('loader-host');
             st.restorePos = true;
         }
         var size = opts.size === 'sm' || opts.size === 'lg' ? ' loader--' + opts.size : '';
@@ -104,7 +104,7 @@
             st.$ov.removeClass('is-visible');
             var remove = function () {
                 st.$ov.remove();
-                if (st.restorePos) $(el).css('position', '');
+                if (st.restorePos) $(el).removeClass('loader-host');
             };
             if (C.reducedMotion() || !st.shownAt) remove(); else setTimeout(remove, 220);
             $(el).removeAttr('aria-busy');
@@ -230,14 +230,17 @@
     var NovaSkeleton = (function () {
         var W = [92, 78, 64, 85, 70, 56, 88, 74];
         function w(i, list) { list = list || W; return list[i % list.length]; }
-        function sk(cls, width, extra) {
-            return '<span class="skeleton ' + (cls || '') + '"' + (width ? ' style="--skeleton-width:' + width + '%' + (extra || '') + '"' : extra ? ' style="' + extra + '"' : '') + '></span>';
+        /* largura e altura viram classes (sem style): arredonda para múltiplos de 5 */
+        function step(n) { return Math.max(5, Math.min(100, Math.round(n / 5) * 5)); }
+        function sk(cls, width, mod) {
+            var c = 'skeleton' + (cls ? ' ' + cls : '') + (width ? ' skeleton--w-' + step(width) : '') + (mod ? ' ' + mod : '');
+            return '<span class="' + c + '"></span>';
         }
         function repeat(n, fn) { var h = ''; for (var i = 0; i < n; i++) h += fn(i); return h; }
 
         var T = {
             text: function (o) {
-                return '<div class="skeleton-stack skeleton-paragraph" style="gap:0">' + repeat(o.lines || 3, function (i) { return sk('skeleton--text', w(i)); }) + '</div>';
+                return '<div class="skeleton-stack skeleton-paragraph">' + repeat(o.lines || 3, function (i) { return sk('skeleton--text', w(i)); }) + '</div>';
             },
             list: function (o) {
                 return '<div class="skeleton-list">' + repeat(o.rows || 4, function (i) {
@@ -249,8 +252,8 @@
             card: function (o) {
                 var h = repeat(o.count || 1, function (i) {
                     return '<div class="skeleton-card">' + (o.media ? sk('skeleton--block') : '') + sk('skeleton--title') +
-                        '<div class="skeleton-stack skeleton-paragraph" style="gap:0">' + sk('skeleton--text', w(i)) + sk('skeleton--text', w(i + 1)) + sk('skeleton--text', w(i + 2)) + '</div>' +
-                        '<div class="skeleton-card__footer">' + sk('skeleton--button') + sk('skeleton--button', null, '--skeleton-width:88px') + '</div></div>';
+                        '<div class="skeleton-stack skeleton-paragraph">' + sk('skeleton--text', w(i)) + sk('skeleton--text', w(i + 1)) + sk('skeleton--text', w(i + 2)) + '</div>' +
+                        '<div class="skeleton-card__footer">' + sk('skeleton--button') + sk('skeleton--button skeleton--button-short') + '</div></div>';
                 });
                 return (o.count || 1) > 1 ? '<div class="card-group">' + h + '</div>' : h;
             },
@@ -270,11 +273,11 @@
                 }) + '</div>';
             },
             form: function (o) {
-                return '<div class="skeleton-form" style="--skeleton-cols:' + (o.cols || 2) + '">' + repeat(o.fields || 4, function () { return sk('skeleton--input'); }) + '</div>';
+                return '<div class="skeleton-form skeleton-form--cols-' + Math.max(1, Math.min(4, o.cols || 2)) + '">' + repeat(o.fields || 4, function () { return sk('skeleton--input'); }) + '</div>';
             },
             chart: function (o) {
                 var hs = [45, 70, 55, 85, 62, 78, 40, 66];
-                return '<div class="skeleton-chart">' + repeat(o.bars || 8, function (i) { return sk('', null, '--h:' + hs[i % hs.length] + '%'); }) + '</div>';
+                return '<div class="skeleton-chart">' + repeat(o.bars || 8, function (i) { return sk('', null, 'skeleton--h-' + step(hs[i % hs.length])); }) + '</div>';
             },
             /* linhas para o <tbody> de uma .data-table */
             table: function (o) {

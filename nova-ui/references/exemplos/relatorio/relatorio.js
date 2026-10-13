@@ -163,16 +163,10 @@ function relatorioAbono($root) {
     $q('valor-label').text(abono ? 'Valor abonado' : 'Valor descontado');
     $q('valor').text(moeda(valor));
     $q('valor-foot').text(pv + '% do QCX original');
-    $q('valor-prog')
-      .attr('aria-valuenow', pv)
-      .find('.progress__bar')
-      .css('--progress-value', pv + '%');
+    NOVAUI.progress.set({ target: $q('valor-prog'), value: pv });
     $q('resto').text(moeda(resto));
     $q('resto-foot').text(pr + '% não ' + (abono ? 'abonado' : 'descontado'));
-    $q('resto-prog')
-      .attr('aria-valuenow', pr)
-      .find('.progress__bar')
-      .css('--progress-value', pr + '%');
+    NOVAUI.progress.set({ target: $q('resto-prog'), value: pr });
 
     agrupar($q('pracas'), lista, 'praca', true);
     agrupar($q('motivos'), lista, 'motivo', false);
@@ -220,9 +214,7 @@ function relatorioAbono($root) {
           (praca
             ? '<span class="progress progress--sm progress--teal" role="img" aria-label="' +
               pct +
-              '% do total" data-pct="' +
-              pct +
-              '"><span class="progress__bar"></span></span>'
+              '% do total" data-value="' + pct + '"><span class="progress__bar"></span></span>'
             : '') +
           '</span><span class="list-item__trailing"><strong>' +
           moeda(g.valor) +
@@ -230,10 +222,8 @@ function relatorioAbono($root) {
         );
       }).join(''),
     );
-    $lista.find('[data-pct]').each(function () {
-      $(this)
-        .find('.progress__bar')
-        .css('--progress-value', $(this).attr('data-pct') + '%');
+    $lista.find('.progress[data-value]').each(function () {
+      NOVAUI.progress.set({ target: this, value: $(this).attr('data-value') });
     });
   }
 

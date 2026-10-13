@@ -650,25 +650,170 @@
     border-radius: var(--nova-radius-md);
 }
 
-/* larguras prontas */
+/* larguras prontas: .skeleton--w-5 … .skeleton--w-100 (de 5 em 5, em %) */
+.skeleton--w-5 {
+    --skeleton-width: 5%;
+}
+
+.skeleton--w-10 {
+    --skeleton-width: 10%;
+}
+
+.skeleton--w-15 {
+    --skeleton-width: 15%;
+}
+
+.skeleton--w-20 {
+    --skeleton-width: 20%;
+}
+
 .skeleton--w-25 {
     --skeleton-width: 25%;
+}
+
+.skeleton--w-30 {
+    --skeleton-width: 30%;
+}
+
+.skeleton--w-35 {
+    --skeleton-width: 35%;
 }
 
 .skeleton--w-40 {
     --skeleton-width: 40%;
 }
 
+.skeleton--w-45 {
+    --skeleton-width: 45%;
+}
+
+.skeleton--w-50 {
+    --skeleton-width: 50%;
+}
+
+.skeleton--w-55 {
+    --skeleton-width: 55%;
+}
+
 .skeleton--w-60 {
     --skeleton-width: 60%;
+}
+
+.skeleton--w-65 {
+    --skeleton-width: 65%;
+}
+
+.skeleton--w-70 {
+    --skeleton-width: 70%;
 }
 
 .skeleton--w-75 {
     --skeleton-width: 75%;
 }
 
+.skeleton--w-80 {
+    --skeleton-width: 80%;
+}
+
+.skeleton--w-85 {
+    --skeleton-width: 85%;
+}
+
 .skeleton--w-90 {
     --skeleton-width: 90%;
+}
+
+.skeleton--w-95 {
+    --skeleton-width: 95%;
+}
+
+.skeleton--w-100 {
+    --skeleton-width: 100%;
+}
+
+/* alturas prontas (barras do gráfico): .skeleton--h-20 … .skeleton--h-100 */
+.skeleton--h-20 {
+    --h: 20%;
+}
+
+.skeleton--h-25 {
+    --h: 25%;
+}
+
+.skeleton--h-30 {
+    --h: 30%;
+}
+
+.skeleton--h-35 {
+    --h: 35%;
+}
+
+.skeleton--h-40 {
+    --h: 40%;
+}
+
+.skeleton--h-45 {
+    --h: 45%;
+}
+
+.skeleton--h-50 {
+    --h: 50%;
+}
+
+.skeleton--h-55 {
+    --h: 55%;
+}
+
+.skeleton--h-60 {
+    --h: 60%;
+}
+
+.skeleton--h-65 {
+    --h: 65%;
+}
+
+.skeleton--h-70 {
+    --h: 70%;
+}
+
+.skeleton--h-75 {
+    --h: 75%;
+}
+
+.skeleton--h-80 {
+    --h: 80%;
+}
+
+.skeleton--h-85 {
+    --h: 85%;
+}
+
+.skeleton--h-90 {
+    --h: 90%;
+}
+
+.skeleton--h-95 {
+    --h: 95%;
+}
+
+.skeleton--h-100 {
+    --h: 100%;
+}
+
+/* botão mais curto (segundo botão do card) */
+.skeleton--button-short {
+    --skeleton-width: 88px;
+}
+
+/* container de widget que recebe a tela de abertura (.loader-screen) */
+.loader-screen-host {
+    position: relative;
+    min-height: 320px;
+}
+
+/* host do overlay de carregamento: o JS coloca quando o container é static */
+.loader-host {
+    position: relative;
 }
 
 /* compatibilidade: dois skeletons seguidos ganham espaço */
@@ -696,7 +841,11 @@
     gap: 0;
 }
 
-/* parágrafo: última linha mais curta */
+/* parágrafo: linhas coladas; a última mais curta */
+.skeleton-stack.skeleton-paragraph {
+    gap: 0;
+}
+
 .skeleton-paragraph .skeleton--text:last-child {
     --skeleton-width: 60%;
 }
@@ -819,6 +968,19 @@
     display: grid;
     grid-template-columns: repeat(var(--skeleton-cols, 2), minmax(0, 1fr));
     gap: var(--nova-form-gap-y) var(--nova-form-gap-x);
+}
+
+/* colunas: .skeleton-form--cols-1 … --cols-4 (padrão 2) */
+.skeleton-form--cols-1 {
+    --skeleton-cols: 1;
+}
+
+.skeleton-form--cols-3 {
+    --skeleton-cols: 3;
+}
+
+.skeleton-form--cols-4 {
+    --skeleton-cols: 4;
 }
 
 .skeleton-form>.skeleton--input:last-child:nth-child(odd) {

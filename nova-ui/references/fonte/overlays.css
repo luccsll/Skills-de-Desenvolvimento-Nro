@@ -221,6 +221,10 @@
     animation: nova-toast-timer var(--toast-duration) linear forwards;
 }
 
+.toast__timer.is-restarting {
+    animation: none;
+}
+
 .toast.is-paused .toast__timer {
     animation-play-state: paused;
 }

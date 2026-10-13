@@ -69,7 +69,7 @@ kbd,
 /* =========================================================================
    1. BREADCRUMB
    ========================================================================= */
-.breadcrumb {
+.breadcrumbs {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -83,7 +83,7 @@ kbd,
     border-radius: 0;
 }
 
-.breadcrumb__item {
+.breadcrumbs__item {
     display: inline-flex;
     align-items: center;
     gap: 2px;
@@ -91,7 +91,7 @@ kbd,
     color: var(--nova-color-text-secondary);
 }
 
-.breadcrumb__item+.breadcrumb__item::before {
+.breadcrumbs__item+.breadcrumbs__item::before {
     content: "chevron_right";
     font-family: var(--nova-icon-font);
     font-size: 16px;
@@ -111,7 +111,7 @@ kbd,
     color: var(--nova-color-text-muted);
 }
 
-.breadcrumb--slash .breadcrumb__item+.breadcrumb__item::before {
+.breadcrumbs--slash .breadcrumbs__item+.breadcrumbs__item::before {
     content: "/";
     width: auto;
     padding: 0 4px;
@@ -120,7 +120,7 @@ kbd,
     color: var(--nova-color-border-strong);
 }
 
-.breadcrumb__link {
+.breadcrumbs__link {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -134,37 +134,37 @@ kbd,
     white-space: nowrap;
 }
 
-.breadcrumb__link svg {
+.breadcrumbs__link svg {
     flex-shrink: 0;
     width: 16px;
     height: 16px;
 }
 
-.breadcrumb__link .icon {
+.breadcrumbs__link .icon {
     --icon-size: 16px;
     flex-shrink: 0;
 }
 
-.breadcrumb__link:hover {
+.breadcrumbs__link:hover {
     color: var(--nova-color-brand-500);
     text-decoration: underline;
     text-underline-offset: 3px;
 }
 
-.breadcrumb__link:focus-visible,
-.breadcrumb__more:focus-visible {
+.breadcrumbs__link:focus-visible,
+.breadcrumbs__more:focus-visible {
     outline: none;
     box-shadow: 0 0 0 2px var(--nova-color-brand-500);
 }
 
-.breadcrumb__current,
-.breadcrumb__item [aria-current="page"] {
+.breadcrumbs__current,
+.breadcrumbs__item [aria-current="page"] {
     padding: 2px 4px;
     font-weight: var(--nova-font-weight-semibold);
     color: var(--nova-color-text-primary);
 }
 
-.breadcrumb__more {
+.breadcrumbs__more {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -181,23 +181,23 @@ kbd,
     cursor: pointer;
 }
 
-.breadcrumb__more:hover,
-.breadcrumb__more[aria-expanded="true"] {
+.breadcrumbs__more:hover,
+.breadcrumbs__more[aria-expanded="true"] {
     background: var(--nova-color-hover);
     color: var(--nova-color-text-primary);
 }
 
 /* no celular: mostra só o nível anterior como "voltar" */
 @media (max-width: 575.98px) {
-    .breadcrumb--responsive .breadcrumb__item {
+    .breadcrumbs--responsive .breadcrumbs__item {
         display: none;
     }
 
-    .breadcrumb--responsive .breadcrumb__item:nth-last-child(2) {
+    .breadcrumbs--responsive .breadcrumbs__item:nth-last-child(2) {
         display: inline-flex;
     }
 
-    .breadcrumb--responsive .breadcrumb__item:nth-last-child(2)::before {
+    .breadcrumbs--responsive .breadcrumbs__item:nth-last-child(2)::before {
         transform: rotate(180deg);
     }
 }

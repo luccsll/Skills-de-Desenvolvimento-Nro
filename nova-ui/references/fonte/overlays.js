@@ -94,8 +94,8 @@
             t.remaining = t.duration;
             t.started = Date.now();
             t.timeout = setTimeout(function () { close(t, 'timeout'); }, t.remaining);
-            var $bar = t.$el.find('.toast__timer').css('animation', 'none');
-            if ($bar.length) { void $bar[0].offsetWidth; $bar.css('animation', ''); }
+            var $bar = t.$el.find('.toast__timer').addClass('is-restarting');
+            if ($bar.length) { void $bar[0].offsetWidth; $bar.removeClass('is-restarting'); }
         }
 
         function pause(t) {

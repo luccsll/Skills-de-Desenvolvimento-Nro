@@ -7,7 +7,8 @@
    NOVAUI.field           campos, máscaras, validação, campo automático
    NOVAUI.select          select, combobox, autocomplete
    NOVAUI.tags            campo de tags
-   NOVAUI.rte · upload    editor de texto · upload de arquivos
+   NOVAUI.rte             editor de texto
+   NOVAUI.attachment      anexo (upload, arrastar e soltar, aba Anexos)
    NOVAUI.table · grid    tabela · tabela editável
    NOVAUI.tree · kanban · calendar
    NOVAUI.menu · tabs · stepper · anchorNav

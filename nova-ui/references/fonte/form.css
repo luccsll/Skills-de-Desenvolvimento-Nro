@@ -2,7 +2,7 @@
    NOVA UI — FORMULÁRIO (layout, grid e tamanhos de campo)
    Depende dos tokens --nova-* e de inputs.css.
    Inclui também a estrutura de campo: .form-label, .form-description,
-   .form-helper, .form-error, .form-group, .fieldset, .field-group e
+   .form-helper, .form-error-text, .form-group, .fieldset, .field-group e
    .form-error-summary.
 
    Grid de 12 colunas, mobile-first, nos mesmos breakpoints do Bootstrap:
@@ -31,7 +31,7 @@
 }
 
 /* ===== FORMULÁRIO ===== */
-.form {
+.form-layout {
     display: flex;
     flex-direction: column;
     gap: var(--nova-form-section-gap);
@@ -407,7 +407,7 @@
 }
 
 /* linha de campos com largura fixa, lado a lado */
-.form-inline {
+.form-inline-row {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
@@ -470,7 +470,7 @@
      <p class="form-description">Explica o campo antes do controle</p>
      …controle…
      <p class="form-helper">Dica curta depois do controle</p>
-     <p class="form-error">Mensagem de erro</p>
+     <p class="form-error-text">Mensagem de erro</p>
    </div>
    ========================================================================= */
 .form-group {
@@ -516,6 +516,11 @@
     color: var(--nova-color-text-secondary);
 }
 
+/* sem limite de largura (ex.: dentro de abas e painéis largos) */
+.form-description--full {
+    max-width: none;
+}
+
 .form-helper {
     margin: 0;
     font-size: var(--nova-font-size-sm);
@@ -523,7 +528,7 @@
     color: var(--nova-color-text-secondary);
 }
 
-.form-error {
+.form-error-text {
     display: flex;
     align-items: flex-start;
     gap: 6px;
@@ -533,7 +538,7 @@
     color: var(--nova-danger-text);
 }
 
-.form-error::before {
+.form-error-text::before {
     content: "error";
     font-family: var(--nova-icon-font);
     font-size: 16px;
@@ -553,7 +558,7 @@
     overflow: hidden;
 }
 
-.form-error[hidden],
+.form-error-text[hidden],
 .form-helper[hidden] {
     display: none;
 }

@@ -252,6 +252,8 @@
     align-items: flex-start;
     gap: 6px;
     margin: 0;
+    min-width: 0;
+    overflow-wrap: anywhere;
     font-size: var(--nova-font-size-sm);
     line-height: var(--nova-line-height-base);
     color: var(--nova-color-text-secondary);

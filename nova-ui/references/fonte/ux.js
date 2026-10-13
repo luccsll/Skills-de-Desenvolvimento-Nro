@@ -295,10 +295,10 @@
             var $spot = $(state.spot).prop('hidden', false);
             if (target) {
                 var r = target.getBoundingClientRect();
-                $spot.css({ top: r.top - pad, left: r.left - pad, width: r.width + pad * 2, height: r.height + pad * 2 });
+                $spot.removeClass('tour-spotlight--center').css({ top: r.top - pad, left: r.left - pad, width: r.width + pad * 2, height: r.height + pad * 2 });
                 place(state.pop, { top: r.top - pad, bottom: r.bottom + pad, left: r.left - pad, right: r.right + pad, width: r.width + pad * 2, height: r.height + pad * 2 }, step.placement || 'bottom', 12);
             } else { // passo sem alvo: centralizado
-                $spot.css({ width: 0, height: 0, top: '50%', left: '50%' });
+                $spot.addClass('tour-spotlight--center').css({ width: '', height: '', top: '', left: '' });
                 $(state.pop).css({
                     left: Math.round((document.documentElement.clientWidth - state.pop.offsetWidth) / 2),
                     top: Math.round((window.innerHeight - state.pop.offsetHeight) / 2)
@@ -391,8 +391,7 @@
 
     function openCoach(btn) {
         if (!coach.pop) {
-            coach.pop = makePopover('popover--brand');
-            coach.pop.style.setProperty('--popover-width', '280px');
+            coach.pop = makePopover('popover--brand popover--coach');
             $(coach.pop)
                 .on('click', '[data-coach]', function () { closeCoach($(this).attr('data-coach') === 'ok'); })
                 .on('keydown', function (e) { if (e.key === 'Escape') { e.stopPropagation(); closeCoach(false); } });
@@ -400,10 +399,10 @@
         coach.owner = btn;
         var $b = $(btn).attr('aria-expanded', 'true');
         $(coach.pop).html('<span class="popover__arrow" aria-hidden="true"></span>' +
-            '<div class="popover__header"><span class="badge badge--sm" style="--badge-bg:rgba(19,178,172,.2);--badge-fg:#5fd4ce;--badge-border:transparent">Novidade</span></div>' +
-            '<div class="popover__header" style="padding-top:8px"><h3 class="popover__title">' + esc($b.attr('data-title') || '') + '</h3></div>' +
+            '<div class="popover__header"><span class="badge badge--sm badge--new">Novidade</span></div>' +
+            '<div class="popover__header popover__header--tight"><h3 class="popover__title">' + esc($b.attr('data-title') || '') + '</h3></div>' +
             '<div class="popover__body">' + esc($b.attr('data-text') || '') + '</div>' +
-            '<div class="popover__footer"><button type="button" class="btn btn--ghost btn--sm" data-coach="later" style="margin-right:auto">Depois</button>' +
+            '<div class="popover__footer"><button type="button" class="btn btn--ghost btn--sm" data-coach="later">Depois</button>' +
             '<button type="button" class="btn btn--primary btn--sm" data-coach="ok">Entendi</button></div>').prop('hidden', false);
         place(coach.pop, btn.getBoundingClientRect(), $b.attr('data-placement') || 'bottom', 10);
         C.focus($(coach.pop).find('[data-coach="ok"]'));
@@ -593,7 +592,7 @@
         i = Math.max(0, Math.min(i, last));
         $slides.each(function (k) { this.hidden = k !== i; });
         $w.attr('data-index', i).find('.popover__dots span').each(function (k) { $(this).toggleClass('is-active', k === i); });
-        $w.find('[data-welcome-prev]').css('visibility', i === 0 ? 'hidden' : '');
+        $w.find('[data-welcome-prev]').toggleClass('is-invisible', i === 0);
         var $next = $w.find('[data-welcome-next]');
         $next.text(i === last ? ($next.attr('data-done-text') || 'Começar') : 'Próximo');
         $w.find('[data-welcome-status]').text('Etapa ' + (i + 1) + ' de ' + $slides.length);

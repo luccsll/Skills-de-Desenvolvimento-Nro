@@ -665,18 +665,37 @@
         };
     })();
 
+    /* barra de progresso: <div class="progress" data-value="91"> */
+    function progressSet(el, value) {
+        el = C.get(el);
+        if (!el) return;
+        var v = Math.max(0, Math.min(100, parseFloat(value) || 0));
+        var $el = $(el).attr('data-value', v);
+        if (!$el.attr('role')) $el.attr('role', 'progressbar');
+        if ($el.attr('role') === 'progressbar') $el.attr({ 'aria-valuemin': 0, 'aria-valuemax': 100, 'aria-valuenow': v });
+        el.style.setProperty('--progress-value', v + '%');
+    }
+
+    function progressRefresh() {
+        $('.progress[data-value]').each(function () { progressSet(this, $(this).attr('data-value')); });
+    }
+
     $(function () {
+        progressRefresh();
         NovaTree.refresh();
         NovaKanban.refresh();
         NovaGrid.refresh();
     });
 
     NOVAUI._onRefresh(function () {
+        progressRefresh();
         NovaTree.refresh();
         NovaKanban.refresh();
         NovaGrid.refresh();
     });
 
+    // NOVAUI.progress.set({ target, value: 0–100 })
+    NOVAUI.progress = { set: function (o) { progressSet(o.target, o.value); } };
     NOVAUI.tree = NovaTree;
     NOVAUI.kanban = NovaKanban;
     // NOVAUI.calendar.create({ target, date, events, weekStart, maxPerDay, onEventClick, onDayClick })

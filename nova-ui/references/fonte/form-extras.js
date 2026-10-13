@@ -5,11 +5,7 @@
               .rte__toolbar (botões data-cmd) e .rte__content
               contenteditable. Cola como texto puro. data-max-length opcional.
               NOVAUI.rte.getHTML(el) / setHTML(el, html) / setDisabled(el, bool)
-   Upload     <div class="upload" data-max-size="10" data-max-files="5">
-              eventos: nova:upload-add { files, items }, nova:upload-remove,
-              nova:upload-reject { file, reason }
-              NOVAUI.upload.setProgress(item, %), .getFiles(el), .clear(el)
-              NOVAUI.upload.setStatus({ target: item, type: 'done'|'error', message })
+   Upload     agora é o Anexo: NOVAUI.attachment (attachments.js)
    Cor        <div class="color-field"> com .color-field__native e
               .color-field__hex; .color-swatch[data-color] com
               data-target="#input-color"
@@ -170,164 +166,6 @@
     })();
 
     /* =====================================================================
-       UPLOAD
-       ===================================================================== */
-    var Upload = (function () {
-        var ICON_X = '<span class="icon" aria-hidden="true">close</span>';
-
-        function fmtSize(b) {
-            if (b < 1024) return b + ' B';
-            if (b < 1048576) return Math.round(b / 1024) + ' KB';
-            return (b / 1048576).toFixed(1).replace('.', ',') + ' MB';
-        }
-
-        function kind(name) {
-            var ext = (name.split('.').pop() || '').toLowerCase();
-            if (ext === 'pdf') return ['pdf', 'PDF'];
-            if ($.inArray(ext, ['xls', 'xlsx', 'csv']) > -1) return ['xls', ext.toUpperCase()];
-            if ($.inArray(ext, ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg']) > -1) return ['img', ext.toUpperCase()];
-            return ['', (ext || 'ARQ').slice(0, 4).toUpperCase()];
-        }
-
-        function accepts(input, file) {
-            var acc = $.grep($.map(($(input).attr('accept') || '').split(','), function (s) { return $.trim(s).toLowerCase(); }), Boolean);
-            var name = file.name.toLowerCase(), type = (file.type || '').toLowerCase();
-            return !acc.length || acc.some(function (a) {
-                if (a[0] === '.') return name.slice(-a.length) === a;
-                if (/\/\*$/.test(a)) return type.indexOf(a.slice(0, -1)) === 0;
-                return type === a;
-            });
-        }
-
-        function files(up) {
-            return up._novaFiles || (up._novaFiles = []);
-        }
-
-        function syncInput(up) {
-            try {
-                var dt = new DataTransfer();
-                $.each(files(up), function (i, f) { dt.items.add(f.file); });
-                $(up).find('.upload__input')[0].files = dt.files;
-            } catch (e) { /* navegador sem DataTransfer: a lista fica só no JS */ }
-        }
-
-        function setError(up, msg) {
-            $(up).toggleClass('is-error', !!msg).find('.upload__error').text(msg || '').prop('hidden', !msg);
-        }
-
-        function add(up, fileList) {
-            var $up = $(up), input = $up.find('.upload__input')[0], $list = $up.find('.upload__list');
-            var maxMB = parseFloat($up.attr('data-max-size')) || 0;
-            var maxFiles = parseInt($up.attr('data-max-files'), 10) || (input.multiple ? 0 : 1);
-            var list = files(up), added = [], errors = [];
-            if (!input.multiple) { list.length = 0; $list.empty(); }
-            $.each(fileList, function (i, file) {
-                var reason = null;
-                if (!accepts(input, file)) reason = 'Tipo de arquivo não permitido';
-                else if (maxMB && file.size > maxMB * 1048576) reason = 'Maior que ' + String(maxMB).replace('.', ',') + ' MB';
-                else if (maxFiles && list.length >= maxFiles) reason = 'Limite de ' + maxFiles + (maxFiles > 1 ? ' arquivos' : ' arquivo');
-                else if (list.some(function (f) { return f.file.name === file.name && f.file.size === file.size; })) reason = 'Arquivo já adicionado';
-                if (reason) {
-                    errors.push(file.name + ': ' + reason.toLowerCase());
-                    return C.emit(up, 'nova:upload-reject', { file: file, reason: reason });
-                }
-                var k = kind(file.name), n = esc(file.name);
-                var $li = $('<li class="upload__item">').html(
-                    '<span class="upload__file-icon' + (k[0] ? ' upload__file-icon--' + k[0] : '') + '" aria-hidden="true">' + esc(k[1]) + '</span>' +
-                    '<span class="upload__name" title="' + n + '">' + n + '</span>' +
-                    '<button type="button" class="btn btn--tertiary btn--sm btn--icon upload__remove" aria-label="Remover ' + n + '">' + ICON_X + '</button>' +
-                    '<span class="upload__meta"><span class="upload__size">' + fmtSize(file.size) + '</span>' +
-                    '<span class="upload__progress" role="progressbar" aria-label="Envio de ' + n + '" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></span>' +
-                    '<span class="upload__status"></span></span>').appendTo($list);
-                var entry = { file: file, item: $li[0] };
-                $li[0]._novaFile = entry;
-                list.push(entry);
-                added.push(entry);
-            });
-            setError(up, errors.join(' · '));
-            syncInput(up);
-            if (added.length) {
-                C.emit(up, 'nova:upload-add', { files: $.map(added, function (a) { return a.file; }), items: $.map(added, function (a) { return a.item; }) });
-            }
-        }
-
-        function remove(up, li) {
-            var list = files(up), entry = li._novaFile, i = $.inArray(entry, list);
-            if (i > -1) list.splice(i, 1);
-            $(li).remove();
-            syncInput(up);
-            setError(up, '');
-            C.emit(up, 'nova:upload-remove', { file: entry ? entry.file : null });
-            $(up).find('.upload__input').trigger('focus');
-        }
-
-        function setProgress(li, pct) {
-            pct = Math.max(0, Math.min(100, Math.round(pct)));
-            var $li = $(C.get(li));
-            $li[0].style.setProperty('--upload-progress', pct + '%');
-            $li.find('.upload__progress').attr('aria-valuenow', pct);
-            $li.find('.upload__status').text(pct + '%');
-        }
-
-        function setStatus(li, status, msg) {
-            var $li = $(C.get(li)).removeClass('is-done is-error');
-            if (status) $li.addClass('is-' + status);
-            $li.find('.upload__status').text(msg || (status === 'done' ? 'Enviado' : status === 'error' ? 'Falha no envio' : ''));
-        }
-
-        function init(up) {
-            if (up._novaUpload) return;
-            up._novaUpload = true;
-            var $up = $(up), depth = 0;
-            var hasFiles = function (e) { var dt = e.originalEvent.dataTransfer; return dt && $.inArray('Files', dt.types) > -1; };
-            $up.find('.upload__input').on('change', function () {
-                if (this.files && this.files.length) add(up, Array.prototype.slice.call(this.files));
-            });
-            $up.on('click', '.upload__remove', function () { remove(up, $(this).closest('.upload__item')[0]); })
-                .on('dragenter', function (e) {
-                    if (!hasFiles(e)) return;
-                    e.preventDefault();
-                    depth++;
-                    $up.addClass('is-dragover');
-                })
-                .on('dragover', function (e) {
-                    if ($up.hasClass('is-dragover')) { e.preventDefault(); e.originalEvent.dataTransfer.dropEffect = 'copy'; }
-                })
-                .on('dragleave', function () {
-                    depth = Math.max(0, depth - 1);
-                    if (!depth) $up.removeClass('is-dragover');
-                })
-                .on('drop', function (e) {
-                    e.preventDefault();
-                    depth = 0;
-                    $up.removeClass('is-dragover');
-                    if (!$up.find('.upload__input').prop('disabled')) add(up, e.originalEvent.dataTransfer.files);
-                });
-        }
-
-        return {
-            init: init,
-            setProgress: setProgress,
-            setStatus: setStatus,
-            getFiles: function (el) { el = C.get(el); return el ? $.map(files(el), function (f) { return f.file; }) : []; },
-            clear: function (el) {
-                el = C.get(el);
-                if (!el) return;
-                files(el).length = 0;
-                $(el).find('.upload__list').empty();
-                syncInput(el);
-                setError(el, '');
-            }
-        };
-    })();
-
-    /* soltar um arquivo fora da área não abre o arquivo no navegador */
-    $(window).on('dragover drop', function (e) {
-        var dt = e.originalEvent.dataTransfer;
-        if (dt && $.inArray('Files', dt.types || []) > -1 && !$(e.target).closest('.upload').length) e.preventDefault();
-    });
-
-    /* =====================================================================
        COLOR PICKER
        ===================================================================== */
     function normHex(v) {
@@ -398,8 +236,8 @@
                 else b.value = parseFloat(a.value) + gap;
             }
             // o polegar mexido por último fica por cima
-            a.style.zIndex = changed === a ? 3 : 2;
-            b.style.zIndex = changed === a ? 2 : 3;
+            $(a).toggleClass('is-front', changed === a);
+            $(b).toggleClass('is-front', changed !== a);
             el.style.setProperty('--slider-from', sliderPct(a) + '%');
             el.style.setProperty('--slider-to', sliderPct(b) + '%');
             $(b).attr('aria-valuetext', sliderFormat($s, b.value));
@@ -418,24 +256,28 @@
     function refresh(root) {
         var $root = $(C.get(root) || document);
         $root.find('.rte').each(function () { RTE.init(this); });
-        $root.find('.upload').each(function () { Upload.init(this); });
         $root.find('.color-field').each(function () {
             var n = $(this).find('.color-field__native')[0];
             if (n) setColor(this, n.value.toLowerCase(), 'init');
         });
         $root.find('.slider').each(function () { sliderSync($(this)); });
+        $root.find('.rating-display[data-value]').each(function () { ratingSet(this, $(this).attr('data-value')); });
+    }
+
+    /* nota só leitura: <span class="rating-display" data-value="4.3"> */
+    function ratingSet(el, value) {
+        el = C.get(el);
+        if (!el) return;
+        var v = Math.max(0, Math.min(5, parseFloat(String(value).replace(',', '.')) || 0));
+        $(el).attr({ 'data-value': v, role: 'img', 'aria-label': 'Nota ' + String(v).replace('.', ',') + ' de 5' });
+        el.style.setProperty('--rating-value', v);
     }
 
     $(function () { refresh(); });
 
     NOVAUI._onRefresh(refresh);
 
+    // NOVAUI.rating.set({ target, value })
+    NOVAUI.rating = { set: function (o) { ratingSet(o.target, o.value); } };
     NOVAUI.rte = { getHTML: RTE.getHTML, setHTML: RTE.setHTML, setDisabled: RTE.setDisabled };
-    NOVAUI.upload = {
-        setProgress: Upload.setProgress,
-        // NOVAUI.upload.setStatus({ target: item, type: 'done'|'error', message })
-        setStatus: function (o) { Upload.setStatus(o.target, o.type, o.message); },
-        getFiles: Upload.getFiles,
-        clear: Upload.clear
-    };
 })(window.jQuery, window, document);

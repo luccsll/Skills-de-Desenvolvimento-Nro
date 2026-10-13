@@ -72,7 +72,29 @@ Utilitários: `.margin-{lado}-{n}` e `.pad-{lado}-{n}`, lado = `top|bottom|left|
 - Containers: `.page-container` + `--sm` 640 · `--md` 880 (formulários Fluig) · `--lg` 1200 (consulta) · `--xl` 1440 · `--max` · `--fluid`.
 - Grid de formulário: `.form-grid` com `.form-col-1…12` e `.form-col-sm|md|lg|xl-1…12`. `.form-grid--compact` para menos espaço.
 - Breakpoints: sm 576 · md 768 · lg 992 · xl 1200 · 2xl 1400.
-- Estrutura de formulário: `.form-section` (+ `__header`, `__title`, `__desc`), `.fieldset` (+ `--bordered`, `__legend`), `.form-actions` (+ `--between`, `--start`, `--sticky`, `__spacer`), `.form-group` / `.form-label` para controles que não são `.field` (checkbox, radio, switch, upload, OTP).
+- Estrutura de formulário: `.form-layout` (container com espaço entre seções), `.form-section` (+ `__header`, `__title`, `__desc`), `.fieldset` (+ `--bordered`, `__legend`), `.form-description` (+ `--full` sem limite de largura, para abas e painéis largos), `.form-actions` (+ `--between`, `--start`, `--sticky`, `__spacer`), `.form-group` / `.form-label` para controles que não são `.field` (checkbox, radio, switch, anexo, OTP).
+- Campos fora do grid (filtros, formulários curtos): `.field--w-xs|sm|md|lg|xl|full` dentro de `.form-inline-row`.
+- Texto de erro solto: `.form-error-text`.
+
+### Classes que substituem CSS inline
+
+A regra é não usar `style=""`. Para os casos que antes pediam variável CSS no HTML, use:
+
+| Antes (proibido) | Agora |
+|---|---|
+| `style="--table-min-width:860px"` | `.table--min-sm` 640 · `--min-md` 860 · `--min-lg` 1024 · `--min-xl` 1200 (na `<table>`) |
+| `style="--table-max-height:240px"` | `.table-scroll--h-sm` 240 · `--h-md` 400 · `--h-lg` 560 (no `.table-scroll`) |
+| `style="width:120px"` no `<th>` | `.col-width-60 · 80 · 100 · 120 · 140 · 160 · 200 · 240 · 280` |
+| `style="--progress-value:40%"` | `data-value="40"` no `.progress` (mudar depois: `NOVAUI.progress.set`) |
+| `style="--rating-value:4.3"` | `data-value="4.3"` no `.rating-display` (`NOVAUI.rating.set`) |
+| `style="--anim-delay:2"` | `.anim-delay-1 … .anim-delay-10` (40ms cada) |
+| `style="--card-accent:…"` | `.card--accent` + `.card--protheus · --rm · --totvs · --fluig · --kcor` |
+| larguras/alturas no skeleton | `.skeleton--w-5 … --w-100` (de 5 em 5, %) · `.skeleton--h-20 … --h-100` |
+| `style="position:relative;min-height:320px"` no widget | `.loader-screen-host` |
+| `style="position:relative;display:inline-flex"` no coachmark | `.coachmark-host` |
+| `style="max-width:none"` na descrição | `.form-description--full` |
+
+Se nenhuma classe resolver, crie uma no `.css` do processo, com nome que faça sentido.
 
 ## Ícones
 
@@ -82,8 +104,8 @@ Material Symbols Rounded (Google Fonts), nome em inglês de fonts.google.com/ico
 <span class="icon" aria-hidden="true">receipt_long</span>
 ```
 
-Modificadores: `.icon--xs|sm|md|lg|xl`, `.icon--filled`, `.icon--bold`, `.icon--light`. Ícone em bloco colorido: `.icon-tile` + `--sm|lg|xl|2xl`, `--teal|success|warning|danger|neutral`, `--round`.
+Modificadores: `.icon--xs|sm|md|lg|xl`, `.icon--filled`, `.icon--bold`, `.icon--light`. Ícone em bloco colorido: `.icon-tile` + `--sm|md|lg|xl|2xl`, `--teal|success|warning|danger|neutral`, `--round`.
 
 ## Outros utilitários
 
-`.justify-start|center|end|between` · `.align-center` · `.sr-only` · `.focus-ring` · `.state-layer` · `.anim-fade-in|scale-in|slide-up|slide-down|slide-in-right|pop|pulse|spin`.
+`.justify-start|center|end|between` · `.align-center` · `.sr-only` · `.is-invisible` (oculto, mas ocupa espaço) · `.focus-ring` · `.state-layer` · `.anim-fade-in|scale-in|slide-up|slide-down|slide-in-right|pop|pulse|spin` + `.anim-delay-1…10`.

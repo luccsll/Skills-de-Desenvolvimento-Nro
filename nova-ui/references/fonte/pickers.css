@@ -1,0 +1,418 @@
+/* =========================================================================
+   NOVA UI — SELETOR DE DATA E DE HORA
+   Botão no campo (.field__trigger) e os popups (.datepicker, .timepicker),
+   que ficam no <body>. No celular viram uma folha presa embaixo da tela.
+   Comportamento em pickers.js.
+   ========================================================================= */
+
+/* ----- botão no fim do campo ----- */
+.field__trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--nova-radius-sm);
+    background: transparent;
+    color: var(--nova-color-text-secondary);
+    cursor: pointer;
+}
+
+.field__trigger:hover,
+.field.is-open .field__trigger {
+    background: var(--nova-color-bg-subtle);
+    color: var(--nova-color-brand-500);
+}
+
+.field__trigger:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--nova-color-brand-500);
+}
+
+.field__trigger .icon {
+    --icon-size: 20px;
+}
+
+.field__control:has(.field__input:disabled) .field__trigger,
+.field__control:has(.field__input[readonly]) .field__trigger {
+    display: none;
+}
+
+/* ----- popup comum ----- */
+.datepicker,
+.timepicker {
+    position: absolute;
+    z-index: var(--nova-z-menu);
+    border: var(--nova-border);
+    border-radius: var(--nova-radius-lg);
+    background: var(--nova-color-bg-surface);
+    box-shadow: var(--nova-shadow-lg);
+    font-family: var(--nova-font-family);
+    color: var(--nova-color-text-primary);
+    animation: nova-picker-in var(--nova-transition-fast, .15s) ease-out;
+}
+
+@keyframes nova-picker-in {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+}
+
+/* ===== DATA ===== */
+.datepicker {
+    display: flex;
+}
+
+.datepicker__main {
+    width: 296px;
+    padding: var(--nova-space-3);
+}
+
+.datepicker__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nova-space-1);
+    margin-bottom: var(--nova-space-2);
+}
+
+.datepicker__nav,
+.datepicker__title {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    border: 0;
+    border-radius: var(--nova-radius-sm);
+    background: transparent;
+    color: var(--nova-color-text-primary);
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.datepicker__nav {
+    width: 32px;
+    padding: 0;
+    color: var(--nova-color-text-secondary);
+}
+
+.datepicker__title {
+    gap: 2px;
+    padding: 0 var(--nova-space-2);
+    font-size: var(--nova-font-size-sm);
+    font-weight: var(--nova-font-weight-semibold);
+}
+
+.datepicker__title span:first-child::first-letter {
+    text-transform: uppercase;
+}
+
+.datepicker__title .icon {
+    --icon-size: 18px;
+    color: var(--nova-color-text-muted);
+}
+
+.datepicker__nav:hover,
+.datepicker__title:hover {
+    background: var(--nova-color-bg-subtle);
+}
+
+.datepicker__nav:focus-visible,
+.datepicker__title:focus-visible,
+.datepicker__day:focus-visible,
+.datepicker__pick:focus-visible,
+.datepicker__preset:focus-visible,
+.timepicker__option:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--nova-color-brand-500);
+}
+
+.datepicker__hint {
+    margin: 0 0 var(--nova-space-2);
+    font-size: var(--nova-font-size-xs);
+    color: var(--nova-color-brand-500);
+    font-weight: var(--nova-font-weight-semibold);
+    text-align: center;
+}
+
+.datepicker__grid {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.datepicker__grid th {
+    padding: 0 0 var(--nova-space-1);
+    font-size: var(--nova-font-size-xs);
+    font-weight: var(--nova-font-weight-semibold);
+    color: var(--nova-color-text-muted);
+    text-align: center;
+}
+
+.datepicker__grid td {
+    padding: 1px 0;
+    text-align: center;
+}
+
+.datepicker__day {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--nova-radius-pill);
+    background: transparent;
+    color: var(--nova-color-text-primary);
+    font-family: inherit;
+    font-size: var(--nova-font-size-sm);
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+}
+
+.datepicker__day:hover:not(:disabled):not(.is-selected):not(.is-in-range):not(.is-range-start):not(.is-range-end) {
+    background: var(--nova-color-bg-subtle);
+}
+
+.datepicker__day.is-in-range:hover:not(:disabled) {
+    background: var(--nova-color-brand-100);
+}
+
+.datepicker__day.is-outside {
+    color: var(--nova-color-text-muted);
+}
+
+.datepicker__day.is-today {
+    font-weight: var(--nova-font-weight-semibold);
+    color: var(--nova-color-brand-500);
+}
+
+.datepicker__day.is-today::after {
+    content: "";
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    margin-left: -2px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.datepicker__day:disabled {
+    color: var(--nova-color-text-muted);
+    text-decoration: line-through;
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+/* período: faixa entre o início e o fim */
+.datepicker__day.is-in-range {
+    border-radius: 0;
+    background: var(--nova-color-brand-50, #eef4fc);
+    color: var(--nova-color-brand-700, var(--nova-color-brand-500));
+}
+
+.datepicker__day.is-range-start {
+    border-radius: var(--nova-radius-pill) 0 0 var(--nova-radius-pill);
+}
+
+.datepicker__day.is-range-end {
+    border-radius: 0 var(--nova-radius-pill) var(--nova-radius-pill) 0;
+}
+
+.datepicker__day.is-range-start.is-range-end {
+    border-radius: var(--nova-radius-pill);
+}
+
+.datepicker__day.is-selected,
+.datepicker__day.is-range-start,
+.datepicker__day.is-range-end,
+.datepicker__day.is-selected:hover:not(:disabled) {
+    background: var(--nova-color-brand-500);
+    color: #fff;
+    font-weight: var(--nova-font-weight-semibold);
+}
+
+.datepicker__picks {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--nova-space-2);
+    padding: var(--nova-space-2) 0;
+}
+
+.datepicker__pick {
+    height: 44px;
+    border: 0;
+    border-radius: var(--nova-radius-md);
+    background: transparent;
+    color: var(--nova-color-text-primary);
+    font-family: inherit;
+    font-size: var(--nova-font-size-sm);
+    cursor: pointer;
+}
+
+.datepicker__pick:hover:not(:disabled) {
+    background: var(--nova-color-bg-subtle);
+}
+
+.datepicker__pick.is-selected {
+    background: var(--nova-color-brand-500);
+    color: #fff;
+    font-weight: var(--nova-font-weight-semibold);
+}
+
+.datepicker__pick:disabled {
+    color: var(--nova-color-text-muted);
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.datepicker__foot {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--nova-space-2);
+    margin-top: var(--nova-space-2);
+    padding-top: var(--nova-space-2);
+    border-top: var(--nova-border);
+}
+
+/* atalhos (Hoje, Últimos 7 dias…) */
+.datepicker__presets {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 164px;
+    padding: var(--nova-space-3) var(--nova-space-2);
+    border-right: var(--nova-border);
+    background: var(--nova-color-bg-subtle);
+    border-radius: var(--nova-radius-lg) 0 0 var(--nova-radius-lg);
+}
+
+.datepicker__preset {
+    padding: var(--nova-space-2) var(--nova-space-3);
+    border: 0;
+    border-radius: var(--nova-radius-sm);
+    background: transparent;
+    color: var(--nova-color-text-secondary);
+    font-family: inherit;
+    font-size: var(--nova-font-size-sm);
+    text-align: left;
+    cursor: pointer;
+}
+
+.datepicker__preset:hover {
+    background: var(--nova-color-bg-surface);
+    color: var(--nova-color-brand-500);
+}
+
+/* ===== HORA ===== */
+.timepicker {
+    width: 168px;
+    max-height: 264px;
+    overflow-y: auto;
+    padding: var(--nova-space-1);
+    overscroll-behavior: contain;
+}
+
+.timepicker__option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nova-space-2);
+    width: 100%;
+    padding: var(--nova-space-2) var(--nova-space-3);
+    border: 0;
+    border-radius: var(--nova-radius-sm);
+    background: transparent;
+    color: var(--nova-color-text-primary);
+    font-family: inherit;
+    font-size: var(--nova-font-size-sm);
+    font-variant-numeric: tabular-nums;
+    text-align: left;
+    cursor: pointer;
+}
+
+.timepicker__option:hover {
+    background: var(--nova-color-bg-subtle);
+}
+
+.timepicker__option.is-selected {
+    background: var(--nova-color-brand-500);
+    color: #fff;
+    font-weight: var(--nova-font-weight-semibold);
+}
+
+.timepicker__dur {
+    font-size: var(--nova-font-size-xs);
+    color: var(--nova-color-text-muted);
+}
+
+.timepicker__option.is-selected .timepicker__dur {
+    color: rgba(255, 255, 255, .8);
+}
+
+.timepicker__empty {
+    margin: 0;
+    padding: var(--nova-space-3);
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-text-muted);
+}
+
+/* ===== CELULAR: folha presa embaixo ===== */
+.datepicker.is-sheet,
+.timepicker.is-sheet {
+    position: fixed;
+    top: auto !important;
+    right: 0;
+    bottom: 0;
+    left: 0 !important;
+    width: auto;
+    max-height: 80vh;
+    border-radius: var(--nova-radius-lg) var(--nova-radius-lg) 0 0;
+    animation-name: nova-picker-sheet;
+}
+
+.datepicker.is-sheet {
+    flex-direction: column-reverse;
+    overflow-y: auto;
+}
+
+.datepicker.is-sheet .datepicker__main {
+    width: auto;
+    padding: var(--nova-space-4);
+}
+
+.datepicker.is-sheet .datepicker__day {
+    width: 40px;
+    height: 40px;
+}
+
+.datepicker.is-sheet .datepicker__presets {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: auto;
+    border-right: 0;
+    border-top: var(--nova-border);
+    border-radius: 0;
+}
+
+.timepicker.is-sheet {
+    max-height: 50vh;
+    padding: var(--nova-space-2);
+}
+
+@keyframes nova-picker-sheet {
+    from {
+        transform: translateY(100%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .datepicker,
+    .timepicker {
+        animation: none;
+    }
+}

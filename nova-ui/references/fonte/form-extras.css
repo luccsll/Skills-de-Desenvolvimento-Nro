@@ -5,7 +5,7 @@
 
    Seções:
      1. Rich Text Editor
-     2. File Upload / Drag & Drop Upload
+     2. (Upload de arquivos agora é o Anexo: attachments.css)
      3. Color Picker
      4. Slider / Range Slider
      5. Rating
@@ -203,244 +203,6 @@
 }
 
 /* =========================================================================
-   2. FILE UPLOAD / DRAG & DROP UPLOAD
-   <div class="upload" data-max-size="10" data-max-files="5">
-     <label class="upload__zone"><input type="file" class="upload__input" multiple accept>…</label>
-     <ul class="upload__list"></ul></div>
-   ========================================================================= */
-.upload {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nova-space-3);
-    width: 100%;
-    font-family: var(--nova-font-family);
-}
-
-.upload__input {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-}
-
-.upload__zone {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: var(--nova-space-2);
-    min-height: 148px;
-    margin: 0;
-    padding: var(--nova-space-6) var(--nova-space-5);
-    border: 1.5px dashed var(--nova-color-border-strong);
-    border-radius: var(--nova-radius-md);
-    background: var(--nova-color-bg-subtle);
-    font-weight: var(--nova-font-weight-regular);
-    text-align: center;
-    color: var(--nova-color-text-secondary);
-    cursor: pointer;
-    transition: border-color var(--nova-transition-fast), background var(--nova-transition-fast);
-}
-
-.upload__zone:hover {
-    border-color: var(--nova-color-brand-500);
-    background: var(--nova-selected-bg, #eef4fc);
-}
-
-.upload__zone:focus-within {
-    border-color: var(--nova-color-brand-500);
-    box-shadow: 0 0 0 3px var(--nova-color-brand-100);
-}
-
-.upload.is-dragover .upload__zone {
-    border-style: solid;
-    border-color: var(--nova-color-brand-500);
-    background: var(--nova-selected-bg, #eef4fc);
-}
-
-.upload.is-error .upload__zone {
-    border-color: var(--nova-danger-text);
-}
-
-.upload__icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: var(--nova-color-bg-surface);
-    color: var(--nova-color-brand-500);
-    box-shadow: var(--nova-shadow-sm);
-}
-
-.upload__icon svg {
-    width: 22px;
-    height: 22px;
-}
-
-.upload__icon .icon {
-    --icon-size: 22px;
-}
-
-.upload__title {
-    font-size: var(--nova-font-size-base);
-    color: var(--nova-color-text-primary);
-}
-
-.upload__title strong {
-    color: var(--nova-color-brand-500);
-    font-weight: var(--nova-font-weight-semibold);
-}
-
-.upload__hint {
-    font-size: var(--nova-font-size-xs);
-    color: var(--nova-color-text-muted);
-}
-
-/* compacto: só botão */
-.upload--button .upload__zone {
-    flex-direction: row;
-    align-self: flex-start;
-    min-height: 0;
-    padding: 0;
-    border: 0;
-    background: none;
-}
-
-.upload--button .upload__zone:hover,
-.upload--button .upload__zone:focus-within {
-    background: none;
-    box-shadow: none;
-}
-
-.upload--button .upload__zone .btn {
-    pointer-events: none;
-}
-
-.upload--button .upload__zone:focus-within .btn {
-    box-shadow: 0 0 0 3px var(--btn-ring, var(--nova-color-brand-100));
-}
-
-/* lista de arquivos */
-.upload__list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nova-space-2);
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-.upload__list:empty {
-    display: none;
-}
-
-.upload__item {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 2px var(--nova-space-3);
-    padding: var(--nova-space-3);
-    border: 1px solid var(--nova-color-border);
-    border-radius: var(--nova-radius-sm);
-    background: var(--nova-color-bg-surface);
-}
-
-.upload__file-icon {
-    grid-row: span 2;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: var(--nova-radius-sm);
-    background: var(--nova-info-bg);
-    color: var(--nova-color-brand-700);
-    font-size: 10px;
-    font-weight: var(--nova-font-weight-bold);
-    text-transform: uppercase;
-}
-
-.upload__file-icon--pdf {
-    background: var(--nova-danger-bg);
-    color: var(--nova-danger-text);
-}
-
-.upload__file-icon--xls {
-    background: var(--nova-success-bg);
-    color: var(--nova-success-text);
-}
-
-.upload__file-icon--img {
-    background: var(--nova-accent-teal-bg, #dbf3f2);
-    color: var(--nova-accent-teal-text, #0b7a76);
-}
-
-.upload__name {
-    overflow: hidden;
-    font-size: var(--nova-font-size-sm);
-    font-weight: var(--nova-font-weight-medium);
-    color: var(--nova-color-text-primary);
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.upload__meta {
-    grid-column: 2;
-    display: flex;
-    align-items: center;
-    gap: var(--nova-space-2);
-    min-width: 0;
-    font-size: var(--nova-font-size-xs);
-    color: var(--nova-color-text-muted);
-    font-variant-numeric: tabular-nums;
-}
-
-.upload__progress {
-    flex: 1;
-    max-width: 200px;
-    height: 4px;
-    overflow: hidden;
-    border-radius: 2px;
-    background: var(--nova-color-border);
-}
-
-.upload__progress span {
-    display: block;
-    width: var(--upload-progress, 0%);
-    height: 100%;
-    background: var(--nova-color-brand-500);
-    transition: width var(--nova-transition-base);
-}
-
-.upload__remove {
-    grid-row: 1 / span 2;
-    grid-column: 3;
-}
-
-.upload__item.is-done .upload__meta {
-    color: var(--nova-success-text);
-}
-
-.upload__item.is-error {
-    border-color: rgba(198, 43, 43, .35);
-    background: var(--nova-danger-bg);
-}
-
-.upload__item.is-error .upload__meta {
-    color: var(--nova-danger-text);
-}
-
-.upload__item.is-done .upload__progress,
-.upload__item.is-error .upload__progress {
-    display: none;
-}
-
-/* =========================================================================
    3. COLOR PICKER
    ========================================================================= */
 .color-field {
@@ -609,6 +371,15 @@
     outline: none;
 }
 
+/* faixa dupla: o polegar mexido por último fica por cima */
+.slider__input+.slider__input {
+    z-index: 2;
+}
+
+.slider__input.is-front {
+    z-index: 3;
+}
+
 .slider__input::-webkit-slider-runnable-track {
     height: 24px;
     background: transparent;
@@ -760,7 +531,8 @@
     --rating-size: 18px;
 }
 
-/* só leitura, com valor fracionado: style="--rating-value: 4.3" */
+/* só leitura, com valor fracionado: <span class="rating-display" data-value="4.3"></span>
+   (o JS lê data-value; para mudar depois: NOVAUI.rating.set({ target, value })) */
 .rating-display {
     --rating-size: 18px;
     --rating-max: 5;
@@ -795,8 +567,6 @@
 @media (prefers-reduced-motion: reduce) {
 
     .rte,
-    .upload__zone,
-    .upload__progress span,
     .color-swatch,
     .slider__input::-webkit-slider-thumb,
     .rating__star {

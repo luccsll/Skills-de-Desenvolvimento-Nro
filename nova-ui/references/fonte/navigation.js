@@ -33,7 +33,7 @@
         }
 
         function position(menu, anchor, placement) {
-            var $m = $(menu).prop('hidden', false).css({ visibility: 'hidden', left: 0, top: 0 });
+            var $m = $(menu).prop('hidden', false).addClass('is-invisible').css({ left: 0, top: 0 });
             var m = 8, mw = menu.offsetWidth, mh = menu.offsetHeight;
             var vw = document.documentElement.clientWidth, vh = window.innerHeight, x, y;
             if (anchor.width === undefined) { // ponto (botão direito)
@@ -52,7 +52,7 @@
                 if (!top && y + mh > vh - m && anchor.top - mh - 4 > m) y = anchor.top - mh - 4;
                 if (top && y < m) y = anchor.bottom + 4;
             }
-            $m.css({ left: Math.round(Math.min(Math.max(m, x), vw - m - mw)), top: Math.round(Math.max(m, y)), visibility: '' });
+            $m.css({ left: Math.round(Math.min(Math.max(m, x), vw - m - mw)), top: Math.round(Math.max(m, y)) }).removeClass('is-invisible');
         }
 
         function closeFrom(level, restore) {

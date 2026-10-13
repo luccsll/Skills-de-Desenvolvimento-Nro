@@ -1,18 +1,21 @@
 # Nova UI — Catálogo de componentes
 
-Gerado a partir do catálogo oficial do showcase (botão "<> Código"). 71 componentes. Todos já vêm em `nova-ui.min.css` / `nova-ui.min.js`; os arquivos-fonte citados servem só para consultar em `references/fonte/`.
+> Regras de uso de JS nos exemplos: sempre jQuery, `var` e `function` (sem arrow function). Eventos `nova:*` com jQuery: dados em `e.originalEvent.detail`. O `email-fluig` é a única exceção à regra sem CSS inline.
+
+Gerado a partir do catálogo oficial do showcase (botão "<> Código"). 79 componentes. Todos já vêm em `nova-ui.min.css` / `nova-ui.min.js`, exceto o template de e-mail (arquivo próprio). O anexo com `layout: 'drop'` também precisa do FilePond, e a prévia de PDF do pdf.js (ver `#anexo`). Os arquivos-fonte citados servem só para consultar em `references/fonte/`.
 
 ## Índice
 
 - **Botões:** [Botão](#botao) · [Botão com ícone](#botao-icone) · [Botão carregando](#botao-carregando) · [Botão com contador](#botao-contador) · [Botões agrupados (segmentado)](#botao-segmentado)
-- **Formulário:** [Campo de texto](#campo-texto) · [Campo de busca (ícone e limpar)](#campo-busca) · [Campo com máscara e validação](#campo-mascara) · [Campo preenchido automaticamente](#campo-auto) · [Área de texto com contador](#textarea) · [Código de verificação (OTP / PIN)](#otp) · [Campo numérico com + e −](#stepper-numerico) · [Grid de formulário (12 colunas)](#grid-formulario) · [Grupo de campos (fieldset)](#fieldset) · [Resumo de erros do formulário](#resumo-erros)
+- **Formulário:** [Campo de texto](#campo-texto) · [Estado do campo via JavaScript](#campo-estado-js) · [Campo de busca (ícone e limpar)](#campo-busca) · [Campo com máscara e validação](#campo-mascara) · [Seletor de data e período](#data-periodo) · [Seletor de hora](#hora) · [Campo preenchido automaticamente](#campo-auto) · [Área de texto com contador](#textarea) · [Código de verificação (OTP / PIN)](#otp) · [Campo numérico com + e −](#stepper-numerico) · [Grid de formulário (12 colunas)](#grid-formulario) · [Grupo de campos (fieldset)](#fieldset) · [Resumo de erros do formulário](#resumo-erros)
 - **Seleção:** [Checkbox](#checkbox) · [Radio](#radio) · [Switch (liga/desliga)](#switch) · [Select (lista suspensa)](#select) · [Multi select](#multi-select) · [Combobox (digitar para filtrar)](#combobox) · [Autocomplete (busca em dataset)](#autocomplete) · [Listbox (lista de opções visível)](#listbox) · [Tag (etiqueta)](#tag) · [Tags de filtro](#tag-filtro) · [Campo de tags](#campo-tags)
-- **Campos extras:** [Editor de texto (rich text)](#editor-texto) · [Upload de arquivos](#upload) · [Seletor de cor](#cor) · [Slider (controle deslizante)](#slider) · [Avaliação (estrelas)](#avaliacao)
-- **Exibição de dados:** [Badge (status)](#badge) · [Tabela](#tabela) · [Avatar](#avatar) · [Indicador (stat / KPI)](#stat) · [Card](#card) · [Card com foto (produto)](#card-produto) · [Lista (list item)](#lista) · [Lista de descrição (dados)](#lista-descricao) · [Accordion](#accordion) · [Timeline (histórico)](#timeline) · [Árvore (tree view)](#arvore) · [Kanban](#kanban) · [Calendário](#calendario) · [Data grid (tabela editável)](#data-grid) · [Barra de progresso](#progresso)
-- **Navegação:** [Breadcrumb (trilha)](#breadcrumb) · [Abas (tabs)](#abas) · [Paginação](#paginacao) · [Stepper (etapas)](#stepper) · [Menu suspenso (dropdown)](#menu) · [Menu de contexto (botão direito)](#menu-contexto)
+- **Campos extras:** [Editor de texto (rich text)](#editor-texto) · [Anexo (upload de arquivos)](#anexo) · [Seletor de cor](#cor) · [Slider (controle deslizante)](#slider) · [Avaliação (estrelas)](#avaliacao)
+- **Exibição de dados:** [Badge (status)](#badge) · [Tabela](#tabela) · [Barra de filtros](#barra-filtros) · [Ações em massa na tabela](#acoes-massa) · [Tabela pai x filho](#pai-filho) · [Avatar](#avatar) · [Indicador (stat / KPI)](#stat) · [Card](#card) · [Card com foto (produto)](#card-produto) · [Lista (list item)](#lista) · [Lista de descrição (dados)](#lista-descricao) · [Accordion](#accordion) · [Timeline (histórico)](#timeline) · [Histórico de alterações (antes x depois)](#historico-alteracoes) · [Árvore (tree view)](#arvore) · [Kanban](#kanban) · [Calendário](#calendario) · [Data grid (tabela editável)](#data-grid) · [Barra de progresso](#progresso)
+- **Navegação:** [Breadcrumb (trilha)](#breadcrumbs) · [Abas (tabs)](#abas) · [Paginação](#paginacao) · [Stepper (etapas)](#stepper) · [Menu suspenso (dropdown)](#menu) · [Menu de contexto (botão direito)](#menu-contexto)
 - **Experiência:** [Estado vazio / erro / sucesso](#estado-vazio) · [Alerta (aviso na página)](#alerta) · [Banner (faixa no topo)](#banner) · [Confirmação](#confirmacao) · [Tooltip e ajuda (?)](#tooltip) · [Coachmark (novidade)](#coachmark) · [Tour guiado](#tour) · [Painel de ajuda](#painel-ajuda) · [FAQ (perguntas frequentes)](#faq) · [Onboarding (primeiros passos)](#onboarding) · [Página 404 / 403 / 500 / manutenção](#pagina-erro)
 - **Sobreposições:** [Toast (aviso rápido)](#toast) · [Modal](#modal) · [Drawer (painel lateral)](#drawer)
 - **Carregamento:** [Loader sobre um elemento](#loader-overlay) · [Tela de abertura (widget)](#tela-abertura) · [Spinner e pontos](#spinner) · [Skeleton](#skeleton) · [Barra de carregamento no topo](#barra-topo)
+- **E-mail:** [E-mail de notificação (Fluig)](#email-fluig)
 
 ---
 
@@ -96,7 +99,7 @@ Combine uma variante, um tamanho e, se quiser, largura total.
 **Uso pelo JavaScript**
 
 ```js
-botao.classList.add('is-loading');   // ao terminar: remove('is-loading')
+$('#salvar').addClass('is-loading');   // ao terminar: $('#salvar').removeClass('is-loading')
 ```
 
 **Classes**
@@ -215,6 +218,84 @@ Muda o estado visual e a mensagem do campo.
 | `NOVAUI.field.clear(target)` | — | — | Limpa o valor e dispara input/change. |
 | `NOVAUI.field.refresh(root)` | — | document | Recalcula contador, máscaras e estado de valor em HTML novo. |
 
+<a id="campo-estado-js"></a>
+## Estado do campo via JavaScript
+
+`key: campo-estado-js` · palavras-chave: estado erro sucesso alerta validacao setState mensagem campo · fonte CSS: inputs.css · fonte JS: inputs.js
+
+**HTML base**
+
+```html
+<div class="field field--required" id="campo-placa">
+  <div class="field__control">
+    <div class="field__body">
+      <label class="field__label" for="placa">Placa do veículo</label>
+      <input class="field__input" id="placa" name="placa" type="text" placeholder="AAA0A00" required>
+    </div>
+  </div>
+  <div class="field__footer">
+    <p class="field__message">Placa da frota, sem traço.</p>
+  </div>
+</div>
+```
+
+**Uso pelo JavaScript**
+
+```js
+// Erro, sucesso ou alerta: a mensagem aparece embaixo do campo, com ícone
+NOVAUI.field.setState({ target: '#campo-placa', type: 'error', message: 'Placa não cadastrada na frota.' });
+NOVAUI.field.setState({ target: '#campo-placa', type: 'success', message: 'Veículo encontrado.' });
+NOVAUI.field.setState({ target: '#campo-placa', type: 'warning', message: 'Licenciamento vence em 12 dias.' });
+
+// Volta ao normal (o texto de ajuda original reaparece)
+NOVAUI.field.setState({ target: '#campo-placa', type: null });
+
+// Exemplo real: consulta ao sair do campo
+$('#placa').on('change', function () {
+  var placa = $.trim(this.value).toUpperCase();
+  if (!placa) return NOVAUI.field.setState({ target: '#campo-placa', type: null });
+  var ds = DatasetFactory.getDataset('ds_global_frota', null,
+    [DatasetFactory.createConstraint('placa', placa, placa, ConstraintType.MUST)], null);
+  if (!ds || !ds.values.length) {
+    NOVAUI.field.setState({ target: '#campo-placa', type: 'error', message: 'Placa não cadastrada na frota.' });
+  } else {
+    NOVAUI.field.setState({ target: '#campo-placa', type: 'success', message: 'Veículo encontrado.' });
+  }
+});
+
+// No envio do Fluig: valida os obrigatórios e bloqueia se tiver erro
+var beforeSendValidate = function (numState, nextState) {
+  var ok = true;
+  $('form .field__input[required]').each(function () {
+    if (!NOVAUI.field.validate(this)) ok = false;   // marca o erro no campo
+  });
+  if (!ok) throw 'Corrija os campos destacados.';
+};
+```
+
+**NOVAUI.field.setState(opções)**
+
+Muda o estado visual e a mensagem do campo. Atualiza o aria-invalid sozinho.
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `target` | elemento \| seletor | — | O .field ou o input dentro dele. |
+| `type` | 'error' \| 'success' \| 'warning' \| null | null | Estado. null volta ao normal e devolve o texto de ajuda original. |
+| `message` | texto | — | Mensagem embaixo do campo. Sem mensagem, só muda a cor da borda. |
+
+**Outras funções**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `NOVAUI.field.validate(target)` | — | — | Aplica required e data-validate agora. Marca o erro e devolve true/false. |
+| `NOVAUI.field.clear(target)` | — | — | Limpa o valor e dispara input/change. |
+
+**Classes (aplicadas pelo setState)**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `.field--error · --success · --warning` | — | — | Também podem vir direto no HTML, se o estado já for conhecido ao carregar. |
+
 <a id="campo-busca"></a>
 ## Campo de busca (ícone e limpar)
 
@@ -290,6 +371,152 @@ NOVAUI.field.unmask('#cpf');    // valor sem pontos e traço
 | `NOVAUI.field.validate(target)` | — | — | Aplica data-validate agora. Devolve true/false. |
 | `NOVAUI.field.unmask(target)` | — | — | Valor sem máscara. Em currency devolve número. |
 | `NOVAUI.field.isCPF(v) · isCNPJ(v)` | texto | — | Confere um CPF/CNPJ sem precisar de campo. |
+
+<a id="data-periodo"></a>
+## Seletor de data e período
+
+`key: data-periodo` · palavras-chave: data calendario datepicker periodo intervalo de ate ferias abono vencimento · fonte CSS: pickers.css, inputs.css · fonte JS: pickers.js, inputs.js
+
+**HTML base**
+
+```html
+<!-- data única: só o atributo, sem JS (vale também para type="date") -->
+<div class="field field--required">
+  <div class="field__control">
+    <div class="field__body">
+      <label class="field__label" for="dataAbono">Data do abono</label>
+      <input type="date" class="field__input" id="dataAbono" name="dataAbono" data-datepicker
+             data-min="-30" data-max="hoje" data-disable="weekends">
+    </div>
+  </div>
+</div>
+
+<!-- período: dois campos ligados -->
+<div class="form-grid">
+  <div class="form-col-12 form-col-md-6">
+    <div class="field"><div class="field__control"><div class="field__body">
+      <label class="field__label" for="feriasInicio">Férias: início</label>
+      <input class="field__input" id="feriasInicio" name="feriasInicio" data-datepicker
+             data-range-end="#feriasFim" data-min="+1" data-max-range="30">
+    </div></div></div>
+  </div>
+  <div class="form-col-12 form-col-md-6">
+    <div class="field"><div class="field__control"><div class="field__body">
+      <label class="field__label" for="feriasFim">Férias: fim</label>
+      <input class="field__input" id="feriasFim" name="feriasFim" data-datepicker data-range-start="#feriasInicio">
+    </div></div></div>
+  </div>
+</div>
+```
+
+**Uso pelo JavaScript**
+
+```js
+// não precisa de JS: o data-datepicker basta.
+// Pelo JS só quando a regra for uma função (ex.: feriados vindos de um dataset)
+NOVAUI.datepicker.create({
+  target: '#dataAbono',
+  min: '-30',                                  // 30 dias atrás
+  max: 'hoje',
+  disable: function (d) { return feriados.indexOf(NOVAUI.datepicker.format(d)) > -1; },
+  onChange: function (r) { console.log(r.value, r.date); }
+});
+
+$('#feriasInicio').on('nova:date-change', function (e) {
+  var d = e.originalEvent.detail;             // { value, date, start, end }
+  console.log(d.start, d.end);
+});
+
+NOVAUI.datepicker.setValue('#dataAbono', '09/10/2026');
+var data = NOVAUI.datepicker.getDate('#dataAbono');   // Date ou null
+```
+
+**Atributos HTML (no input)**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `data-datepicker` | — | — | Liga o calendário. Põe a máscara dd/mm/aaaa e o botão no campo. |
+| `type="date"` | — | — | Opcional. O campo mostra dd/mm/aaaa e um oculto com o mesmo name grava aaaa-mm-dd (o valor do type="date"). min e max nativos viram os limites. |
+| `data-range-end · data-range-start` | #idDoOutroCampo | — | Liga os dois campos do período (no início e no fim). |
+| `data-min · data-max` | hoje · +30 · -7 · dd/mm/aaaa · #campo | — | Primeira e última data aceitas. +N/-N contam dias a partir de hoje. |
+| `data-disable` | weekends | — | Bloqueia sábado e domingo. |
+| `data-disabled-dates` | dd/mm/aaaa,dd/mm/aaaa | — | Datas bloqueadas (feriados). |
+| `data-max-range` | número | — | Tamanho máximo do período em dias (no campo inicial). |
+| `data-presets` | — | — | Mostra atalhos: Hoje, Últimos 7 dias, Últimos 30 dias, Este mês, Mês passado. |
+
+**Funções e evento**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `NOVAUI.datepicker.create(opções)` | { target, min, max, disable, disabledDates, maxRange, presets, onChange } | — | Regras pelo JS. disable pode ser uma função (data) → true para bloquear. |
+| `NOVAUI.datepicker.open(target) · close()` | — | — | Abre e fecha o calendário. |
+| `NOVAUI.datepicker.setValue(target, valor) · getDate(target)` | dd/mm/aaaa · Date | — | Muda o valor / devolve a data como Date. |
+| `nova:date-change` | { value, date, start, end } | — | No campo (no período, no campo inicial). |
+
+**Teclado**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `Seta para baixo no campo` | — | — | Abre o calendário. |
+| `Setas · Home/End · Page Up/Down` | — | — | Dia · início/fim da semana · mês (com Shift, ano). |
+| `Enter · Esc` | — | — | Escolhe · fecha e volta ao campo. |
+
+<a id="hora"></a>
+## Seletor de hora
+
+`key: hora` · palavras-chave: hora horario timepicker plantao jornada inicio fim duracao · fonte CSS: pickers.css, inputs.css · fonte JS: pickers.js, inputs.js
+
+**HTML base**
+
+```html
+<div class="form-grid">
+  <div class="form-col-12 form-col-md-6">
+    <div class="field"><div class="field__control"><div class="field__body">
+      <label class="field__label" for="plantaoInicio">Plantão: início</label>
+      <input class="field__input" id="plantaoInicio" name="plantaoInicio" data-timepicker
+             data-step="30" data-min="06:00" data-max="22:00" data-range-end="#plantaoFim">
+    </div></div></div>
+  </div>
+  <div class="form-col-12 form-col-md-6">
+    <div class="field"><div class="field__control"><div class="field__body">
+      <label class="field__label" for="plantaoFim">Plantão: fim</label>
+      <input class="field__input" id="plantaoFim" name="plantaoFim" data-timepicker
+             data-step="30" data-range-start="#plantaoInicio">
+    </div></div></div>
+  </div>
+</div>
+```
+
+**Uso pelo JavaScript**
+
+```js
+// não precisa de JS: o data-timepicker basta.
+NOVAUI.timepicker.create({ target: '#horaAcesso', step: 15, min: '07:00', max: '19:00' });
+
+$('#plantaoFim').on('nova:time-change', function (e) {
+  console.log(e.originalEvent.detail.value);   // '18:30'
+});
+
+NOVAUI.timepicker.setValue('#plantaoInicio', '08:00');
+```
+
+**Atributos HTML (no input)**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `data-timepicker` | — | — | Liga a lista de horários. Põe a máscara hh:mm e o botão no campo. |
+| `type="time"` | — | — | Opcional. min, max e step nativos (step em segundos: 900 = 15 min) viram os limites e o intervalo. |
+| `data-step` | minutos | 30 | Intervalo entre os horários da lista. |
+| `data-min · data-max` | hh:mm | 00:00 · 23:59 | Primeiro e último horário. |
+| `data-range-end · data-range-start` | #idDoOutroCampo | — | Início e fim: o fim só mostra horários depois do início, com a duração. |
+
+**Funções e evento**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `NOVAUI.timepicker.create(opções)` | { target, step, min, max, onChange } | — | Regras pelo JS. |
+| `NOVAUI.timepicker.open(target) · close() · setValue(target, 'hh:mm')` | — | — | Abre, fecha e muda o valor. |
+| `nova:time-change` | { value, minutes } | — | No campo, ao escolher na lista. |
 
 <a id="campo-auto"></a>
 ## Campo preenchido automaticamente
@@ -393,7 +620,9 @@ Preenche o campo e destaca por um instante.
 **Uso pelo JavaScript**
 
 ```js
-document.querySelector('#otp-demo').addEventListener('nova:otp-complete', e => console.log(e.detail.value));
+$('#otp-demo').on('nova:otp-complete', function (e) {
+  console.log(e.originalEvent.detail.value);   // código completo
+});
 ```
 
 **Atributos HTML**
@@ -933,7 +1162,7 @@ NOVAUI.tags.set('#emails', ['a@x.com']);
     </button>
     <span aria-hidden="true" class="rte__sep"></span>
     <button aria-label="Título" aria-pressed="false" class="rte__btn" data-cmd="formatBlock" data-value="h3" title="Título" type="button">
-      <span style="font-weight:700">H</span>
+      <strong>H</strong>
     </button>
     <button aria-label="Lista" aria-pressed="false" class="rte__btn" data-cmd="insertUnorderedList" title="Lista" type="button">
       <span aria-hidden="true" class="icon">format_list_bulleted</span>
@@ -999,59 +1228,122 @@ NOVAUI.rte.getHTML('.rte');
 | `NOVAUI.rte.setHTML(target, html)` | texto | — | Troca o conteúdo. |
 | `NOVAUI.rte.setDisabled(target, bool)` | — | — | Bloqueia a edição. |
 
-<a id="upload"></a>
-## Upload de arquivos
+<a id="anexo"></a>
+## Anexo (upload de arquivos)
 
-`key: upload` · palavras-chave: upload anexo arquivo arrastar · fonte CSS: form-extras.css, form.css · fonte JS: form-extras.js
+`key: anexo` · palavras-chave: anexo upload arquivo arrastar soltar drag drop filepond fluig aba anexos botao pdf preview progresso · fonte CSS: attachments.css · fonte JS: attachments.js
 
 **HTML base**
 
 ```html
-<div class="upload" data-max-files="5" data-max-size="10" id="upload-demo">
-  <label class="upload__zone">
-    <input accept=".pdf,.png,.jpg,.jpeg,.xlsx,.docx" aria-describedby="up-hint" class="upload__input" multiple type="file">
-    <span class="upload__icon"><span aria-hidden="true" class="icon">upload</span></span>
-    <span class="upload__title"><strong>Clique para escolher</strong> ou arraste os arquivos aqui</span>
-    <span class="upload__hint" id="up-hint">PDF, imagem, Excel ou Word · até 10 MB cada · no máximo 5 arquivos</span>
-  </label>
-  <p class="form-error upload__error" hidden></p>
-  <ul aria-live="polite" class="upload__list"></ul>
+<div class="form-group form-group--stretch">
+  <span class="form-label is-required">Carteira de habilitação (CNH)</span>
+  <div class="attachment" id="anexo-cnh">
+    <input type="file" class="attachment__input">
+    <!-- guarda o nome do arquivo no formulário (o Fluig grava) -->
+    <input type="hidden" id="anexoCnhNome" name="anexoCnhNome">
+  </div>
 </div>
 ```
 
 **Uso pelo JavaScript**
 
 ```js
-document.querySelector('#upload-demo').addEventListener('nova:upload-add', e => {
-  e.detail.items.forEach(item => NOVAUI.upload.setStatus({ target: item, type: 'done' }));
+// Carregue o FilePond ANTES da Nova UI (só para layout: 'drop'):
+//   no <head>:  <link rel="stylesheet" href="https://unpkg.com/filepond/dist/filepond.min.css">
+//   no <body>:  <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+// Só para prévia de PDF:
+//   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+// 1) Arrastar e soltar + aba Anexos do Fluig (o padrão)
+var atividade = getWKNumState();           // ou o campo hidden com a atividade
+var INICIO = ['0', '4'], REAJUSTE = ['10'];
+
+$(function () {
+  NOVAUI.attachment.create({
+    target: '#anexo-cnh',
+    nameField: '#anexoCnhNome',
+    layout: 'drop',                         // 'drop' (arrastar e soltar) | 'button'
+    fluig: true,                            // true: vai para a aba Anexos | false: fica só no formulário
+    prefix: 'CNH',                          // na aba Anexos: "CNH - arquivo.pdf"
+    accept: ['.pdf', '.jpg', '.jpeg', '.png'],
+    maxSize: 500,                           // KB
+    required: true,
+    editable: INICIO.concat(REAJUSTE).indexOf(atividade) > -1,   // pode anexar nesta etapa?
+    removable: REAJUSTE.indexOf(atividade) > -1                  // pode trocar o arquivo já enviado?
+  });
 });
+
+// bloqueia o envio sem o anexo obrigatório
+var beforeSendValidate = function (numState, nextState) {
+  if (!NOVAUI.attachment.validate()) throw 'Anexe a carteira de habilitação.';
+};
+
+// 2) Botão, vários arquivos, envio feito por você (sem aba Anexos)
+NOVAUI.attachment.create({
+  target: '#anexo-docs',
+  layout: 'button',
+  buttonText: 'Anexar documentos',
+  fluig: false,
+  multiple: true,
+  maxFiles: 5,
+  maxSize: 10240
+});
+
+$('#anexo-docs').on('nova:attachment-add', function (e) {
+  var item = e.originalEvent.detail.item;
+  NOVAUI.attachment.setProgress({ target: item, value: 40 });
+  // ... depois do envio:
+  NOVAUI.attachment.setStatus({ target: item, type: 'done' });
+});
+
+var arquivos = NOVAUI.attachment.getFiles('#anexo-docs');   // File[]
 ```
 
-**Atributos HTML**
+**NOVAUI.attachment.create(opções)**
+
+Cria o campo. Devolve o controle (remove, clear, files, names, validate, destroy). As opções também podem vir no HTML: data-layout, data-fluig="false", data-multiple, data-max-files, data-max-size, data-accept, data-prefix, data-required.
 
 | Parâmetro / classe | Tipo / valores | Padrão | Para quê |
 |---|---|---|---|
-| `data-max-size` | MB | — | Tamanho máximo por arquivo. |
-| `data-max-files` | número | 1 (ou ilimitado com multiple) | Quantidade máxima. |
-| `accept (no input)` | .pdf,.png,… | todos | Tipos aceitos. |
-| `multiple (no input)` | — | — | Permite vários arquivos. |
-| `.upload--button` | — | — | Versão compacta, só botão. |
+| `target` | elemento \| seletor | — | O .attachment (com o input file dentro). |
+| `layout` | 'drop' \| 'button' | 'drop' | Visual. 'drop' é a área de arrastar e soltar (FilePond); 'button' é um botão compacto, que também aceita soltar o arquivo em cima. |
+| `fluig` | boolean | true | true: o arquivo vai para a aba Anexos do processo. false: fica só no formulário; pegue com getFiles e envie você (setProgress e setStatus mostram o andamento). |
+| `multiple` | boolean | false | Aceita vários arquivos. Com um só, um arquivo novo troca o anterior. |
+| `maxFiles` | número | sem limite | Limite de arquivos (com multiple). |
+| `nameField` | elemento \| seletor | input com name dentro | Campo que grava o nome do arquivo no formulário (com multiple, uma lista em JSON). As próximas etapas usam esse nome para achar o anexo. |
+| `accept` | lista de extensões ou tipos | ['.pdf','.jpg','.jpeg','.png'] | Tipos aceitos ('.pdf', 'image/*'). |
+| `maxSize` | número (KB) | 5120 | Tamanho máximo de cada arquivo. |
+| `prefix` | texto | '' | Prefixo no nome do arquivo ("CNH - arquivo.pdf"), para identificar na aba Anexos. Use quando o formulário tem mais de um anexo. |
+| `editable` | boolean | true | Se pode anexar nesta etapa. false mostra só o arquivo (ou "Nenhum arquivo anexado"). |
+| `removable` | boolean | false | Se pode remover o arquivo já enviado em outra etapa (ex.: Reajuste). Remove também da aba Anexos. |
+| `required` | boolean | false | Obrigatório no validate(). |
+| `preview` | boolean | true (false com multiple) | Mostra a imagem ou as páginas do PDF (PDF precisa do pdf.js). |
+| `previewPages` | número | 2 | Quantas páginas do PDF mostrar. |
+| `label · buttonText` | HTML · texto | Arraste o arquivo aqui… · Anexar arquivo | Texto da área de soltar e do botão. |
+| `onAdd · onRemove` | function | — | Chamadas ao anexar e ao remover. |
 
-**Funções**
+**Funções e eventos**
 
 | Parâmetro / classe | Tipo / valores | Padrão | Para quê |
 |---|---|---|---|
-| `NOVAUI.upload.setProgress(item, %)` | 0–100 | — | Barra de progresso do arquivo. |
-| `NOVAUI.upload.setStatus({ target, type, message })` | type: 'done' \| 'error' | — | Marca o arquivo como enviado ou com falha. |
-| `NOVAUI.upload.getFiles(target) · clear(target)` | — | — | Lista os arquivos / limpa tudo. |
+| `NOVAUI.attachment.validate(target?)` | — | todos | Confere os obrigatórios e marca o erro. Use no beforeSendValidate. |
+| `NOVAUI.attachment.get(target)` | — | — | Controle de um campo já criado (.remove(nome), .clear(), .names(), .validate(), .destroy()). |
+| `NOVAUI.attachment.getFiles(target) · clear(target)` | — | — | Arquivos anexados nesta etapa (File[]) / tira todos. |
+| `NOVAUI.attachment.setProgress({ target, value })` | 0–100 | — | Barra de progresso do arquivo (target = item do evento). |
+| `NOVAUI.attachment.setStatus({ target, type, message })` | type: 'done' \| 'error' \| null | — | Marca o arquivo como enviado ou com falha. |
+| `nova:attachment-add` | { file, name, item, fluig, sent } | — | Arquivo anexado. sent = true quando foi para a aba Anexos. |
+| `nova:attachment-remove` | { name } | — | Arquivo removido. |
+| `nova:attachment-error` | { message, file } | — | Arquivo recusado (tipo, tamanho, limite, repetido ou etapa). |
 
-**Eventos**
+**Como funciona no Fluig (fluig: true)**
 
 | Parâmetro / classe | Tipo / valores | Padrão | Para quê |
 |---|---|---|---|
-| `nova:upload-add` | { files, items } | — | Arquivos aceitos. |
-| `nova:upload-remove` | { file } | — | Arquivo removido. |
-| `nova:upload-reject` | { file, reason } | — | Arquivo recusado (tipo, tamanho, limite). |
+| `Anexar` | — | — | O arquivo é colocado no uploader nativo do Fluig (frame pai) e entra na aba Anexos. |
+| `Próximas etapas` | — | — | Acha o anexo pelo nome em ECM.attachmentTable e baixa por /api/public/ecm/document/downloadURL para Abrir e para a prévia. |
+| `Remover` | — | — | Tira da aba Anexos com WKFViewAttachment.removeAttach e reabre a área de soltar. |
+| `Fora do Fluig` | — | — | Funciona só na tela (útil para testar), sem enviar para lugar nenhum. |
 
 <a id="cor"></a>
 ## Seletor de cor
@@ -1312,6 +1604,264 @@ Use as partes que precisar; todas são opcionais menos a tabela.
 |---|---|---|---|
 | `nova:sort` | { column, key, direction } | — | Coluna ordenada. |
 | `nova:selection` | { rows } | — | Seleção mudou. |
+
+<a id="barra-filtros"></a>
+## Barra de filtros
+
+`key: barra-filtros` · palavras-chave: filtro filtros busca chips limpar tudo pesquisa tabela relatorio · fonte CSS: filters.css, badges.css, tables.css · fonte JS: filters.js
+
+**HTML base**
+
+```html
+<div class="filter-bar" data-filter-for="#tabela-solic" data-filter-noun="solicitação|solicitações">
+  <div class="filter-bar__main">
+    <div class="field field--compact filter-bar__search">
+      <div class="field__control">
+        <span class="field__icon"><span class="icon" aria-hidden="true">search</span></span>
+        <div class="field__body">
+          <label class="field__label" for="filtro-busca">Buscar</label>
+          <input class="field__input" id="filtro-busca" type="search" data-filter-search>
+        </div>
+      </div>
+    </div>
+    <div class="field field--compact field--select">
+      <div class="field__control"><div class="field__body">
+        <label class="field__label" for="filtro-status">Status</label>
+        <select class="field__input" id="filtro-status" data-filter="status">
+          <option value="">Todos os status</option>
+          <option value="pendente">Pendente</option>
+          <option value="aprovado">Aprovado</option>
+        </select>
+      </div></div>
+    </div>
+    <button type="button" class="btn btn--secondary" data-filter-toggle>
+      <span class="icon" aria-hidden="true">tune</span><span>Mais filtros</span>
+    </button>
+  </div>
+
+  <!-- filtros extras (campos normais, com rótulo) -->
+  <div class="filter-bar__panel" hidden>
+    <div class="field"><div class="field__control"><div class="field__body">
+      <label class="field__label" for="filtro-de">Aberta de</label>
+      <input class="field__input" id="filtro-de" data-datepicker data-range-end="#filtro-ate"
+             data-filter="abertura" data-filter-match="from" data-filter-label="Abertura">
+    </div></div></div>
+    <div class="field"><div class="field__control"><div class="field__body">
+      <label class="field__label" for="filtro-ate">Até</label>
+      <input class="field__input" id="filtro-ate" data-datepicker data-range-start="#filtro-de"
+             data-filter="abertura" data-filter-match="to">
+    </div></div></div>
+  </div>
+</div>
+
+<!-- cada linha traz os valores filtrados -->
+<tr data-id="SA-1042" data-status="pendente" data-abertura="02/10/2026">…</tr>
+```
+
+**Uso pelo JavaScript**
+
+```js
+// filtro feito no dataset (sem data-filter-for)
+// <div class="filter-bar" data-filter-mode="server">
+$('#filtros').on('nova:filter-change', function (e) {
+  var f = e.originalEvent.detail;   // { search, filters: { status: 'pendente', abertura: { from, to } } }
+  carregarSolicitacoes(f.search, f.filters);
+});
+
+NOVAUI.filterBar.set('#filtros', 'status', 'pendente');
+NOVAUI.filterBar.get('#filtros');      // { search, filters }
+NOVAUI.filterBar.clear('#filtros');
+NOVAUI.filterBar.apply('#filtros');    // depois de trocar as linhas da tabela
+```
+
+**Partes**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `.filter-bar__main` | — | — | Busca, filtros principais e o botão Mais filtros. |
+| `.filter-bar__panel` | hidden | — | Filtros extras. Abre com o botão data-filter-toggle (que mostra quantos filtros do painel estão ativos). |
+| `.filter-bar__active` | gerada | — | Resultado ("5 de 8 solicitações"), chips dos filtros ativos e Limpar tudo. |
+
+**Atributos HTML**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `data-filter-for` | #idDaTabela | — | Filtra a tabela na própria página. Sem resultado, mostra uma linha com "Limpar filtros". |
+| `data-filter-mode` | server | — | Não filtra a tabela; só avisa (nova:filter-change) para buscar no dataset. |
+| `data-filter-noun` | singular\|plural | item\|itens | Palavra do contador de resultados. |
+| `data-filter-search` | — | — | No input de busca (procura no texto da linha). |
+| `data-filter` | chave | — | No campo de filtro (select, multi select, checkbox, radio, texto). A linha traz o valor em data-chave. |
+| `data-filter-label` | texto | label do campo | Nome que aparece no chip. |
+| `data-filter-match` | from · to | — | Início e fim de um intervalo de datas (mesma chave nos dois). |
+
+**Funções e evento**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `NOVAUI.filterBar.get(target)` | — | — | { search, filters }. |
+| `NOVAUI.filterBar.set(target, chave, valor)` | — | — | Muda um filtro ('search' para a busca; { from, to } para intervalo). |
+| `NOVAUI.filterBar.clear(target) · apply(target)` | — | — | Limpa tudo / aplica de novo (depois de trocar as linhas). |
+| `nova:filter-change` | { search, filters, visible, total } | — | Na .filter-bar, a cada mudança (busca com 250ms de espera). |
+
+<a id="acoes-massa"></a>
+## Ações em massa na tabela
+
+`key: acoes-massa` · palavras-chave: acoes em massa lote selecao selecionar varios aprovar todos bulk · fonte CSS: tables.css · fonte JS: tables.js
+
+**HTML base**
+
+```html
+<!-- barra: aparece sozinha quando há linhas marcadas -->
+<div class="table-bulk table-bulk--floating" data-bulk-for="tabela-solic"
+     data-bulk-label="solicitação selecionada|solicitações selecionadas" hidden>
+  <span class="table-bulk__count" data-bulk-count></span>
+  <span class="table-bulk__divider" aria-hidden="true"></span>
+  <div class="table-bulk__actions">
+    <button type="button" class="btn btn--ghost btn--sm" data-bulk-action="aprovar"
+            data-bulk-confirm="Aprovar {n} solicitações?">
+      <span class="icon" aria-hidden="true">check</span><span>Aprovar</span>
+    </button>
+    <button type="button" class="btn btn--ghost btn--sm btn--icon" data-bulk-clear aria-label="Limpar seleção">
+      <span class="icon" aria-hidden="true">close</span>
+    </button>
+  </div>
+</div>
+
+<table class="data-table" id="tabela-solic">
+  <thead><tr>
+    <th class="cell-check"><input type="checkbox" class="data-table__check" data-select-all aria-label="Selecionar todas"></th>
+    <th>Integrante</th>
+  </tr></thead>
+  <tbody>
+    <tr data-id="SA-1042">
+      <td class="cell-check"><input type="checkbox" class="data-table__check" data-select-row aria-label="Selecionar SA-1042"></td>
+      <td>Ana Beatriz Souza</td>
+    </tr>
+  </tbody>
+</table>
+```
+
+**Uso pelo JavaScript**
+
+```js
+$('#tabela-solic').on('nova:bulk-action', function (e) {
+  var d = e.originalEvent.detail;          // { action: 'aprovar', rows: [tr…], ids: ['SA-1042', …] }
+  aprovarSolicitacoes(d.ids).then(function () {
+    NOVAUI.table.clearSelection('#tabela-solic');
+    NOVAUI.toast({ type: 'success', message: d.ids.length + ' solicitações aprovadas.' });
+  });
+});
+
+NOVAUI.table.getSelectedIds('#tabela-solic');        // ['SA-1042', …]
+NOVAUI.table.select('#tabela-solic', ['SA-1042']);
+```
+
+**Classes e atributos**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `.table-bulk` | data-bulk-for="idDaTabela" | — | Barra dentro do .table-card (entre o cabeçalho e a tabela). |
+| `.table-bulk--floating` | — | — | Barra flutuante presa embaixo da tela; Esc limpa a seleção. |
+| `data-bulk-label` | singular\|plural | selecionado\|selecionados | Texto do contador ("3 solicitações selecionadas"). |
+| `data-bulk-action` | nome da ação | — | No botão: dispara nova:bulk-action com as linhas marcadas. |
+| `data-bulk-confirm · data-bulk-message` | texto com {n} | — | Pede confirmação antes; {n} vira a quantidade. Botão com classe danger abre a confirmação vermelha. |
+| `data-bulk-clear` | — | — | Desmarca tudo. |
+| `tr data-id` | texto | — | Identificador da linha, devolvido em ids. |
+
+**Funções e eventos**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `Shift + clique` | — | — | Marca ou desmarca o intervalo desde a última linha clicada. |
+| `NOVAUI.table.getSelected(t) · getSelectedIds(t)` | — | — | Linhas (tr) / data-id das marcadas. |
+| `NOVAUI.table.select(t, ids) · clearSelection(t)` | — | — | Marca pelos ids / desmarca tudo. |
+| `nova:bulk-action` | { action, rows, ids } | — | Na tabela, ao clicar numa ação (depois da confirmação). |
+| `nova:selection` | { rows, ids } | — | Na tabela, a cada mudança de seleção. |
+
+<a id="pai-filho"></a>
+## Tabela pai x filho
+
+`key: pai-filho` · palavras-chave: pai filho wdkAddChild fnWdkRemoveChild tablename itens linhas adicionar remover fluig · fonte CSS: tables.css, badges.css · fonte JS: tables.js
+
+**HTML base**
+
+```html
+<div class="child-table" id="itens" data-min="1" data-max="20" data-confirm-remove>
+  <div class="child-table__header">
+    <h3 class="child-table__title">Itens <span class="badge badge--neutral badge--sm" data-child-count>0</span></h3>
+    <button type="button" class="btn btn--secondary btn--sm" data-child-add>
+      <span class="icon" aria-hidden="true">add</span><span>Adicionar item</span>
+    </button>
+  </div>
+  <div class="table-scroll">
+    <table class="data-table data-table--stack" tablename="tbItens" noaddbutton="true" nodeletebutton="true">
+      <thead><tr>
+        <th class="cell-index">#</th>
+        <th>Produto</th>
+        <th class="cell-num">Quantidade</th>
+        <th class="cell-actions"><span class="sr-only">Ações</span></th>
+      </tr></thead>
+      <tbody>
+        <!-- linha modelo (o Fluig e a Nova UI escondem) -->
+        <tr data-child-template>
+          <td class="cell-index" data-child-index></td>
+          <td><input class="child-table__input" name="itemProduto" aria-label="Produto"></td>
+          <td class="cell-num"><input class="child-table__input" name="itemQtd" type="number" min="1" aria-label="Quantidade"></td>
+          <td class="cell-actions">
+            <button type="button" class="btn btn--tertiary btn--sm btn--icon" data-child-remove aria-label="Remover item">
+              <span class="icon" aria-hidden="true">delete</span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+```
+
+**Uso pelo JavaScript**
+
+```js
+// inicia sozinho (.child-table); pelo JS dá para mudar as regras por etapa
+NOVAUI.childTable.create({
+  target: '#itens',
+  editable: INICIO.indexOf(atividade) > -1,   // false esconde adicionar/remover
+  onAdd: function (row, indice) { NOVAUI.field.autofill('#itemQtd___' + indice, '1'); }
+});
+
+NOVAUI.childTable.add('#itens', { itemProduto: 'EPI000123', itemQtd: 2 });   // devolve o índice
+NOVAUI.childTable.rows('#itens');   // [{ index, row, values: { itemProduto, itemQtd } }]
+
+var beforeSendValidate = function () {
+  if (!NOVAUI.childTable.validate('#itens')) throw 'Adicione pelo menos um item.';
+};
+
+$('#itens').on('nova:child-add', function (e) { console.log(e.originalEvent.detail.index); });
+```
+
+**Classes e atributos**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `.child-table` | data-min · data-max | 0 · sem limite | Mínimo (validate e lixeira bloqueada) e máximo de linhas (Adicionar desabilita). |
+| `data-confirm-remove` | — \| texto | — | Pergunta antes de remover. Com texto, usa como título. |
+| `data-editable="false" · data-empty` | — · texto | — | Esconde adicionar/remover · texto do estado vazio. |
+| `table[tablename]` | nome | — | A tabela pai x filho do Fluig (com noaddbutton e nodeletebutton). |
+| `tr[data-child-template]` | — | primeira linha | Linha modelo, oculta. |
+| `[data-child-add] · [data-child-remove]` | — | — | Botões de adicionar (pode ter mais de um) e de remover (na linha). |
+| `[data-child-index] · [data-child-count]` | — | — | Número da linha · total de linhas. |
+| `.child-table__input` | — | — | Campo dentro da célula (input ou select). |
+
+**Funções e eventos**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `NOVAUI.childTable.create(opções)` | { target, min, max, confirmRemove, editable, addText, empty, onAdd, onRemove } | — | Regras pelo JS. |
+| `NOVAUI.childTable.add(target, valores)` | { campo: valor } | — | Adiciona uma linha (wdkAddChild) e preenche. Devolve o índice. |
+| `NOVAUI.childTable.remove(target, linha \| índice)` | — | — | Remove sem perguntar (fnWdkRemoveChild). |
+| `NOVAUI.childTable.rows(target)` | — | — | Linhas com índice e valores pelo nome sem ___N. |
+| `NOVAUI.childTable.clear · validate · refresh` | — | — | Remove todas · confere o mínimo · atualiza depois que o Fluig carregar linhas. |
+| `nova:child-add · nova:child-remove` | { row, index } · { index } | — | No .child-table. |
 
 <a id="avatar"></a>
 ## Avatar
@@ -1629,6 +2179,105 @@ Usa <details> nativo, sem JS.
 |---|---|---|---|
 | `.timeline--compact` | — | — | Menos espaçamento. |
 
+<a id="historico-alteracoes"></a>
+## Histórico de alterações (antes x depois)
+
+`key: historico-alteracoes` · palavras-chave: historico alteracoes modificacoes antes depois comparar diff log auditoria modificationLog edicao · fonte CSS: changes.css, data-display.css, badges.css · fonte JS: changes.js
+
+**HTML base**
+
+```html
+<!-- campo que o Fluig grava (JSON com todas as alterações) -->
+<input type="hidden" id="modificationLog" name="modificationLog">
+
+<!-- onde o histórico aparece (fica oculto enquanto não houver alteração) -->
+<div class="change-history" id="historico"></div>
+```
+
+**Uso pelo JavaScript**
+
+```js
+// registra as alterações dos campos de #editProductInfo
+var atividade = $('#activity').val();
+var EDITA = ['0', '4', '10'];
+
+$(function () {
+  NOVAUI.changeHistory.track({
+    target: '#editProductInfo',                 // área com os campos
+    field: '#modificationLog',                  // campo oculto (JSON)
+    history: '#historico',                      // atualiza o histórico a cada mudança
+    user: function () { return $('#userLoged').val(); },
+    enabled: EDITA.indexOf(atividade) > -1,     // só registra nas etapas de edição
+    when: function () { return $('#typeSolic').val() === 'edit'; },
+    valueLabels: {                              // código → texto no histórico
+      'Bloqueado': { S: 'Sim', N: 'Não' },
+      'Retem PIS': { '1': 'Sim', '2': 'Não' }
+    }
+  });
+
+  // trocou o produto: os valores atuais viram o novo "antes"
+  $('#searchProduct').on('change', function () {
+    NOVAUI.changeHistory.reset('#editProductInfo');
+  });
+});
+
+// nas outras etapas: só mostrar
+NOVAUI.changeHistory.render({
+  target: '#historico',
+  field: '#modificationLog',
+  valueLabels: { 'Bloqueado': { S: 'Sim', N: 'Não' } }
+});
+
+// evento a cada alteração gravada
+$('#modificationLog').on('nova:change-history', function (e) {
+  console.log(e.originalEvent.detail.changes);   // { 'Bloqueado': { old: 'N', new: 'S' } }
+});
+```
+
+**NOVAUI.changeHistory.track(opções)**
+
+Começa a registrar. Guarda os valores quando o usuário entra no primeiro campo e, a cada change, grava a diferença no campo oculto. Cada entrada no formulário vira uma sessão por usuário.
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `target` | elemento \| seletor | — | Área com os campos que serão comparados. |
+| `field` | elemento \| seletor | — | Campo oculto que grava o JSON (o Fluig salva com o formulário). |
+| `history` | elemento \| seletor | — | Onde mostrar o histórico. Atualiza a cada alteração. |
+| `user` | texto \| function | WCMAPI.userCode | Login de quem está alterando. |
+| `enabled` | boolean | true | Se registra nesta etapa. |
+| `when` | function | — | Condição a cada alteração (ex.: só quando o tipo da solicitação é edição). |
+| `fields` | seletor | inputs, selects e textareas editáveis | Quais campos entram na comparação. |
+| `useText` | boolean | false | Grava o texto da opção do select ("Sim") em vez do valor ("S"). |
+| `valueLabels` | objeto | — | Troca códigos por texto no histórico: { 'Rótulo': { S: 'Sim', N: 'Não' } }. |
+
+**NOVAUI.changeHistory.render(opções)**
+
+Monta o histórico a partir do JSON. Use nas etapas que só mostram.
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `target · field` | elemento \| seletor | — | Onde mostrar e o campo oculto com o JSON. |
+| `valueLabels` | objeto | — | Código → texto, como no track. |
+| `people` | function(login) | dataset colleague | Devolve { name, photo } (ou só o nome) de cada login. No Fluig o padrão busca no dataset colleague. Também vale no track. |
+| `title` | texto | Histórico do formulário editado | Título acima da lista. '' tira o título. |
+| `order` | 'desc' \| 'asc' | 'desc' | Mais recentes primeiro ou por último. |
+| `hideEmpty · emptyText` | boolean · texto | true · Nenhuma alteração registrada. | Esconde o bloco sem alterações, ou mostra o texto. |
+
+**Rótulo de cada campo**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `data-change-label` | texto | — | No campo: nome que aparece no histórico. Sem ele, usa o <label> do campo (for=id), depois o rótulo do .field / .form-group. |
+| `data-change-on · data-change-off` | texto | Sim · Não | Texto do checkbox marcado e desmarcado. |
+
+**Funções e evento**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `NOVAUI.changeHistory.reset(target?)` | — | todos | Nova comparação: os valores atuais viram o "antes" (ex.: trocou o produto). |
+| `NOVAUI.changeHistory.parse(valor)` | — | — | Lê o JSON (formato novo ou antigo) e devolve a lista por usuário. |
+| `nova:change-history` | { changes, log } | — | No campo oculto, a cada alteração gravada. |
+
 <a id="arvore"></a>
 ## Árvore (tree view)
 
@@ -1752,10 +2401,10 @@ Usa <details> nativo, sem JS.
 **HTML base**
 
 ```html
-<div class="kanban" id="kanban-demo" style="--kanban-max-height:560px;--kanban-col:232px">
+<div class="kanban" id="kanban-demo">
   <section aria-label="Solicitado" class="kanban__column" data-status="solicitado">
     <header class="kanban__header">
-      <span class="kanban__dot" style="--kanban-accent:var(--nova-color-text-muted)"></span>
+      <span class="kanban__dot"></span>
       <h4 class="kanban__title">Solicitado</h4>
       <span class="kanban__count" data-kanban-count="">0</span>
       <div class="kanban__actions">
@@ -1776,7 +2425,7 @@ Usa <details> nativo, sem JS.
   </section>
   <section aria-label="Em aprovação" class="kanban__column" data-limit="3" data-status="aprovacao">
     <header class="kanban__header">
-      <span class="kanban__dot" style="--kanban-accent:var(--nova-warning-text)"></span>
+      <span class="kanban__dot kanban__dot--warning"></span>
       <h4 class="kanban__title">Em aprovação</h4>
       <span class="kanban__count" data-kanban-count="">0</span>
       <span class="kanban__limit" title="Limite da coluna">máx. 3</span>
@@ -1820,6 +2469,12 @@ Usa <details> nativo, sem JS.
 |---|---|---|---|
 | `nova:kanban-move` | { card, id, from, to, index } | — | Card movido (mouse ou Shift + setas). |
 
+**Cores da coluna**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `.kanban__dot--info · --warning · --success · --danger` | — | neutro | Cor do ponto no título da coluna. |
+
 <a id="calendario"></a>
 ## Calendário
 
@@ -1837,7 +2492,7 @@ Usa <details> nativo, sem JS.
 NOVAUI.calendar.create({
   target: '#calendario',
   events: [{ id: 1, title: 'Plantão TI', start: '2026-10-05', color: 'brand' }],
-  onEventClick: ev => console.log(ev)
+  onEventClick: function (ev) { console.log(ev); }
 });
 ```
 
@@ -1882,16 +2537,16 @@ Objeto do calendário.
 **HTML base**
 
 ```html
-<table class="data-grid" id="grid-demo" style="--table-min-width:860px">
+<table class="data-grid table--min-md" id="grid-demo">
   <thead>
     <tr>
       <th class="data-grid__rownum" scope="col">#</th>
-      <th data-key="codigo" scope="col" style="width:110px">Código</th>
+      <th data-key="codigo" scope="col" class="col-width-120">Código</th>
       <th class="is-required" data-key="descricao" scope="col">Descrição</th>
-      <th data-key="responsavel" scope="col" style="width:150px">Responsável</th>
-      <th class="cell-num is-required" data-key="licencas" scope="col" style="width:100px">Licenças</th>
-      <th class="cell-num" data-key="custo" scope="col" style="width:140px">Custo unitário</th>
-      <th class="cell-num" data-key="inicio" scope="col" style="width:120px">Início</th>
+      <th data-key="responsavel" scope="col" class="col-width-160">Responsável</th>
+      <th class="cell-num is-required col-width-100" data-key="licencas" scope="col">Licenças</th>
+      <th class="cell-num col-width-140" data-key="custo" scope="col">Custo unitário</th>
+      <th class="cell-num col-width-120" data-key="inicio" scope="col">Início</th>
     </tr>
   </thead>
   <tbody>
@@ -1951,6 +2606,13 @@ Nas células <td>.
 |---|---|---|---|
 | `nova:grid-change` | { cell, row, key, oldValue, value, error } | — | Célula alterada. |
 
+**Larguras**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `.table--min-sm · --min-md · --min-lg · --min-xl` | 640 · 860 · 1024 · 1200px | — | Largura mínima antes de rolar na horizontal. |
+| `.col-width-60 … .col-width-280` | px | — | Largura fixa da coluna (no <th>). |
+
 <a id="progresso"></a>
 ## Barra de progresso
 
@@ -1959,8 +2621,8 @@ Nas células <td>.
 **HTML base**
 
 ```html
-<div aria-label="Licenças Protheus" aria-valuemax="100" aria-valuemin="0" aria-valuenow="91" class="progress progress--warning" role="progressbar">
-  <span class="progress__bar" style="--progress-value:91%"></span>
+<div aria-label="Licenças Protheus" aria-valuemax="100" aria-valuemin="0" aria-valuenow="91" class="progress progress--warning" role="progressbar" data-value="91">
+  <span class="progress__bar"></span>
 </div>
 ```
 
@@ -1968,7 +2630,7 @@ Nas células <td>.
 
 | Parâmetro / classe | Tipo / valores | Padrão | Para quê |
 |---|---|---|---|
-| `--progress-value` | CSS, ex.: 40% | 0% | Quanto está preenchido (na .progress__bar). |
+| `data-value` | 0 a 100 | 0 | Quanto está preenchido (no .progress). Para mudar depois: NOVAUI.progress.set({ target, value }). |
 | `.progress--sm` | — | — | Mais fina. |
 | `.progress--success · --warning · --danger · --teal` | — | azul | Cor. |
 
@@ -1976,20 +2638,20 @@ Nas células <td>.
 
 # Navegação
 
-<a id="breadcrumb"></a>
+<a id="breadcrumbs"></a>
 ## Breadcrumb (trilha)
 
-`key: breadcrumb` · palavras-chave: breadcrumb trilha caminho · fonte CSS: navigation.css · fonte JS: — (só CSS)
+`key: breadcrumbs` · palavras-chave: breadcrumbs trilha caminho · fonte CSS: navigation.css · fonte JS: — (só CSS)
 
 **HTML base**
 
 ```html
-<nav aria-label="Você está aqui" class="breadcrumb">
-  <ol class="breadcrumb__list">
-    <li class="breadcrumb__item"><a class="breadcrumb__link" href="#exemplo">Início</a></li>
-    <li class="breadcrumb__item"><a class="breadcrumb__link" href="#exemplo">Processos</a></li>
-    <li class="breadcrumb__item"><a class="breadcrumb__link" href="#exemplo">Iniciar solicitações</a></li>
-    <li class="breadcrumb__item"><span aria-current="page" class="breadcrumb__current">Solicitação de abono</span></li>
+<nav aria-label="Você está aqui" class="breadcrumbs">
+  <ol class="breadcrumbs__list">
+    <li class="breadcrumbs__item"><a class="breadcrumbs__link" href="#exemplo">Início</a></li>
+    <li class="breadcrumbs__item"><a class="breadcrumbs__link" href="#exemplo">Processos</a></li>
+    <li class="breadcrumbs__item"><a class="breadcrumbs__link" href="#exemplo">Iniciar solicitações</a></li>
+    <li class="breadcrumbs__item"><span aria-current="page" class="breadcrumbs__current">Solicitação de abono</span></li>
   </ol>
 </nav>
 ```
@@ -1998,8 +2660,8 @@ Nas células <td>.
 
 | Parâmetro / classe | Tipo / valores | Padrão | Para quê |
 |---|---|---|---|
-| `.breadcrumb--slash` | — | — | Separador "/" em vez de seta. |
-| `.breadcrumb--responsive` | — | — | No celular mostra só o nível anterior, como "voltar". |
+| `.breadcrumbs--slash` | — | — | Separador "/" em vez de seta. |
+| `.breadcrumbs--responsive` | — | — | No celular mostra só o nível anterior, como "voltar". |
 | `aria-current="page"` | — | — | No item atual. |
 
 <a id="abas"></a>
@@ -2022,16 +2684,16 @@ Nas células <td>.
     <button aria-controls="abas1-p2" aria-selected="false" class="tabs__tab" id="abas1-t2" role="tab" type="button">Histórico</button>
   </div>
   <div aria-labelledby="abas1-t0" class="tabs__panel" id="abas1-p0" role="tabpanel">
-    <div class="form-description" style="max-width:none">Matrícula, cargo, setor e gestor do integrante.</div>
+    <div class="form-description form-description--full">Matrícula, cargo, setor e gestor do integrante.</div>
   </div>
   <div aria-labelledby="abas1-t1" class="tabs__panel" hidden id="abas1-p1" role="tabpanel">
-    <div class="form-description" style="max-width:none">Os sistemas e perfis que o integrante tem hoje.</div>
+    <div class="form-description form-description--full">Os sistemas e perfis que o integrante tem hoje.</div>
   </div>
   <div aria-labelledby="abas1-t2" class="tabs__panel" hidden id="abas1-p2" role="tabpanel">
-    <div class="form-description" style="max-width:none">Todas as solicitações e revogações do integrante.</div>
+    <div class="form-description form-description--full">Todas as solicitações e revogações do integrante.</div>
   </div>
   <div aria-labelledby="abas1-t3" class="tabs__panel" hidden id="abas1-p3" role="tabpanel">
-    <div class="form-description" style="max-width:none">Termos assinados e documentos da solicitação.</div>
+    <div class="form-description form-description--full">Termos assinados e documentos da solicitação.</div>
   </div>
 </div>
 ```
@@ -2039,7 +2701,7 @@ Nas células <td>.
 **Uso pelo JavaScript**
 
 ```js
-NOVAUI.tabs.select(document.querySelector('#minha-aba'));
+NOVAUI.tabs.select('#minha-aba');
 ```
 
 **Classes e Atributos HTML**
@@ -2210,7 +2872,10 @@ NOVAUI.stepper.set('.stepper', 2, { errors: [1] });
 **Uso pelo JavaScript**
 
 ```js
-document.querySelector('#menu-acoes').addEventListener('nova:menu-select', e => console.log(e.detail.value));
+// o menu vai para o <body> quando abre: escute pelo document
+$(document).on('nova:menu-select', '#menu-acoes', function (e) {
+  console.log(e.originalEvent.detail.value);
+});
 ```
 
 **Atributos HTML**
@@ -2375,7 +3040,7 @@ NOVAUI.dialog.confirm({
   consequences: ['Kcor · Operador', 'Fluig · Usuário'],
   confirmText: 'Revogar acessos'
   // requireText: 'EXCLUIR'   → exige digitar a palavra
-}).then(ok => { if (ok) revogar(); });
+}).then(function (ok) { if (ok) revogar(); });
 ```
 
 **NOVAUI.dialog.confirm(opções) → Promise<boolean>**
@@ -2432,7 +3097,7 @@ Só informa, com um botão.
 **HTML base**
 
 ```html
-<span style="position:relative;display:inline-flex">
+<span class="coachmark-host">
   <button type="button" class="btn btn--secondary">Exportar</button>
   <button type="button" class="coachmark coachmark--corner" data-coachmark="export-pdf" data-title="Exportar em PDF" data-text="Agora dá para exportar em PDF." data-placement="bottom"></button>
 </span>
@@ -2452,6 +3117,12 @@ Só informa, com um botão.
 | Parâmetro / classe | Tipo / valores | Padrão | Para quê |
 |---|---|---|---|
 | `nova:coachmark-dismiss` | { key } | — | Novidade dispensada. |
+
+**Classes**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `.coachmark-host` | — | — | Envolve o botão e o ponto, para o ponto ficar no canto dele. |
 
 <a id="tour"></a>
 ## Tour guiado
@@ -2549,7 +3220,7 @@ Passo a passo destacando partes da tela.
             </button>
           </li>
         </ul>
-        <p class="form-helper" data-help-empty="" hidden="" style="padding:12px 0">Nenhum artigo encontrado. Fale com o Service Desk.</p>
+        <p class="form-helper help-panel__empty" data-help-empty="" hidden="">Nenhum artigo encontrado. Fale com o Service Desk.</p>
       </div>
       <div class="help-panel__section">
         <p class="help-panel__section-title">Primeiros passos</p>
@@ -2561,10 +3232,10 @@ Passo a passo destacando partes da tela.
     </div>
   </div>
   <div class="help-panel__footer">
-    <strong style="color:var(--nova-color-text-primary)">Não achou o que precisava?</strong>
-    <span style="display:flex;flex-wrap:wrap;align-items:center;gap:8px" style="gap:16px">
-      <span style="display:flex;flex-wrap:wrap;align-items:center;gap:8px" style="gap:6px"><span aria-hidden="true" class="icon">call</span>Ramal 2000</span>
-      <span style="display:flex;flex-wrap:wrap;align-items:center;gap:8px" style="gap:6px"><span aria-hidden="true" class="icon">mail</span>servicedesk@novarotadooeste.com.br</span>
+    <strong class="help-panel__footer-title">Não achou o que precisava?</strong>
+    <span class="help-panel__contacts">
+      <span class="help-panel__contact"><span aria-hidden="true" class="icon">call</span>Ramal 2000</span>
+      <span class="help-panel__contact"><span aria-hidden="true" class="icon">mail</span>servicedesk@novarotadooeste.com.br</span>
     </span>
   </div>
 </aside>
@@ -2747,7 +3418,7 @@ NOVAUI.onboarding.complete('#onb-demo', 'perfil');
 **HTML base**
 
 ```html
-<div class="status-page" style="--status-page-height:600px">
+<div class="status-page">
   <div class="status-page__top">
     <img alt="Nova Rota do Oeste" class="status-page__logo only-light" src="nova-ui/logos/nova-rota-do-oeste.png">
     <img alt class="status-page__logo only-dark" src="nova-ui/logos/nova-rota-do-oeste.png">
@@ -2888,7 +3559,9 @@ Aviso rápido no canto da tela.
 ```js
 NOVAUI.modal.open('modal-editar');
 NOVAUI.modal.close('modal-editar', 'confirm');
-document.getElementById('modal-editar').addEventListener('nova:modal-close', e => console.log(e.detail.value));
+$('#modal-editar').on('nova:modal-close', function (e) {
+  console.log(e.originalEvent.detail.value);
+});
 ```
 
 **Classes e Atributos HTML**
@@ -3027,7 +3700,7 @@ Cobre o elemento com o loader.
 **HTML base**
 
 ```html
-<div class="meu-widget" style="position:relative;min-height:320px">
+<div class="meu-widget loader-screen-host">
   <!-- conteúdo do widget -->
   <div class="loader-screen loader-screen--brand" role="status">
     <p class="loader-screen__title">Abono</p>
@@ -3042,9 +3715,11 @@ Cobre o elemento com o loader.
 **Uso pelo JavaScript**
 
 ```js
-const tela = NOVAUI.loader.screen('.meu-widget');
+var tela = NOVAUI.loader.screen('.meu-widget');
 tela.message('Buscando abonos no RM…');
-carregar().then(() => tela.hide()).catch(() => tela.error('O RM não respondeu.', recarregar));
+carregar()
+  .then(function () { tela.hide(); })
+  .catch(function () { tela.error('O RM não respondeu.', recarregar); });
 ```
 
 **Classes**
@@ -3062,6 +3737,12 @@ carregar().then(() => tela.hide()).catch(() => tela.error('O RM não respondeu.'
 | `.progress(0–100)` | — | — | Barra de progresso (null esconde). |
 | `.error(texto, aoTentar)` | function | — | Mostra erro com botão "Tentar de novo". |
 | `.hide() · .show()` | — | — | Esconde / mostra de novo. |
+
+**Container**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `.loader-screen-host` | — | — | No container do widget: posição relativa e altura mínima de 320px. |
 
 <a id="spinner"></a>
 ## Spinner e pontos
@@ -3191,3 +3872,325 @@ Barra fina no topo da página.
 | `start()` | — | — | Começa (avança devagar sozinha). |
 | `set(0–100)` | número | — | Define o progresso. |
 | `done()` | — | — | Completa e some. Chamadas aninhadas contam. |
+
+---
+
+# E-mail
+
+<a id="email-fluig"></a>
+## E-mail de notificação (Fluig)
+
+`key: email-fluig` · palavras-chave: email e-mail template notificacao notifier aprovacao fluig tabela · fonte CSS: — · fonte JS: — (só CSS)
+
+**HTML base**
+
+```html
+<!DOCTYPE html>
+<!--
+=====================================================================
+  NOVA UI · Template de e-mail (Fluig)
+  Notificação de tarefa / solicitação
+
+  Por que este arquivo é diferente do resto da Nova UI:
+  e-mail não carrega CSS externo e o Outlook não entende flex/grid.
+  Por isso o layout é todo em <table> e o estilo vai direto nos
+  elementos (style=""). O <style> do <head> só faz ajustes de celular
+  e é ignorado com segurança por quem não suporta.
+
+  Como usar no Fluig
+  1. Painel de Controle > Templates de e-mail > Adicionar.
+     Código: tpl_notificacao   ·   Arquivo: este HTML.
+  2. No evento do processo (ex.: afterTaskSave), envie com notifier:
+
+     var parametros = new java.util.HashMap();
+     parametros.put("TITULO",       "Solicitação de abono aguardando aprovação");
+     parametros.put("SAUDACAO",     "Olá, David");
+     parametros.put("MENSAGEM",     "Lucas Lima enviou uma solicitação de abono para a sua aprovação.");
+     parametros.put("STATUS",       "Aguardando sua aprovação");
+     parametros.put("NUM_PROCESSO", String(getValue("WKNumProces")));
+     parametros.put("PROCESSO",     "Solicitação de abono");
+     parametros.put("SOLICITANTE",  "Lucas Da Silva Lima");
+     parametros.put("ETAPA",        "Avaliação Coordenação");
+     parametros.put("DATA",         "09/10/2026 às 11:55");
+     parametros.put("OBSERVACAO",   "Quebra de caixa de R$ 10,50 na praça 08.");
+     parametros.put("LINK",         "https://SEU-FLUIG/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID=" + getValue("WKNumProces"));
+     parametros.put("BOTAO",        "Abrir solicitação");
+     parametros.put("subject",      "[Fluig] Solicitação de abono nº " + getValue("WKNumProces"));
+
+     var destinatarios = new java.util.ArrayList();
+     destinatarios.add("matricula-do-aprovador");   // matrícula (login) do usuário Fluig
+
+     notifier.notify("matricula-do-remetente", "tpl_notificacao", parametros, destinatarios, "text/html");
+
+  Variáveis (no HTML aparecem como $ + {NOME}): TITULO, SAUDACAO, MENSAGEM,
+  STATUS, NUM_PROCESSO, PROCESSO, SOLICITANTE, ETAPA, DATA, OBSERVACAO,
+  LINK e BOTAO.
+  Toda variável usada aqui precisa ser enviada (mesmo vazia: ""),
+  senão o Fluig não monta o e-mail.
+
+  Logo: troque o src da <img> pelo endereço público da logo branca
+  (ex.: o mesmo servidor da Nova UI). E-mail não aceita arquivo local.
+=====================================================================
+-->
+<html lang="pt-BR" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="x-apple-disable-message-reformatting">
+    <meta name="color-scheme" content="light">
+    <meta name="supported-color-schemes" content="light">
+    <title>${TITULO}</title>
+    <!--[if mso]>
+    <noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript>
+    <![endif]-->
+    <style>
+        body { margin: 0; padding: 0; width: 100% !important; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+        table { border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+        img { border: 0; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
+        a { text-decoration: none; }
+
+        @media only screen and (max-width: 620px) {
+            .email-container { width: 100% !important; }
+            .email-pad { padding-left: 20px !important; padding-right: 20px !important; }
+            .email-title { font-size: 20px !important; line-height: 28px !important; }
+            .email-label { display: block !important; width: auto !important; padding: 12px 20px 0 !important; border-bottom: 0 !important; }
+            .email-value { display: block !important; width: auto !important; padding: 2px 20px 12px !important; }
+            .email-button { width: 100% !important; }
+            .email-button a { display: block !important; }
+        }
+    </style>
+</head>
+
+<body style="margin:0; padding:0; background-color:#F4F6F9;">
+
+    <!-- texto de pré-visualização (aparece na lista de e-mails, escondido no corpo) -->
+    <div style="display:none; font-size:1px; line-height:1px; max-height:0; max-width:0; opacity:0; overflow:hidden; mso-hide:all;">
+        ${MENSAGEM}
+    </div>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#F4F6F9" style="background-color:#F4F6F9;">
+        <tr>
+            <td align="center" style="padding:32px 12px;">
+
+                <!--[if mso]><table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
+                <table role="presentation" class="email-container" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px; max-width:600px;">
+
+                    <!-- ===== CABEÇALHO ===== -->
+                    <tr>
+                        <td bgcolor="#283272" style="background-color:#283272; border-radius:12px 12px 0 0; padding:24px 32px;" class="email-pad">
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td align="left" valign="middle">
+                                        <img src="https://nova-ui.novarotadooeste.com.br/v1/logos/nova-rota-do-oeste-branco.png" width="132" alt="Nova Rota do Oeste" style="display:block; width:132px; max-width:132px; height:auto; color:#FFFFFF; font-family:Arial, Helvetica, sans-serif; font-size:16px; font-weight:bold;">
+                                    </td>
+                                    <td align="right" valign="middle" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:16px; color:#C9D3EE;">
+                                        Fluig
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- faixa da marca -->
+                    <tr>
+                        <td style="font-size:0; line-height:0;">
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td width="70%" height="4" bgcolor="#2F509F" style="background-color:#2F509F; font-size:0; line-height:0;">&nbsp;</td>
+                                    <td width="20%" height="4" bgcolor="#13B2AC" style="background-color:#13B2AC; font-size:0; line-height:0;">&nbsp;</td>
+                                    <td width="10%" height="4" bgcolor="#DBDD3B" style="background-color:#DBDD3B; font-size:0; line-height:0;">&nbsp;</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- ===== CORPO ===== -->
+                    <tr>
+                        <td bgcolor="#FFFFFF" style="background-color:#FFFFFF; padding:32px 32px 8px;" class="email-pad">
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+
+                                <!-- status -->
+                                <tr>
+                                    <td style="padding-bottom:16px;">
+                                        <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                                            <tr>
+                                                <td bgcolor="#FFF4DB" style="background-color:#FFF4DB; border-radius:999px; padding:5px 12px; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:16px; font-weight:bold; color:#8A5A00;">
+                                                    &#9679;&nbsp; ${STATUS}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                                <!-- título -->
+                                <tr>
+                                    <td class="email-title" style="font-family:Arial, Helvetica, sans-serif; font-size:22px; line-height:30px; font-weight:bold; color:#1A1F29; padding-bottom:16px;">
+                                        ${TITULO}
+                                    </td>
+                                </tr>
+
+                                <!-- texto -->
+                                <tr>
+                                    <td style="font-family:Arial, Helvetica, sans-serif; font-size:15px; line-height:24px; color:#3D4554; padding-bottom:4px;">
+                                        ${SAUDACAO},
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-family:Arial, Helvetica, sans-serif; font-size:15px; line-height:24px; color:#3D4554; padding-bottom:24px;">
+                                        ${MENSAGEM}
+                                    </td>
+                                </tr>
+
+                                <!-- detalhes -->
+                                <tr>
+                                    <td style="padding-bottom:24px;">
+                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#F7F8FA" style="background-color:#F7F8FA; border:1px solid #E3E7ED; border-radius:8px;">
+                                            <tr>
+                                                <td colspan="2" style="padding:14px 20px 10px; font-family:Arial, Helvetica, sans-serif; font-size:11px; line-height:16px; font-weight:bold; letter-spacing:0.6px; text-transform:uppercase; color:#687180; border-bottom:1px solid #E3E7ED;">
+                                                    Detalhes da solicitação
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="email-label" width="38%" valign="top" style="padding:12px 0 12px 20px; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:20px; color:#687180; border-bottom:1px solid #E3E7ED;">Nº da solicitação</td>
+                                                <td class="email-value" valign="top" style="padding:12px 20px 12px 12px; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:20px; font-weight:bold; color:#1A1F29; border-bottom:1px solid #E3E7ED;">${NUM_PROCESSO}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="email-label" width="38%" valign="top" style="padding:12px 0 12px 20px; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:20px; color:#687180; border-bottom:1px solid #E3E7ED;">Processo</td>
+                                                <td class="email-value" valign="top" style="padding:12px 20px 12px 12px; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:20px; color:#1A1F29; border-bottom:1px solid #E3E7ED;">${PROCESSO}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="email-label" width="38%" valign="top" style="padding:12px 0 12px 20px; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:20px; color:#687180; border-bottom:1px solid #E3E7ED;">Solicitante</td>
+                                                <td class="email-value" valign="top" style="padding:12px 20px 12px 12px; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:20px; color:#1A1F29; border-bottom:1px solid #E3E7ED;">${SOLICITANTE}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="email-label" width="38%" valign="top" style="padding:12px 0 12px 20px; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:20px; color:#687180; border-bottom:1px solid #E3E7ED;">Etapa atual</td>
+                                                <td class="email-value" valign="top" style="padding:12px 20px 12px 12px; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:20px; color:#1A1F29; border-bottom:1px solid #E3E7ED;">${ETAPA}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="email-label" width="38%" valign="top" style="padding:12px 0 12px 20px; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:20px; color:#687180; border-bottom:1px solid #E3E7ED;">Data</td>
+                                                <td class="email-value" valign="top" style="padding:12px 20px 12px 12px; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:20px; color:#1A1F29; border-bottom:1px solid #E3E7ED;">${DATA}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="email-label" width="38%" valign="top" style="padding:12px 0 14px 20px; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:20px; color:#687180;">Observação</td>
+                                                <td class="email-value" valign="top" style="padding:12px 20px 14px 12px; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:20px; color:#1A1F29;">${OBSERVACAO}</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                                <!-- botão (funciona no Outlook) -->
+                                <tr>
+                                    <td align="left" style="padding-bottom:12px;">
+                                        <table role="presentation" class="email-button" cellpadding="0" cellspacing="0" border="0">
+                                            <tr>
+                                                <td align="center" bgcolor="#2F509F" style="background-color:#2F509F; border-radius:8px;">
+                                                    <!--[if mso]>
+                                                    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="${LINK}" style="height:46px; v-text-anchor:middle; width:240px;" arcsize="17%" stroke="f" fillcolor="#2F509F">
+                                                        <w:anchorlock/>
+                                                        <center style="color:#FFFFFF; font-family:Arial, Helvetica, sans-serif; font-size:15px; font-weight:bold;">${BOTAO}</center>
+                                                    </v:roundrect>
+                                                    <![endif]-->
+                                                    <!--[if !mso]><!-->
+                                                    <a href="${LINK}" target="_blank" style="display:inline-block; padding:13px 28px; font-family:Arial, Helvetica, sans-serif; font-size:15px; line-height:20px; font-weight:bold; color:#FFFFFF; text-decoration:none; border-radius:8px;">${BOTAO} &rarr;</a>
+                                                    <!--<![endif]-->
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                                <!-- link em texto -->
+                                <tr>
+                                    <td style="font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:18px; color:#687180; padding-bottom:24px;">
+                                        Se o botão não funcionar, copie e cole no navegador:<br>
+                                        <a href="${LINK}" target="_blank" style="color:#2F509F; text-decoration:underline; word-break:break-all;">${LINK}</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- ===== RODAPÉ ===== -->
+                    <tr>
+                        <td bgcolor="#FFFFFF" style="background-color:#FFFFFF; border-radius:0 0 12px 12px; padding:0 32px 28px;" class="email-pad">
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td style="border-top:1px solid #E3E7ED; padding-top:20px; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:18px; color:#687180;">
+                                        Este é um e-mail automático do Fluig. Não responda.<br>
+                                        Dúvidas: Service Desk · ramal 2000 · <a href="mailto:servicedesk@novarotadooeste.com.br" style="color:#2F509F; text-decoration:underline;">servicedesk@novarotadooeste.com.br</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td align="center" style="padding:20px 12px 0; font-family:Arial, Helvetica, sans-serif; font-size:11px; line-height:16px; color:#8A93A3;">
+                            Nova Rota do Oeste · Cuiabá, MT
+                        </td>
+                    </tr>
+                </table>
+                <!--[if mso]></td></tr></table><![endif]-->
+
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>
+
+```
+
+**Uso pelo JavaScript**
+
+```js
+// Evento do processo (ex.: afterTaskSave). Template cadastrado com o código tpl_notificacao.
+var parametros = new java.util.HashMap();
+parametros.put("TITULO",       "Solicitação de abono aguardando aprovação");
+parametros.put("SAUDACAO",     "Olá, David");
+parametros.put("MENSAGEM",     "Lucas Lima enviou uma solicitação de abono para a sua aprovação.");
+parametros.put("STATUS",       "Aguardando sua aprovação");
+parametros.put("NUM_PROCESSO", String(getValue("WKNumProces")));
+parametros.put("PROCESSO",     "Solicitação de abono");
+parametros.put("SOLICITANTE",  "Lucas Da Silva Lima");
+parametros.put("ETAPA",        "Avaliação Coordenação");
+parametros.put("DATA",         "09/10/2026 às 11:55");
+parametros.put("OBSERVACAO",   "");   // vazia também precisa ir
+parametros.put("LINK",         "https://SEU-FLUIG/portal/p/1/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID=" + getValue("WKNumProces"));
+parametros.put("BOTAO",        "Abrir solicitação");
+parametros.put("subject",      "[Fluig] Solicitação de abono nº " + getValue("WKNumProces"));
+
+var destinatarios = new java.util.ArrayList();
+destinatarios.add("matricula-do-aprovador");   // login do usuário no Fluig
+
+notifier.notify("matricula-do-remetente", "tpl_notificacao", parametros, destinatarios, "text/html");
+```
+
+**Variáveis do template**
+
+Todas precisam ser enviadas, mesmo vazias.
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `TITULO` | texto | — | Título grande do e-mail e da aba. |
+| `SAUDACAO` | texto | — | Ex.: "Olá, David" (a vírgula já está no template). |
+| `MENSAGEM` | texto | — | Frase principal. Também aparece na prévia da caixa de entrada. |
+| `STATUS` | texto | — | Etiqueta amarela no topo (ex.: "Aguardando sua aprovação"). |
+| `NUM_PROCESSO` | texto | — | Número da solicitação. |
+| `PROCESSO` | texto | — | Nome do processo. |
+| `SOLICITANTE` | texto | — | Quem abriu a solicitação. |
+| `ETAPA` | texto | — | Etapa atual do processo. |
+| `DATA` | texto | — | Data já formatada. |
+| `OBSERVACAO` | texto | "" | Observação curta. Pode ir vazia. |
+| `LINK` | URL | — | Endereço da solicitação no Fluig (botão e link em texto). |
+| `BOTAO` | texto | — | Texto do botão (ex.: "Abrir solicitação"). |
+| `subject` | texto | — | Assunto do e-mail (parâmetro do Fluig, não aparece no corpo). |
+
+**Ajustes no arquivo**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `Logo` | URL pública | — | Troque o src da <img> pelo endereço público da logo branca. E-mail não aceita arquivo local. |
+| `Cores` | hexadecimal | marca | Azul-marinho #283272 no topo, botão #2F509F, faixa com azul, verde-água e lima. |

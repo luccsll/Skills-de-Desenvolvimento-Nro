@@ -193,11 +193,8 @@ $(function () {
       $('#request-summary-sections [data-sec="' + id + '"]').toggleClass('is-done', ok);
     });
     $('#resumo-progresso-texto').text(feitas + ' de 4 partes');
-    $('#resumo-progresso')
-      .attr('aria-valuenow', feitas * 25)
-      .toggleClass('progress--success', feitas === 4)
-      .find('.progress__bar')
-      .css('--progress-value', feitas * 25 + '%');
+    $('#resumo-progresso').toggleClass('progress--success', feitas === 4);
+    NOVAUI.progress.set({ target: '#resumo-progresso', value: feitas * 25 });
     $('#resumo-operador').text($('#operador-nome').val() || '—');
     $('#resumo-praca').text($('#praca').val() ? $('#praca option:selected').text() : '—');
     $('#resumo-qcx').text($('#valor-qcx').val() ? 'R$ ' + $('#valor-qcx').val() : '—');
@@ -210,7 +207,7 @@ $(function () {
 
   $('#request-summary-sections').on('click', 'a', function (e) {
     e.preventDefault();
-    document.querySelector($(this).attr('href')).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    $($(this).attr('href'))[0].scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
   /* ---------------------------------------------------------------------

@@ -780,6 +780,27 @@ button.list-item:focus-visible,
     border-top: 3px solid var(--card-accent, var(--nova-color-brand-500));
 }
 
+/* cor da faixa por sistema: .card--protheus | --rm | --totvs | --fluig | --kcor (padrão: azul da marca) */
+.card--accent.card--protheus {
+    --card-accent: var(--nova-sys-protheus);
+}
+
+.card--accent.card--rm {
+    --card-accent: var(--nova-sys-totvs);
+}
+
+.card--accent.card--totvs {
+    --card-accent: var(--nova-sys-totvs);
+}
+
+.card--accent.card--fluig {
+    --card-accent: var(--nova-sys-fluig);
+}
+
+.card--accent.card--kcor {
+    --card-accent: var(--nova-sys-kcor);
+}
+
 .card--interactive {
     cursor: pointer;
     transition: border-color var(--nova-transition-fast), box-shadow var(--nova-transition-fast);
@@ -1591,6 +1612,23 @@ button.list-item:focus-visible,
     background: var(--kanban-accent, var(--nova-color-text-muted));
 }
 
+/* cor da coluna: .kanban__dot--info | --warning | --success | --danger (padrão: neutro) */
+.kanban__dot--info {
+    --kanban-accent: var(--nova-color-brand-500);
+}
+
+.kanban__dot--warning {
+    --kanban-accent: var(--nova-warning-text);
+}
+
+.kanban__dot--success {
+    --kanban-accent: var(--nova-success-text);
+}
+
+.kanban__dot--danger {
+    --kanban-accent: var(--nova-danger-text);
+}
+
 .kanban__title {
     min-width: 0;
     margin: 0;
@@ -2075,6 +2113,35 @@ button.list-item:focus-visible,
     height: 10px;
     border-radius: 3px;
     background: var(--legend-color, var(--nova-color-brand-500));
+}
+
+/* cor da legenda, igual à do evento: .calendar-legend__item--brand | --success | --warning | --danger | --teal | --navy | --neutral */
+.calendar-legend__item--brand {
+    --legend-color: var(--nova-color-brand-500);
+}
+
+.calendar-legend__item--success {
+    --legend-color: var(--nova-success-text);
+}
+
+.calendar-legend__item--warning {
+    --legend-color: var(--nova-warning-text);
+}
+
+.calendar-legend__item--danger {
+    --legend-color: var(--nova-danger-text);
+}
+
+.calendar-legend__item--teal {
+    --legend-color: var(--nova-accent-teal);
+}
+
+.calendar-legend__item--navy {
+    --legend-color: var(--nova-accent-navy);
+}
+
+.calendar-legend__item--neutral {
+    --legend-color: var(--nova-color-text-muted);
 }
 
 /* celular: eventos viram pontos */

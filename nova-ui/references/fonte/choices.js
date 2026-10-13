@@ -123,7 +123,7 @@
         if (this.el.parentNode !== host) host.appendChild(this.el);
         var r = anchor.getBoundingClientRect(), m = 8;
         var vh = window.innerHeight, vw = document.documentElement.clientWidth;
-        this.$el.css({ visibility: 'hidden', width: Math.min(Math.max(r.width, 220), vw - 2 * m) }).prop('hidden', false);
+        this.$el.addClass('is-invisible').css({ width: Math.min(Math.max(r.width, 220), vw - 2 * m) }).prop('hidden', false);
         var below = vh - r.bottom - m - 4, above = r.top - m - 4;
         var up = below < Math.min(Math.min(this.el.scrollHeight, 300), 200) && above > below;
         var maxH = Math.max(120, Math.min(300, up ? above : below));
@@ -131,9 +131,8 @@
         var h = Math.min(this.el.offsetHeight, maxH);
         this.$el.css({
             left: Math.round(Math.min(Math.max(m, r.left), vw - m - this.el.offsetWidth)),
-            top: Math.round(up ? r.top - h - 4 : r.bottom + 4),
-            visibility: ''
-        });
+            top: Math.round(up ? r.top - h - 4 : r.bottom + 4)
+        }).removeClass('is-invisible');
     };
 
     Panel.prototype.setActive = function (i) {

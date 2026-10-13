@@ -462,9 +462,49 @@
     animation: nova-pulse 1.6s ease-in-out infinite;
 }
 
-/* atraso escalonado para listas: style="--anim-delay: 2" */
+/* atraso escalonado para listas: .anim-delay-1 … .anim-delay-10 (40ms cada) */
 [class*="anim-"] {
     animation-delay: calc(var(--anim-delay, 0) * 40ms);
+}
+
+.anim-delay-1 {
+    --anim-delay: 1;
+}
+
+.anim-delay-2 {
+    --anim-delay: 2;
+}
+
+.anim-delay-3 {
+    --anim-delay: 3;
+}
+
+.anim-delay-4 {
+    --anim-delay: 4;
+}
+
+.anim-delay-5 {
+    --anim-delay: 5;
+}
+
+.anim-delay-6 {
+    --anim-delay: 6;
+}
+
+.anim-delay-7 {
+    --anim-delay: 7;
+}
+
+.anim-delay-8 {
+    --anim-delay: 8;
+}
+
+.anim-delay-9 {
+    --anim-delay: 9;
+}
+
+.anim-delay-10 {
+    --anim-delay: 10;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -486,6 +526,11 @@
     .state-layer {
         transition: none;
     }
+}
+
+/* invisível, mas ocupa espaço (o JS usa para medir antes de posicionar) */
+.is-invisible {
+    visibility: hidden !important;
 }
 
 /* ===== ACESSIBILIDADE ===== */
@@ -667,6 +712,7 @@
 
 /* tamanhos do icon-tile (padrão 40px) */
 .icon-tile--sm { --icon-tile-size: 32px; }
+.icon-tile--md { --icon-tile-size: 36px; }
 .icon-tile--lg { --icon-tile-size: 48px; }
 .icon-tile--xl { --icon-tile-size: 56px; }
 .icon-tile--2xl { --icon-tile-size: 72px; }

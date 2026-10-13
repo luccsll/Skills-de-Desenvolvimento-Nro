@@ -1,0 +1,179 @@
+/* =========================================================================
+   NOVA UI — BARRA DE FILTROS
+   .filter-bar
+     .filter-bar__main     busca + filtros principais + "Mais filtros"
+     .filter-bar__panel    filtros extras (abre e fecha)
+     .filter-bar__active   resultado, chips dos filtros ativos, "Limpar tudo"
+   Comportamento em filters.js.
+   ========================================================================= */
+.filter-bar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nova-space-3);
+    min-width: 0;
+    font-family: var(--nova-font-family);
+}
+
+.filter-bar__main {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nova-space-2) var(--nova-space-3);
+    min-width: 0;
+}
+
+.filter-bar__main > .field,
+.filter-bar__filters > .field {
+    flex: 0 1 200px;
+    min-width: 160px;
+    margin: 0;
+}
+
+.filter-bar__main > .filter-bar__search {
+    flex: 1 1 280px;
+    min-width: 220px;
+}
+
+.filter-bar__filters {
+    display: contents;
+}
+
+.filter-bar__main > .btn {
+    flex-shrink: 0;
+}
+
+.filter-bar [data-filter-count] {
+    margin-left: 2px;
+}
+
+.filter-bar [data-filter-count][hidden] {
+    display: none;
+}
+
+/* ----- painel com mais filtros ----- */
+.filter-bar__panel {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--nova-space-3);
+    padding: var(--nova-space-4);
+    border: var(--nova-border);
+    border-radius: var(--nova-radius-md);
+    background: var(--nova-color-bg-subtle);
+}
+
+.filter-bar__panel[hidden] {
+    display: none;
+}
+
+.filter-bar__panel > .field,
+.filter-bar__panel > .form-group,
+.filter-bar__panel > fieldset {
+    margin: 0;
+}
+
+.filter-bar__panel-wide {
+    grid-column: 1 / -1;
+}
+
+/* ----- filtros ativos ----- */
+.filter-bar__active {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nova-space-2);
+    min-width: 0;
+}
+
+.filter-bar__active[hidden] {
+    display: none;
+}
+
+.filter-bar__result {
+    margin-right: var(--nova-space-1);
+    font-size: var(--nova-font-size-sm);
+    font-weight: var(--nova-font-weight-semibold);
+    color: var(--nova-color-text-secondary);
+    font-variant-numeric: tabular-nums;
+}
+
+.filter-bar__result:empty {
+    display: none;
+}
+
+.filter-bar__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nova-space-2);
+    min-width: 0;
+}
+
+.filter-bar__chips:empty {
+    display: none;
+}
+
+.filter-bar__chip {
+    max-width: 100%;
+}
+
+.filter-bar__chip .tag__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.filter-bar__chip-key {
+    font-weight: var(--nova-font-weight-regular);
+    opacity: .8;
+}
+
+.filter-bar__clear[hidden] {
+    display: none;
+}
+
+/* ----- tabela sem resultado ----- */
+tr.is-filtered-out,
+tr.filter-bar__empty-row[hidden] {
+    display: none !important;
+}
+
+.filter-bar__empty-row > td {
+    padding: var(--nova-space-8) var(--nova-space-4) !important;
+    text-align: center;
+}
+
+.filter-bar__empty {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--nova-space-2);
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-text-secondary);
+}
+
+.filter-bar__empty > .icon {
+    --icon-size: 28px;
+    color: var(--nova-color-text-muted);
+}
+
+/* dentro do .table-card: a barra ganha o mesmo respiro do cabeçalho */
+.table-card > .filter-bar {
+    padding: var(--nova-space-3) var(--nova-space-5);
+    border-bottom: var(--nova-border);
+}
+
+@media (max-width: 575.98px) {
+    .filter-bar__main > .field,
+    .filter-bar__filters > .field,
+    .filter-bar__main > .filter-bar__search {
+        flex: 1 1 100%;
+        min-width: 0;
+    }
+
+    .filter-bar__main > .btn {
+        flex: 1 1 auto;
+    }
+
+    .table-card > .filter-bar {
+        padding: var(--nova-space-3) var(--nova-space-4);
+    }
+}

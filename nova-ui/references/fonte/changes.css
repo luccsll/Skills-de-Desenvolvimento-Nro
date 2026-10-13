@@ -1,0 +1,173 @@
+/* =========================================================================
+   NOVA UI — HISTÓRICO DE ALTERAÇÕES (antes x depois)
+   <div class="change-history" id="historico"></div>  (montado pelo changes.js)
+   Antes em vermelho, depois em verde, seta no meio. No celular empilha.
+   ========================================================================= */
+.change-history {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nova-space-3);
+    min-width: 0;
+    font-family: var(--nova-font-family);
+}
+
+.change-history[hidden] {
+    display: none !important;
+}
+
+.change-history__title {
+    margin: 0;
+    font-size: var(--nova-font-size-xs);
+    font-weight: var(--nova-font-weight-semibold);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--nova-color-text-secondary);
+}
+
+.change-history__empty {
+    margin: 0;
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-text-muted);
+}
+
+.change-history__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nova-space-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.change-history__entry {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nova-space-3);
+    min-width: 0;
+}
+
+.change-history__entry + .change-history__entry {
+    padding-top: var(--nova-space-5);
+    border-top: var(--nova-border);
+}
+
+/* ----- quem e quando ----- */
+.change-history__head {
+    display: flex;
+    align-items: center;
+    gap: var(--nova-space-3);
+    min-width: 0;
+}
+
+.change-history__who {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.change-history__name {
+    overflow: hidden;
+    font-size: var(--nova-font-size-sm);
+    font-weight: var(--nova-font-weight-semibold);
+    color: var(--nova-color-text-primary);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.change-history__date {
+    font-size: var(--nova-font-size-xs);
+    color: var(--nova-color-text-secondary);
+    font-variant-numeric: tabular-nums;
+}
+
+.change-history__count {
+    flex-shrink: 0;
+}
+
+/* ----- campo: antes → depois ----- */
+.change-history__rows {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nova-space-2);
+}
+
+.change-history__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: stretch;
+    gap: var(--nova-space-3);
+}
+
+.change-history__value {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    padding: var(--nova-space-2) var(--nova-space-3);
+    border: 1px solid transparent;
+    border-radius: var(--nova-radius-md);
+}
+
+.change-history__value--old {
+    border-color: rgba(198, 43, 43, .18);
+    background: var(--nova-danger-bg);
+    color: var(--nova-danger-text);
+}
+
+.change-history__value--new {
+    border-color: rgba(87, 157, 33, .22);
+    background: var(--nova-success-bg);
+    color: var(--nova-success-text);
+}
+
+.change-history__label {
+    font-size: var(--nova-font-size-xs);
+    font-weight: var(--nova-font-weight-semibold);
+    letter-spacing: .02em;
+    text-transform: uppercase;
+}
+
+.change-history__text {
+    font-size: var(--nova-font-size-sm);
+    line-height: var(--nova-line-height-base);
+    overflow-wrap: anywhere;
+}
+
+.change-history__value--old .change-history__text {
+    text-decoration: line-through;
+    text-decoration-color: rgba(198, 43, 43, .45);
+}
+
+.change-history__text.is-empty {
+    font-style: italic;
+    opacity: .7;
+    text-decoration: none;
+}
+
+.change-history__arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--nova-color-text-muted);
+}
+
+.change-history__arrow .icon {
+    --icon-size: 18px;
+}
+
+@media (max-width: 575.98px) {
+    .change-history__rows {
+        gap: var(--nova-space-4);
+    }
+
+    .change-history__row {
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--nova-space-1);
+    }
+
+    .change-history__arrow .icon {
+        transform: rotate(90deg);
+    }
+}

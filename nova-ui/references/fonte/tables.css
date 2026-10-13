@@ -124,6 +124,75 @@
     -webkit-overflow-scrolling: touch;
 }
 
+/* largura mínima (força rolagem horizontal dentro de .table-scroll):
+   .table--min-sm 640px · --min-md 860px · --min-lg 1024px · --min-xl 1200px
+   Outro valor: defina --table-min-width numa classe sua, no seu CSS. */
+.table--min-sm {
+    --table-min-width: 640px;
+}
+
+.table--min-md {
+    --table-min-width: 860px;
+}
+
+.table--min-lg {
+    --table-min-width: 1024px;
+}
+
+.table--min-xl {
+    --table-min-width: 1200px;
+}
+
+/* altura máxima da área de rolagem (cabeçalho fixo): .table-scroll--h-sm 240px · --h-md 400px · --h-lg 560px */
+.table-scroll--h-sm {
+    --table-max-height: 240px;
+}
+
+.table-scroll--h-md {
+    --table-max-height: 400px;
+}
+
+.table-scroll--h-lg {
+    --table-max-height: 560px;
+}
+
+/* largura fixa de coluna (no <th>): .col-width-80 … .col-width-280 */
+.col-width-60 {
+    width: 60px;
+}
+
+.col-width-80 {
+    width: 80px;
+}
+
+.col-width-100 {
+    width: 100px;
+}
+
+.col-width-120 {
+    width: 120px;
+}
+
+.col-width-140 {
+    width: 140px;
+}
+
+.col-width-160 {
+    width: 160px;
+}
+
+.col-width-200 {
+    width: 200px;
+}
+
+.col-width-240 {
+    width: 240px;
+}
+
+.col-width-280 {
+    width: 280px;
+}
+
 /* ===== TABELA BASE ===== */
 .data-table {
     width: 100%;
@@ -682,6 +751,11 @@ th[aria-sort="descending"] .data-table__sort::after {
         display: none;
     }
 
+    /* espaço para o checkbox no canto, sem cobrir o conteúdo */
+    .data-table--stack tbody tr:has(> .cell-check) {
+        padding-right: var(--nova-space-12);
+    }
+
     .data-table--stack .cell-check {
         position: absolute;
         top: var(--nova-space-4);
@@ -740,5 +814,306 @@ th[aria-sort="descending"] .data-table__sort::after {
 @media (prefers-reduced-motion: reduce) {
     .data-table tbody tr {
         transition: none;
+    }
+}
+
+/* =========================================================================
+   AÇÕES EM MASSA — barra flutuante
+   .table-bulk--floating: presa embaixo da tela enquanto houver seleção
+   ========================================================================= */
+.table-bulk--floating {
+    position: fixed;
+    bottom: var(--nova-space-6);
+    left: 50%;
+    z-index: var(--nova-z-sticky);
+    width: max-content;
+    max-width: calc(100vw - 32px);
+    padding: var(--nova-space-2) var(--nova-space-2) var(--nova-space-2) var(--nova-space-5);
+    border: 0;
+    border-radius: var(--nova-radius-pill);
+    background: var(--nova-color-brand-900, #1b2550);
+    box-shadow: var(--nova-shadow-lg);
+    color: #fff;
+    transform: translateX(-50%);
+    animation: nova-bulk-in var(--nova-transition-base, .2s) ease-out;
+}
+
+.table-bulk--floating .table-bulk__count {
+    white-space: nowrap;
+}
+
+.table-bulk--floating .table-bulk__actions {
+    margin-left: var(--nova-space-2);
+}
+
+.table-bulk--floating .btn {
+    --btn-ring: rgba(255, 255, 255, .5);
+}
+
+.table-bulk--floating .btn--ghost,
+.table-bulk--floating .btn--tertiary {
+    color: #fff;
+}
+
+.table-bulk--floating .btn--ghost:hover,
+.table-bulk--floating .btn--tertiary:hover {
+    background: rgba(255, 255, 255, .12);
+    color: #fff;
+}
+
+.table-bulk__divider {
+    width: 1px;
+    height: 20px;
+    background: currentColor;
+    opacity: .25;
+}
+
+@keyframes nova-bulk-in {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 16px);
+    }
+}
+
+@media (max-width: 575.98px) {
+    .table-bulk--floating {
+        right: var(--nova-space-3);
+        bottom: var(--nova-space-3);
+        left: var(--nova-space-3);
+        width: auto;
+        max-width: none;
+        padding: var(--nova-space-3);
+        border-radius: var(--nova-radius-lg);
+        transform: none;
+        animation-name: nova-bulk-in-mobile;
+    }
+
+    .table-bulk--floating .table-bulk__actions {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .table-bulk--floating .table-bulk__actions .btn {
+        flex: 1 1 auto;
+    }
+
+    @keyframes nova-bulk-in-mobile {
+        from {
+            opacity: 0;
+            transform: translateY(16px);
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .table-bulk--floating {
+        animation: none;
+    }
+}
+
+/* =========================================================================
+   PAI X FILHO
+   .child-table
+     .child-table__header   título, contador e "Adicionar"
+     table[tablename]       a linha modelo (data-child-template) fica oculta
+     .child-table__footer   "Adicionar" embaixo (opcional)
+   ========================================================================= */
+.child-table {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border: var(--nova-border);
+    border-radius: var(--nova-radius-lg);
+    background: var(--nova-color-bg-surface);
+    font-family: var(--nova-font-family);
+}
+
+.child-table.has-error {
+    border-color: var(--nova-danger-text);
+}
+
+.child-table__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nova-space-3);
+    padding: var(--nova-space-3) var(--nova-space-5);
+    border-bottom: var(--nova-border);
+}
+
+.child-table__title {
+    display: flex;
+    align-items: center;
+    gap: var(--nova-space-2);
+    margin: 0;
+    font-size: var(--nova-font-size-base);
+    font-weight: var(--nova-font-weight-semibold);
+    color: var(--nova-color-text-primary);
+}
+
+.child-table__footer {
+    display: flex;
+    justify-content: flex-start;
+    padding: var(--nova-space-2) var(--nova-space-3);
+    border-top: var(--nova-border);
+}
+
+.child-table.is-empty .child-table__footer {
+    display: none;
+}
+
+.child-table [data-child-template],
+.child-table tr[hidden] {
+    display: none !important;
+}
+
+.child-table .data-table {
+    margin: 0;
+}
+
+.child-table .data-table td {
+    vertical-align: middle;
+}
+
+.child-table .cell-index {
+    width: 48px;
+    color: var(--nova-color-text-muted);
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+}
+
+.child-table .cell-actions {
+    width: 56px;
+}
+
+/* campo dentro da célula */
+.child-table__input {
+    display: block;
+    width: 100%;
+    min-width: 120px;
+    height: 36px;
+    padding: 0 var(--nova-space-3);
+    border: 1px solid var(--nova-color-border-strong);
+    border-radius: var(--nova-radius-sm);
+    background: var(--nova-color-bg-surface);
+    color: var(--nova-color-text-primary);
+    font-family: inherit;
+    font-size: var(--nova-font-size-sm);
+    transition: border-color var(--nova-transition-fast), box-shadow var(--nova-transition-fast);
+}
+
+select.child-table__input {
+    padding-right: var(--nova-space-8);
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position: calc(100% - 16px) 50%, calc(100% - 11px) 50%;
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+}
+
+.child-table__input:hover {
+    border-color: var(--nova-color-text-muted);
+}
+
+.child-table__input:focus {
+    outline: none;
+    border-color: var(--nova-color-brand-500);
+    box-shadow: 0 0 0 3px var(--nova-color-brand-100);
+}
+
+.child-table__input:disabled,
+.child-table__input[readonly] {
+    border-color: var(--nova-color-border);
+    background: var(--nova-color-bg-subtle);
+    color: var(--nova-color-text-secondary);
+}
+
+.child-table__input.cell-num,
+.child-table .cell-num .child-table__input {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.child-table__input[aria-invalid="true"] {
+    border-color: var(--nova-danger-text);
+}
+
+/* sem linhas */
+.child-table__empty-row > td {
+    padding: var(--nova-space-6) var(--nova-space-4) !important;
+    text-align: center;
+}
+
+.child-table__empty {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--nova-space-2);
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-color-text-secondary);
+}
+
+.child-table__empty > .icon {
+    --icon-size: 28px;
+    color: var(--nova-color-text-muted);
+}
+
+.child-table__error {
+    display: flex;
+    gap: 6px;
+    margin: 0;
+    padding: var(--nova-space-2) var(--nova-space-5);
+    border-top: 1px solid var(--nova-danger-text);
+    background: var(--nova-danger-bg);
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-danger-text);
+    border-radius: 0 0 var(--nova-radius-lg) var(--nova-radius-lg);
+}
+
+.child-table__error[hidden] {
+    display: none;
+}
+
+.child-table.is-readonly [data-child-add],
+.child-table.is-readonly [data-child-remove] {
+    display: none;
+}
+
+/* celular: cada linha vira um card, com o rótulo em cima do campo */
+@media (max-width: 767.98px) {
+    .child-table .data-table--stack tbody tr > *:has(.child-table__input) {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--nova-space-1);
+        text-align: left;
+    }
+
+    .child-table .data-table--stack .cell-index {
+        width: auto;
+        justify-content: flex-start;
+        font-weight: var(--nova-font-weight-semibold);
+        color: var(--nova-color-text-primary);
+    }
+
+    .child-table .data-table--stack .cell-index::before {
+        content: "Linha";
+        margin-right: var(--nova-space-1);
+    }
+
+    .child-table .data-table--stack .cell-actions {
+        position: absolute;
+        top: var(--nova-space-2);
+        right: var(--nova-space-3);
+        width: auto;
+        padding: 0;
+    }
+
+    .child-table .data-table--stack tbody tr {
+        padding-right: var(--nova-space-12, 48px);
+    }
+
+    .child-table .child-table__input {
+        min-width: 0;
     }
 }
