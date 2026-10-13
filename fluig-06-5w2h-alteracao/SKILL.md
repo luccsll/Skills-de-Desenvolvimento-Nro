@@ -1,3 +1,8 @@
+---
+name: fluig-06-5w2h-alteracao
+description: Gera um 5W2H da alteração de código antes do commit/push de um processo Fluig (5w2h_<processo>.md, entrada mais recente no topo).
+---
+
 # Gerar 5W2H da Alteração — Antes do Commit/Push
 
 Toda vez que uma alteração de código for enviada para o Git, gere um 5W2H descrevendo a alteração. Isso vale para qualquer commit/push relevante do projeto — correção, nova funcionalidade, ajuste de regra de negócio, etc.

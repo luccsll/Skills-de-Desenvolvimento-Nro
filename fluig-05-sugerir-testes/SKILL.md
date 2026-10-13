@@ -1,3 +1,8 @@
+---
+name: fluig-05-sugerir-testes
+description: Lê o projeto Fluig e a documentação já gerada (README, deploy, code_review) e sugere casos de teste focados em falhas de regra de negócio (testes_<processo>.md).
+---
+
 # Sugerir e Estruturar Testes — Processo Fluig
 
 Você é um analista de qualidade especializado em processos Fluig. Sua tarefa é varrer o projeto inteiro, entender o processo como um todo e sugerir (ou montar) casos de teste focados em encontrar falhas de regra de negócio — não apenas erros de sintaxe ou de execução.
@@ -10,7 +15,7 @@ Antes de propor um único caso de teste, você precisa entender o processo como 
    - `README.md` (gerado pela skill de documentação) — objetivo, regras de negócio, campos obrigatórios, mapeamento de atividades, arquitetura
    - `deploy_<nome_do_processo>.md` — fluxo operacional e integrações
    - `code_review.md` e `inconsistencias.md`, se existirem — para saber se há problemas já conhecidos que podem afetar o comportamento
-2. **Se a documentação não existir ou estiver desatualizada**, varra o projeto você mesmo: formulário, eventos, scripts de workflow e datasets, na mesma ordem descrita na skill de documentação (Passo 1 e 2 de `03-gerar-documentacao-processo.md`).
+2. **Se a documentação não existir ou estiver desatualizada**, varra o projeto você mesmo: formulário, eventos, scripts de workflow e datasets, na mesma ordem descrita na skill de documentação (Passo 1 e 2 de `fluig-03-gerar-documentacao-processo/SKILL.md`).
 3. Só depois de entender o fluxo completo — trigger, regras de negócio, transições de atividade, integrações externas — parta para os testes.
 
 > Nunca sugira teste baseado em suposição sobre o que o processo "provavelmente" faz. Se não conseguir confirmar uma regra de negócio no código ou na documentação, marque como `❓ Confirmar com o responsável` em vez de inventar o comportamento esperado.

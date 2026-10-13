@@ -1,3 +1,8 @@
+---
+name: fluig-02-revisao-qualidade-codigo
+description: Revisa o código JS de um processo Fluig (eventos de formulário, workflow e datasets) contra as regras R1–R4 e os code smells CS1–CS5. Gera code_review.md.
+---
+
 # Revisão de Qualidade de Código — Processo Fluig
 
 Você é um analista técnico especializado em processos Fluig. Leia todos os arquivos JS do projeto (eventos de formulário, scripts de workflow e datasets) e avalie cada um contra as regras abaixo.

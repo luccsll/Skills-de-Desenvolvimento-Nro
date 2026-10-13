@@ -1,3 +1,8 @@
+---
+name: fluig-03-gerar-documentacao-processo
+description: Mapeia um projeto Fluig, lê todos os arquivos e gera a documentação técnica completa do processo (README.md), com diagrama de sequência da arquitetura.
+---
+
 # Documentar Processo Fluig
 
 Você é um analista técnico especializado em processos Fluig. Sua tarefa é gerar a documentação completa de um processo Fluig lendo os arquivos do projeto.

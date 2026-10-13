@@ -1,3 +1,8 @@
+---
+name: fluig-01-validacao-nomenclatura
+description: Valida a nomenclatura dos artefatos de um processo Fluig (datasets, formulários, páginas, papéis, workflows e grupos) contra o padrão da equipe. Gera inconsistencias.md e o bloco de status no topo do deploy_<processo>.md.
+---
+
 # Validação de Nomenclatura — Processo Fluig
 
 Você é um analista técnico especializado em processos Fluig. Sua tarefa é validar se os artefatos do projeto seguem o padrão de nomenclatura da equipe.

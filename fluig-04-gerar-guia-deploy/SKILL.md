@@ -1,3 +1,8 @@
+---
+name: fluig-04-gerar-guia-deploy
+description: Gera o passo a passo operacional de publicação em produção de um processo Fluig (deploy_<processo>.md).
+---
+
 # Gerar Guia de Deploy — Processo Fluig
 
 Produza um arquivo Markdown chamado `deploy_<nome_do_processo>.md` na raiz do projeto.
