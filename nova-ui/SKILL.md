@@ -19,7 +19,7 @@ Nunca invente classe, atributo, função ou token. Antes de usar algo, confirme 
 
 | Arquivo | Quando abrir |
 |---|---|
-| `references/componentes.md` | **Sempre** que for usar um componente: HTML base, classes, atributos `data-*`, funções e eventos de cada um dos 79 componentes. Busque pelo `key` (ex.: `#modal`, `#data-periodo`, `#anexo`, `#pai-filho`). |
+| `references/componentes.md` | **Sempre** que for usar um componente: HTML base, classes, atributos `data-*`, funções e eventos de cada um dos 83 componentes. Busque pelo `key` (ex.: `#modal`, `#data-periodo`, `#anexo`, `#pai-filho`). |
 | `references/api-js.md` | Índice de todas as funções `NOVAUI.*` e eventos `nova:*`. |
 | `references/fluig.md` | Esqueleto do formulário, campos só com atributo, `beforeSendValidate`, regras por etapa, pai x filho, datasets, e-mail, responsividade e convenções de JS. |
 | `references/fundamentos.md` | Tokens (cores, espaço, tipografia, raio, sombra, z-index), utilitários, **classes que substituem CSS inline**, ícones, grid. |
@@ -33,16 +33,16 @@ Os exemplos de página são **sugestão, não regra**: copie padrões, não a te
 
 ## Regras que valem para todo código entregue
 
-1. **Instalação**: dois arquivos hospedados, carregados depois do CSS do Fluig.
+1. **Instalação**: dois arquivos hospedados. O formulário **não** carrega o `fluig-style-guide.min.css`.
    ```html
-   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap">
    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..600,0..1,0&display=block">
    <link rel="stylesheet" href="https://nova-ui.novarotadooeste.com.br/v1/min/nova-ui.min.css">
    <!-- fim do body, depois do jQuery que o Fluig já carrega -->
    <script src="https://nova-ui.novarotadooeste.com.br/v1/min/nova-ui.min.js"></script>
    ```
    Anexo com área de arrastar e soltar (`layout: 'drop'`) precisa também do **FilePond** (CSS no head e JS **antes** da Nova UI); prévia de PDF precisa do **pdf.js**. Inclua só quando a tela usar (ver `fluig.md`).
-2. **Estrutura do formulário Fluig**: `div.fluig-style-guide > form name="form" role="form"`. Tudo vai dentro do form.
+2. **Estrutura do formulário Fluig**: `<form name="form" role="form">` direto no `body` (sem o wrapper `.fluig-style-guide`) e, dentro dele, `<div class="nova-design-system">` envolvendo a tela. Campos ocultos de controle podem ficar fora dessa div, mas dentro do form.
 3. **Sem CSS inline.** Nada de `style=""` nem `<style>` no HTML. Para larguras, alturas, progresso, nota, atraso de animação e cor de card existem classes ou `data-value` (tabela em `fundamentos.md`: `.table--min-md`, `.col-width-120`, `.table-scroll--h-md`, `data-value="40"`, `.anim-delay-2`, `.card--protheus`…). Se nada resolver, crie uma classe com nome que faça sentido (pode ser em inglês) no `.css` do formulário. **Única exceção:** template de e-mail (`#email-fluig`).
 4. **Campos melhorados funcionam só com atributo ou classe.** Máscara, validação, select com busca, data, hora, contador, pai x filho, filtros e ações em massa: escreva o HTML com os atributos (`data-mask`, `data-validate`, `data-enhance`, `data-datepicker`, `data-timepicker`, `.child-table`, `data-filter-for`…) e **não instancie no JS**. JS só para regra dinâmica (ex.: feriados vindos de dataset) e para componentes maiores (modal criado por JS, toast, tour, anexo, histórico de alterações, calendário).
 5. **JS sempre com jQuery** (o Fluig já carrega), dentro de `$(function () { ... })`, com `var` e `function`. **Nada** de JS puro (`document.querySelector`, `getElementById`, `addEventListener`, `classList`), arrow functions, `const`/`let` ou template strings. Toda chamada à biblioteca começa por `NOVAUI.`. Componentes com variação recebem **objeto** com `type`: `NOVAUI.toast({ type: 'success', message: '...' })`.
@@ -50,13 +50,14 @@ Os exemplos de página são **sugestão, não regra**: copie padrões, não a te
 7. **Ícones**: só Material Symbols Rounded (Google Fonts): `<span class="icon" aria-hidden="true">nome_do_icone</span>`. Botão só com ícone leva `btn--icon` e `aria-label`.
 8. **Classes que não colidem com o Fluig** (Bootstrap 3 e `wcm_global.css`): `.form-grid`/`.form-col-*` (não `.row`/`.col-*`), `.data-table` (não `.table`), `.page-container` (não `.container`), `.form-layout` (não `.form`), `.form-inline-row` (não `.form-inline`), `.form-error-text` (não `.form-error`), `.breadcrumbs` (não `.breadcrumb`), `.btn btn--primary` (não `.btn-primary`).
 9. **Responsivo é obrigatório**: todo campo começa em `form-col-12` e só divide a partir do tablet (`form-col-md-*`). Tabelas com `data-table--stack` ou dentro de `.table-scroll` (+ `.table--min-*`). Sem larguras fixas em px no layout. Testar com a extensão Responsive Viewer do Chrome (390 px, 820 px e desktop).
-10. **Light mode, sem ilustrações.** O formulário fica num container branco do Fluig: não emoldure com cards com sombra sobre fundo cinza; separe partes com divisórias e painéis de fundo suave. Navegação fica no topo — a lateral é da sidebar do Fluig. Header, sidebar, footer, mega menu e command menu **não existem** na Nova UI.
-11. **Fundo de modal/drawer**: branco a 70% (já vem do token `--nova-color-overlay`; não troque por preto).
-12. **Todo `<button>` dentro do form tem `type="button"`**, senão o Fluig submete o formulário.
-13. **Campos gravados no Fluig precisam de `name`**; use o mesmo valor no `id` para o `label for` funcionar. Select com busca, tags, editor, OTP, datepicker e timepicker mantêm um campo nativo com `name` — não remova.
-14. **Envio**: bloqueie o envio pelo `beforeSendValidate` do Fluig (lançando uma mensagem), validando campos, anexos obrigatórios e mínimo de linhas do pai x filho (modelo em `fluig.md`).
-15. **Cores**: use os tokens semânticos `--nova-*`, nunca hex solto nem os primitivos `--nro-*` direto. Lime (`--nova-accent-lime`) é só decorativo (contraste baixo).
-16. **Nomes**: artefatos seguem `references/nomenclatura.md` (`ds_rota###_nomeCamelCase`; `ds_global_nome` para datasets de vários projetos). Logins do Fluig na NRO são o nome junto, sem ponto (ex.: `marcosferreira`) — use esse formato em exemplos.
+10. **Página de processo só com componentes.** Tela de escolha (`.process-choice` + `.choice-card`), cabeçalho (`.process-header`), partes numeradas (`.process-section`), layout com resumo (`.process-layout` + `.process-summary`) e etapas (`.stepper--scroll`) já existem: **não escreva CSS** para isso (ver `fluig.md`, "Página de processo"). Mostre e esconda com o atributo `hidden`, que sempre vence o `display` das classes.
+11. **Light mode, sem ilustrações.** O formulário fica num container branco do Fluig: não emoldure com cards com sombra sobre fundo cinza; separe partes com divisórias e painéis de fundo suave. Navegação fica no topo — a lateral é da sidebar do Fluig. Header, sidebar, footer, mega menu e command menu **não existem** na Nova UI.
+12. **Fundo de modal/drawer**: branco a 70% (já vem do token `--nova-color-overlay`; não troque por preto).
+13. **Todo `<button>` dentro do form tem `type="button"`**, senão o Fluig submete o formulário.
+14. **Campos gravados no Fluig precisam de `name`**; use o mesmo valor no `id` para o `label for` funcionar. Select com busca, tags, editor, OTP, datepicker e timepicker mantêm um campo nativo com `name` — não remova.
+15. **Envio**: bloqueie o envio pelo `beforeSendValidate` do Fluig (lançando uma mensagem), validando campos, anexos obrigatórios e mínimo de linhas do pai x filho (modelo em `fluig.md`).
+16. **Cores**: use os tokens semânticos `--nova-*`, nunca hex solto nem os primitivos `--nro-*` direto. Lime (`--nova-accent-lime`) é só decorativo (contraste baixo).
+17. **Nomes**: artefatos seguem `references/nomenclatura.md` (`ds_rota###_nomeCamelCase`; `ds_global_nome` para datasets de vários projetos). Logins do Fluig na NRO são o nome junto, sem ponto (ex.: `marcosferreira`) — use esse formato em exemplos.
 
 ## Modo 1 — Do pedido ao código
 
@@ -86,6 +87,7 @@ Para cada campo citado, escolha o componente certo. Use a tabela de decisão aba
 | Sim/não que vale na hora (ativar, notificar) | `switch` | |
 | Aceite / marcar itens | `checkbox` | |
 | **Anexo** (documento, CNH, comprovante) | `anexo` | `.attachment` + `NOVAUI.attachment.create({ target, nameField, layout, fluig, … })`. `layout: 'drop'` (padrão, FilePond) ou `'button'`; `fluig: true` manda para a aba Anexos. Obrigatório → `required: true` + `NOVAUI.attachment.validate()` no `beforeSendValidate`. |
+| **Assinatura** (aceite, termo, entrega de EPI) | `assinatura` | `.signature[data-signature]` + `textarea hidden` com o `name` (grava PNG). Só leitura com `data-readonly`. Obrigatória → `data-required` + `NOVAUI.signature.validate()` no `beforeSendValidate`. |
 | Texto formatado | `editor-texto` | |
 | Nota/avaliação | `avaliacao` | |
 | Preenchido pelo sistema (vem do RM/dataset) | `campo-auto` | `readonly` + `NOVAUI.field.autofill` |
@@ -94,6 +96,8 @@ Para cada campo citado, escolha o componente certo. Use a tabela de decisão aba
 | **Lista de itens** que o usuário adiciona (pai x filho) | `pai-filho` | `.child-table` + `table[tablename]` + `tr[data-child-template]`; `data-min`/`data-max`; `NOVAUI.childTable.validate` no envio |
 | Planilha editável | `data-grid` | |
 | Registrar o que foi alterado (antes x depois) | `historico-alteracoes` | campo oculto + `NOVAUI.changeHistory.track` (edição) / `render` (outras etapas) |
+
+Campos ganham melhorias por atributo ou classe, sem JS (ver "Campos: melhorias por atributo" em `fundamentos.md`).
 
 Obrigatório → `.field--required` no `.field` **e** `required` no input. Texto de ajuda → `.field__message` no `.field__footer`.
 
@@ -106,7 +110,9 @@ Obrigatório → `.field--required` no `.field` **e** `required` no input. Texto
 | Pergunta "tem certeza?" | `NOVAUI.dialog.confirm({ type, ... })` — não monte modal na mão |
 | Aviso rápido depois de salvar | `NOVAUI.toast({ type, message })` |
 | Aviso fixo na página | `alerta` (`#alerta`) |
-| Formulário de processo longo | `fieldset` por parte + `.form-grid`, `stepper` ou `abas` se tiver etapas, `.form-actions` no fim |
+| Formulário de processo (solicitação com etapas) | Página de processo: `.process-header` (solicitante + etapas), `.process-layout` com `.process-section` por parte e `.process-summary` ao lado. Se tiver tipos (para mim/outro), `.process-choice` com `.choice-card` antes. Parte por etapa: `hidden`; completa: `data-process-auto` ou `NOVAUI.process.setComplete`. |
+| Formulário curto sem etapas | `fieldset` por parte + `.form-grid` + `.form-actions` no fim |
+| Diálogo de boas-vindas / aviso com ícone grande | `.dialog__body--center` |
 | Tela de consulta / relatório | `tabela` (`.table-card`) + `barra-filtros` (`data-filter-for` filtra na página; `data-filter-mode="server"` para filtrar no dataset) + paginação + estado vazio |
 | Aprovar/recusar vários de uma vez | `acoes-massa` (`.table-bulk` + `data-bulk-action`, `data-bulk-confirm`; evento `nova:bulk-action`) |
 | Trilha de navegação | `breadcrumbs` (`.breadcrumbs`) — só em páginas/widgets; no processo a trilha é do Fluig |
@@ -147,6 +153,7 @@ function validarArea(area) {
 - Chamada demorada: `NOVAUI.loader.wrap({ target, promise, message })` ou `NOVAUI.modal.setLoading(id, true)`.
 - Depois de inserir HTML (AJAX, modal criado por JS): `NOVAUI.refresh(container)`. Na tabela pai x filho, use `NOVAUI.childTable.add` (já inicia a linha).
 - Dataset: `DatasetFactory.getDataset(...)` (no formulário precisa do `vcXMLRPC.js`), com `try/catch` e `NOVAUI.toast({ type: 'error', ... })` na falha.
+- Antes de escrever uma consulta, veja se já existe função em `NOVAUI.integration` (`integracoes.md`), ex.: hierarquia do solicitante → `NOVAUI.integration.rm.searchLeader`; equipe de um líder → `NOVAUI.integration.rm.searchTeam`. Elas já vêm no `nova-ui.min.js` (sem arquivo extra) e precisam do `vcXMLRPC.js`.
 - Funções com JSDoc. Nada de lógica solta no HTML (`onclick=` não).
 
 ### 5. Entregue para o dev neste formato
@@ -332,7 +339,10 @@ Confira, nesta ordem, e devolva a lista de problemas + o código corrigido compl
    | `wdkAddChild` na mão + `NOVAUI.refresh` | `.child-table` + `NOVAUI.childTable` |
    | `data-mask="date"` em campo de data | `data-datepicker` |
    | `NovaToast`, `NovaModal`… | `NOVAUI.toast`, `NOVAUI.modal`… |
-2. Estrutura `fluig-style-guide > form name="form"`, `type="button"`, `name` nos campos gravados, `beforeSendValidate` cobrindo campos, anexos e pai x filho.
+   | `.nova-app` · `div.fluig-style-guide` | `.nova-design-system` (sem wrapper do style guide) |
+   | `.request-header`, `.request-section`, `.request-summary`, `.request-option` (CSS do exemplo antigo) | `.process-header`, `.process-section`, `.process-summary`, `.choice-card` |
+2. Estrutura `form name="form"` + `.nova-design-system` (sem `.fluig-style-guide`), `type="button"`, `name` nos campos gravados, `beforeSendValidate` cobrindo campos, anexos e pai x filho.
+   Layout de processo feito com CSS próprio (`request-*`, cabeçalho, partes numeradas, resumo, tela de escolha) → troque pelos componentes de processo e apague o CSS.
 3. Sem CSS inline (exceto e-mail), sem `<style>` no HTML, sem hex solto, sem `--nro-*` direto; ícones Material Symbols.
 4. Campos melhorados só com atributo/classe (sem instanciar no JS sem necessidade).
 5. JS só com jQuery, `var` e `function`; eventos com `e.originalEvent.detail`; `NOVAUI.*` com objeto nos componentes com variação.

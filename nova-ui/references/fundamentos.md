@@ -38,7 +38,7 @@ Padrão: **light mode** (`<html data-theme="light">`). Densidade opcional: `data
 
 ## Tipografia
 
-Fonte da Nova UI: Inter (fallback Segoe UI, Roboto, Arial). Base 14px, igual ao Fluig.
+Fonte da Nova UI: Open Sans (fallback Arial), a mesma do Fluig. Base 14px.
 
 | Token | px | Uso |
 |---|---|---|
@@ -68,7 +68,8 @@ Utilitários: `.margin-{lado}-{n}` e `.pad-{lado}-{n}`, lado = `top|bottom|left|
 
 ## Layout
 
-- Área: `.nova-app` (fonte, fundo e cor numa área, sem mexer no body do Fluig).
+- Área: `.nova-design-system` (fonte, cor e `box-sizing` numa área; sem fundo, o formulário do Fluig já é branco). Todo formulário fica dentro dela.
+- `hidden` sempre esconde (`[hidden] { display: none !important }`), mesmo em elementos cuja classe define `display`. Mostre e esconda com o atributo, nunca com CSS.
 - Containers: `.page-container` + `--sm` 640 · `--md` 880 (formulários Fluig) · `--lg` 1200 (consulta) · `--xl` 1440 · `--max` · `--fluid`.
 - Grid de formulário: `.form-grid` com `.form-col-1…12` e `.form-col-sm|md|lg|xl-1…12`. `.form-grid--compact` para menos espaço.
 - Breakpoints: sm 576 · md 768 · lg 992 · xl 1200 · 2xl 1400.
@@ -109,3 +110,7 @@ Modificadores: `.icon--xs|sm|md|lg|xl`, `.icon--filled`, `.icon--bold`, `.icon--
 ## Outros utilitários
 
 `.justify-start|center|end|between` · `.align-center` · `.sr-only` · `.is-invisible` (oculto, mas ocupa espaço) · `.focus-ring` · `.state-layer` · `.anim-fade-in|scale-in|slide-up|slide-down|slide-in-right|pop|pulse|spin` + `.anim-delay-1…10`.
+
+## Campos: melhorias por atributo
+
+Campos de formulário (input, select, textarea) que ganham comportamento da Nova UI funcionam **só com atributo ou classe**, sem chamar JavaScript: `data-mask`, `data-validate`, `data-datepicker` (também em `type="date"`), `data-timepicker` (também em `type="time"`), `data-signature`, `data-enhance`, `data-filter`. Use o JS só quando a regra for dinâmica (ex.: feriados vindos de um dataset). Componentes maiores, como anexo, histórico de alterações, modal e calendário, continuam sendo criados pelo JS.

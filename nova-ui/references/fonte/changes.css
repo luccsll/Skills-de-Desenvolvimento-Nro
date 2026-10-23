@@ -46,7 +46,7 @@
     min-width: 0;
 }
 
-.change-history__entry + .change-history__entry {
+.change-history__entry+.change-history__entry {
     padding-top: var(--nova-space-5);
     border-top: var(--nova-border);
 }

@@ -346,7 +346,7 @@ html:has(dialog.dialog[open]:modal) {
     animation: nova-spin .7s linear infinite;
 }
 
-.dialog.is-loading .dialog__body> * {
+.dialog.is-loading .dialog__body>* {
     visibility: hidden;
 }
 

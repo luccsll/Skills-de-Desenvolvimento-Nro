@@ -1,21 +1,22 @@
 # Nova UI — Catálogo de componentes
 
-> Regras de uso de JS nos exemplos: sempre jQuery, `var` e `function` (sem arrow function). Eventos `nova:*` com jQuery: dados em `e.originalEvent.detail`. O `email-fluig` é a única exceção à regra sem CSS inline.
+> Regras de uso de JS nos exemplos: sempre jQuery, `var` e `function` (sem arrow function). Eventos `nova:*` com jQuery: dados em `e.originalEvent.detail`. O `email-fluig` é a única exceção à regra sem CSS inline. Página de processo (cabeçalho, partes, resumo, tela de escolha): grupo **Processo** (`#choice-card`, `#process-header`, `#process-section`).
 
-Gerado a partir do catálogo oficial do showcase (botão "<> Código"). 79 componentes. Todos já vêm em `nova-ui.min.css` / `nova-ui.min.js`, exceto o template de e-mail (arquivo próprio). O anexo com `layout: 'drop'` também precisa do FilePond, e a prévia de PDF do pdf.js (ver `#anexo`). Os arquivos-fonte citados servem só para consultar em `references/fonte/`.
+Gerado a partir do catálogo oficial do showcase (botão "<> Código"). 83 componentes. Todos já vêm em `nova-ui.min.css` / `nova-ui.min.js`, exceto o template de e-mail (arquivo próprio). O anexo com `layout: 'drop'` também precisa do FilePond, e a prévia de PDF do pdf.js (ver `#anexo`). Os arquivos-fonte citados servem só para consultar em `references/fonte/`.
 
 ## Índice
 
 - **Botões:** [Botão](#botao) · [Botão com ícone](#botao-icone) · [Botão carregando](#botao-carregando) · [Botão com contador](#botao-contador) · [Botões agrupados (segmentado)](#botao-segmentado)
 - **Formulário:** [Campo de texto](#campo-texto) · [Estado do campo via JavaScript](#campo-estado-js) · [Campo de busca (ícone e limpar)](#campo-busca) · [Campo com máscara e validação](#campo-mascara) · [Seletor de data e período](#data-periodo) · [Seletor de hora](#hora) · [Campo preenchido automaticamente](#campo-auto) · [Área de texto com contador](#textarea) · [Código de verificação (OTP / PIN)](#otp) · [Campo numérico com + e −](#stepper-numerico) · [Grid de formulário (12 colunas)](#grid-formulario) · [Grupo de campos (fieldset)](#fieldset) · [Resumo de erros do formulário](#resumo-erros)
 - **Seleção:** [Checkbox](#checkbox) · [Radio](#radio) · [Switch (liga/desliga)](#switch) · [Select (lista suspensa)](#select) · [Multi select](#multi-select) · [Combobox (digitar para filtrar)](#combobox) · [Autocomplete (busca em dataset)](#autocomplete) · [Listbox (lista de opções visível)](#listbox) · [Tag (etiqueta)](#tag) · [Tags de filtro](#tag-filtro) · [Campo de tags](#campo-tags)
-- **Campos extras:** [Editor de texto (rich text)](#editor-texto) · [Anexo (upload de arquivos)](#anexo) · [Seletor de cor](#cor) · [Slider (controle deslizante)](#slider) · [Avaliação (estrelas)](#avaliacao)
+- **Campos extras:** [Editor de texto (rich text)](#editor-texto) · [Anexo (upload de arquivos)](#anexo) · [Assinatura](#assinatura) · [Seletor de cor](#cor) · [Slider (controle deslizante)](#slider) · [Avaliação (estrelas)](#avaliacao)
 - **Exibição de dados:** [Badge (status)](#badge) · [Tabela](#tabela) · [Barra de filtros](#barra-filtros) · [Ações em massa na tabela](#acoes-massa) · [Tabela pai x filho](#pai-filho) · [Avatar](#avatar) · [Indicador (stat / KPI)](#stat) · [Card](#card) · [Card com foto (produto)](#card-produto) · [Lista (list item)](#lista) · [Lista de descrição (dados)](#lista-descricao) · [Accordion](#accordion) · [Timeline (histórico)](#timeline) · [Histórico de alterações (antes x depois)](#historico-alteracoes) · [Árvore (tree view)](#arvore) · [Kanban](#kanban) · [Calendário](#calendario) · [Data grid (tabela editável)](#data-grid) · [Barra de progresso](#progresso)
 - **Navegação:** [Breadcrumb (trilha)](#breadcrumbs) · [Abas (tabs)](#abas) · [Paginação](#paginacao) · [Stepper (etapas)](#stepper) · [Menu suspenso (dropdown)](#menu) · [Menu de contexto (botão direito)](#menu-contexto)
 - **Experiência:** [Estado vazio / erro / sucesso](#estado-vazio) · [Alerta (aviso na página)](#alerta) · [Banner (faixa no topo)](#banner) · [Confirmação](#confirmacao) · [Tooltip e ajuda (?)](#tooltip) · [Coachmark (novidade)](#coachmark) · [Tour guiado](#tour) · [Painel de ajuda](#painel-ajuda) · [FAQ (perguntas frequentes)](#faq) · [Onboarding (primeiros passos)](#onboarding) · [Página 404 / 403 / 500 / manutenção](#pagina-erro)
 - **Sobreposições:** [Toast (aviso rápido)](#toast) · [Modal](#modal) · [Drawer (painel lateral)](#drawer)
 - **Carregamento:** [Loader sobre um elemento](#loader-overlay) · [Tela de abertura (widget)](#tela-abertura) · [Spinner e pontos](#spinner) · [Skeleton](#skeleton) · [Barra de carregamento no topo](#barra-topo)
 - **E-mail:** [E-mail de notificação (Fluig)](#email-fluig)
+- **Processo:** [Cartão de opção e tela de escolha](#choice-card) · [Cabeçalho do processo](#process-header) · [Partes do processo e resumo](#process-section)
 
 ---
 
@@ -1344,6 +1345,77 @@ Cria o campo. Devolve o controle (remove, clear, files, names, validate, destroy
 | `Próximas etapas` | — | — | Acha o anexo pelo nome em ECM.attachmentTable e baixa por /api/public/ecm/document/downloadURL para Abrir e para a prévia. |
 | `Remover` | — | — | Tira da aba Anexos com WKFViewAttachment.removeAttach e reabre a área de soltar. |
 | `Fora do Fluig` | — | — | Funciona só na tela (útil para testar), sem enviar para lugar nenhum. |
+
+<a id="assinatura"></a>
+## Assinatura
+
+`key: assinatura` · palavras-chave: assinatura assinar desenhar signature pad canvas caneta dedo aceite termo · fonte CSS: signature.css · fonte JS: signature.js
+
+**HTML base**
+
+```html
+<div class="form-group form-group--stretch">
+  <span class="form-label is-required" id="assinatura-label">Assinatura do solicitante</span>
+  <!-- só o atributo, sem JS. O textarea guarda a imagem (o Fluig grava) -->
+  <div class="signature" data-signature data-required aria-labelledby="assinatura-label">
+    <textarea name="assinaturaSolicitante" hidden></textarea>
+  </div>
+</div>
+
+<!-- etapas seguintes: só mostra -->
+<div class="signature" data-signature data-readonly>
+  <textarea name="assinaturaSolicitante" hidden></textarea>
+</div>
+```
+
+**Uso pelo JavaScript**
+
+```js
+// não precisa de JS para funcionar. Para validar no envio:
+var beforeSendValidate = function (numState, nextState) {
+  if (!NOVAUI.signature.validate()) throw 'Assine o formulário.';
+};
+
+// também anexar a assinatura na aba Anexos do processo
+$('#assinatura').on('nova:signature-change', function (e) {
+  if (e.originalEvent.detail.empty) return;
+  var arquivo = NOVAUI.signature.toFile('#assinatura', 'Assinatura - solicitante.png');
+  NOVAUI.attachment.fluig.send(arquivo);
+});
+
+NOVAUI.signature.isEmpty('#assinatura');   // true | false
+NOVAUI.signature.get('#assinatura');       // 'data:image/png;base64,…'
+NOVAUI.signature.clear('#assinatura');
+```
+
+**Atributos HTML (no .signature)**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `data-signature` | — | — | Liga o componente. Dentro, o campo com name (textarea hidden) recebe a imagem. |
+| `data-required` | — | — | Obrigatória no NOVAUI.signature.validate(). |
+| `data-readonly` | — | — | Só mostra. Também fica só leitura quando o campo está readonly ou disabled (como o Fluig faz nas etapas sem edição). |
+| `data-label` | texto | Assine aqui | Texto da área vazia. |
+| `data-height` | px | 180 | Altura da área. |
+| `data-color` | cor | #283272 | Cor da tinta. |
+
+**Funções e evento**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `NOVAUI.signature.validate(target?)` | — | todas | Confere as obrigatórias e mostra o erro. Use no beforeSendValidate. |
+| `NOVAUI.signature.isEmpty(target) · get(target)` | — | — | Está vazia? / imagem em data URL (PNG). |
+| `NOVAUI.signature.set(target, dataURL) · clear(target)` | — | — | Mostra uma assinatura gravada / apaga. |
+| `NOVAUI.signature.toFile(target, nome)` | — | assinatura.png | File PNG para anexar (ex.: NOVAUI.attachment.fluig.send). |
+| `nova:signature-change` | { value, empty } | — | No .signature, ao terminar um traço, desfazer ou limpar. |
+
+**No Fluig**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `Campo` | textarea hidden | — | A imagem é recortada e salva em 1x (alguns KB). Use textarea, que aceita texto longo. |
+| `Registro oficial` | — | — | Para ter o arquivo no processo, anexe com toFile + NOVAUI.attachment.fluig.send. |
+
 
 <a id="cor"></a>
 ## Seletor de cor
@@ -2833,6 +2905,7 @@ NOVAUI.stepper.set('.stepper', 2, { errors: [1] });
 | `.stepper--compact` | — | — | Mais baixo, nomes curtos. |
 | `.stepper--vertical` | — | — | Etapas na vertical. |
 | `.is-current · .is-complete · .is-error` | — | — | Estado de cada etapa. |
+| `.stepper--scroll` | — | — | Nome das etapas inteiro e rolagem horizontal quando não cabem (cabeçalho do processo). |
 
 **NOVAUI.stepper.set(target, índice, opções)**
 
@@ -3576,6 +3649,7 @@ No <dialog class="dialog">.
 | `data-guard` | — | — | Pergunta antes de descartar alterações. |
 | `data-dialog-open="id"` | id | — | No botão: abre. |
 | `data-dialog-close="valor"` | texto | — | No botão: fecha e devolve o valor. |
+| `.dialog__body--center` | — | — | Conteúdo centralizado (boas-vindas, aviso com ícone grande). |
 
 **Funções**
 
@@ -4194,3 +4268,269 @@ Todas precisam ser enviadas, mesmo vazias.
 |---|---|---|---|
 | `Logo` | URL pública | — | Troque o src da <img> pelo endereço público da logo branca. E-mail não aceita arquivo local. |
 | `Cores` | hexadecimal | marca | Azul-marinho #283272 no topo, botão #2F509F, faixa com azul, verde-água e lima. |
+
+---
+
+# Processo
+
+<a id="choice-card"></a>
+## Cartão de opção e tela de escolha
+
+`key: choice-card` · palavras-chave: escolha opcao tela inicial tipo de solicitacao para mim outro choice card botao grande · fonte CSS: process.css, base.css · fonte JS: — (só CSS)
+
+**HTML base**
+
+```html
+<div class="process-choice">
+  <span class="icon-tile icon-tile--lg"><span class="icon" aria-hidden="true">inventory_2</span></span>
+  <h3 class="process-choice__title">Entrega de Materiais</h3>
+  <p class="process-choice__desc">Selecione uma opção</p>
+  <div class="process-choice__options">
+    <button type="button" class="choice-card" data-para-quem="mim">
+      <span class="icon-tile icon-tile--teal"><span class="icon" aria-hidden="true">person</span></span>
+      <span class="choice-card__text">
+        <span class="choice-card__title">Minha solicitação</span>
+        <span class="choice-card__desc">Os materiais são para você</span>
+      </span>
+    </button>
+    <span class="process-choice__separator">ou</span>
+    <button type="button" class="choice-card" data-para-quem="outro">
+      <span class="icon-tile icon-tile--warning"><span class="icon" aria-hidden="true">group</span></span>
+      <span class="choice-card__text">
+        <span class="choice-card__title">Para outro integrante</span>
+        <span class="choice-card__desc">Materiais para outra pessoa</span>
+      </span>
+    </button>
+  </div>
+</div>
+```
+
+**Uso pelo JavaScript**
+
+```js
+$('[data-para-quem]').on('click', function () {
+  $('#paraQuem').val($(this).attr('data-para-quem'));
+  $('#tela-escolha').prop('hidden', true);
+  $('#tela-formulario').prop('hidden', false);
+});
+```
+
+**Classes**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `.process-choice` | — | — | Tela de escolha centralizada (ícone, título, texto e opções). |
+| `.process-choice__title · __desc · __options · __separator` | — | — | Partes da tela de escolha. |
+| `.choice-card` | button | — | Opção grande clicável. A seta à direita vem do CSS. |
+| `.choice-card__text · __title · __desc` | — | — | Título e linha de apoio da opção. |
+| `aria-pressed="true"` | — | — | Marca a opção escolhida (quando a tela continua visível). |
+
+<a id="process-header"></a>
+## Cabeçalho do processo
+
+`key: process-header` · palavras-chave: cabecalho processo solicitante etapas header requester stepper matricula cargo · fonte CSS: process.css, navigation.css, badges.css, data-display.css · fonte JS: navigation.js
+
+**HTML base**
+
+```html
+<header class="process-header">
+  <div class="process-header__top">
+    <span class="icon-tile icon-tile--md"><span class="icon" aria-hidden="true">inventory_2</span></span>
+    <div class="process-header__title">
+      <p class="process-header__overline">Nova solicitação</p>
+      <h3 class="process-header__name">Entrega de Materiais</h3>
+    </div>
+    <div class="process-header__badges">
+      <span class="badge badge--neutral">Para mim</span>
+    </div>
+    <div class="process-header__actions">
+      <button type="button" class="btn btn--tertiary btn--sm">
+        <span class="icon" aria-hidden="true">swap_horiz</span><span>Trocar</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="process-header__requester">
+    <span class="avatar">LL</span>
+    <div class="process-header__person">
+      <p class="process-header__label">Solicitante</p>
+      <p class="process-header__person-name">Lucas da Silva Lima</p>
+    </div>
+    <dl class="process-header__meta">
+      <div><dt>Cargo</dt><dd>Desenvolvedor de Fluig Pleno</dd></div>
+      <div><dt>Matrícula</dt><dd>445154</dd></div>
+      <div><dt>Aberta em</dt><dd>15/10/2026 12:17</dd></div>
+    </dl>
+    <span class="tag tag--teal tag--sm" data-tip="Dados do solicitante vêm do RM." tabindex="0">
+      <span class="icon" aria-hidden="true">bolt</span>RM
+    </span>
+  </div>
+
+  <div class="process-header__steps">
+    <p class="process-header__label">Etapas</p>
+    <ol class="stepper stepper--compact stepper--scroll" id="etapas">
+      <li class="stepper__step is-complete"><span class="stepper__link"><span class="stepper__marker" aria-hidden="true"></span><span class="stepper__text"><span class="stepper__title">Solicitação</span><span class="stepper__desc">Solicitante</span></span></span></li>
+      <li class="stepper__step is-current" aria-current="step"><span class="stepper__link"><span class="stepper__marker" aria-hidden="true"></span><span class="stepper__text"><span class="stepper__title">Pré-análise</span><span class="stepper__desc">Almoxarifado</span></span></span></li>
+      <li class="stepper__step"><span class="stepper__link"><span class="stepper__marker" aria-hidden="true"></span><span class="stepper__text"><span class="stepper__title">Avaliação</span><span class="stepper__desc">Líder direto</span></span></span></li>
+      <li class="stepper__step"><span class="stepper__link"><span class="stepper__marker" aria-hidden="true"></span><span class="stepper__text"><span class="stepper__title">Recebimento</span><span class="stepper__desc">Solicitante</span></span></span></li>
+    </ol>
+  </div>
+</header>
+```
+
+**Uso pelo JavaScript**
+
+```js
+// etapa atual pelo índice (as anteriores ficam concluídas)
+NOVAUI.stepper.set('#etapas', 1);
+```
+
+**Partes**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `.process-header__top` | — | — | Ícone, .process-header__title (overline + nome), __badges e __actions. |
+| `.process-header__overline · __name` | — | — | Situação (ex.: Nova solicitação) e nome do processo. |
+| `.process-header__requester` | — | — | Avatar, .process-header__person (label + nome), .process-header__meta (dl) e um selo. |
+| `.process-header__label` | — | — | Rótulo em maiúsculas (Solicitante, Etapas). |
+| `.process-header__steps` | — | — | Bloco das etapas, com divisória acima. |
+| `.stepper--scroll` | — | — | Etapas com nome inteiro e rolagem horizontal quando não cabem. No celular, só os marcadores. |
+| `.skeleton dentro do solicitante` | — | — | Enquanto carrega: .skeleton--circle no avatar e .skeleton--text / --text-sm nos dados, sem style inline. |
+
+<a id="process-section"></a>
+## Partes do processo e resumo
+
+`key: process-section` · palavras-chave: parte secao numerada completo resumo progresso layout lateral summary process section · fonte CSS: process.css, data-display.css, loaders.css · fonte JS: process.js
+
+**HTML base**
+
+```html
+<div class="process-layout">
+  <div class="process-layout__main">
+
+    <section class="process-section" id="parte-solicitacao" data-process-auto>
+      <div class="process-section__header">
+        <span class="process-section__number" aria-hidden="true"></span>
+        <div class="process-section__heading">
+          <h4 class="process-section__title">Solicitação</h4>
+          <p class="process-section__desc">Kit e integrante</p>
+        </div>
+        <span class="badge badge--success badge--sm process-section__status">
+          <span class="icon" aria-hidden="true">check</span>Completo
+        </span>
+      </div>
+      <div class="process-section__body">
+        <div class="form-grid">
+          <div class="field field--required form-col-12">
+            <div class="field__control"><div class="field__body">
+              <label class="field__label" for="kit">Kit</label>
+              <input class="field__input" id="kit" name="kit" required>
+            </div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="process-section" id="parte-decisao" data-process-auto>
+      <div class="process-section__header">
+        <span class="process-section__number" aria-hidden="true"></span>
+        <div class="process-section__heading">
+          <h4 class="process-section__title">Pré-análise</h4>
+          <p class="process-section__desc">Conferência pelo almoxarifado</p>
+        </div>
+        <span class="badge badge--success badge--sm process-section__status">
+          <span class="icon" aria-hidden="true">check</span>Completo
+        </span>
+      </div>
+      <div class="process-section__body">
+        <div class="form-group">
+          <span class="form-label is-required" id="decisao-label">Decisão</span>
+          <div class="check-group" role="radiogroup" aria-labelledby="decisao-label">
+            <label class="check"><input type="radio" class="check__input" name="decisao" value="aprovado"><span class="check__label">Aprovar</span></label>
+            <label class="check"><input type="radio" class="check__input" name="decisao" value="reajuste"><span class="check__label">Devolver para reajuste</span></label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <aside class="process-layout__aside" aria-label="Resumo da solicitação">
+    <div class="process-summary">
+      <div class="process-summary__header">
+        <p class="process-summary__title">Resumo</p>
+        <span class="process-summary__count" data-process-count></span>
+      </div>
+      <div class="progress progress--sm" role="progressbar" aria-label="Preenchimento" data-process-progress>
+        <span class="progress__bar"></span>
+      </div>
+      <ol class="process-summary__sections" data-process-sections></ol>
+      <dl class="desc-list desc-list--horizontal desc-list--divided process-summary__values">
+        <div class="desc-list__item"><dt>Kit</dt><dd id="resumo-kit">—</dd></div>
+        <div class="desc-list__item"><dt>Peças</dt><dd class="process-summary__total">12</dd></div>
+      </dl>
+      <p class="process-summary__next">
+        <span class="icon" aria-hidden="true">arrow_forward</span>
+        <span>Próxima etapa: <strong>Avaliação do líder</strong></span>
+      </p>
+    </div>
+  </aside>
+</div>
+```
+
+**Uso pelo JavaScript**
+
+```js
+// parte completa: manual…
+NOVAUI.process.setComplete({ target: '#parte-solicitacao', complete: true });
+
+// …ou automática: <section class="process-section" data-process-auto>
+// (completa quando os obrigatórios visíveis estão preenchidos)
+
+// mostrar/esconder uma parte por etapa já atualiza o resumo
+$('#parte-preanalise').prop('hidden', atividade !== '5');
+
+$('.process-summary').on('nova:process-change', function (e) {
+  console.log(e.originalEvent.detail);   // { done, total }
+});
+```
+
+**Layout**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `.process-layout` | — | — | Conteúdo + resumo lateral (300px), uma coluna abaixo de 992px. |
+| `.process-layout__main · __aside` | — | — | Coluna das partes · coluna do resumo (fixa ao rolar). |
+| `.process-layout--single` | — | — | Sem resumo: só a coluna principal. |
+
+**Parte (.process-section)**
+
+O número é automático e conta só as partes visíveis.
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `.process-section__header` | — | — | __number (vazio), __heading (__title + __desc) e __status. |
+| `.process-section__status` | badge | oculto | Selo "Completo". Aparece sozinho quando a parte tem .is-complete. |
+| `.is-complete` | — | — | Parte completa: número verde, selo visível, marcada no resumo. |
+| `data-process-auto` | — | — | Completa quando os [required] visíveis, os grupos com .form-label.is-required e os anexos obrigatórios estão preenchidos. |
+| `hidden` | — | — | Parte de outra etapa. Some da tela, da numeração e do resumo. |
+
+**Resumo (.process-summary)**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `[data-process-sections]` | ol | — | A Nova UI monta a lista das partes visíveis, com o estado de cada uma. Clique rola até a parte. |
+| `[data-process-progress]` | .progress | — | Barra de preenchimento (fica verde com tudo completo). |
+| `[data-process-count]` | — | — | Texto "2 de 4 partes". |
+| `.process-summary__values · __total` | desc-list | — | Valores do resumo e o total em destaque. |
+| `.process-summary__next · __actions` | — | — | Próxima etapa · botões no fim do resumo. |
+| `data-process-for="#id"` | seletor | o .process-layout | Partes de outra área (quando o resumo fica fora do layout). |
+
+**Funções e evento**
+
+| Parâmetro / classe | Tipo / valores | Padrão | Para quê |
+|---|---|---|---|
+| `NOVAUI.process.setComplete({ target, complete })` | — | — | Marca ou desmarca a parte como completa. |
+| `NOVAUI.process.isComplete(target)` | — | — | true se a parte está completa. |
+| `NOVAUI.process.refresh(root?)` | — | — | Recalcula partes automáticas e resumo (raramente necessário). |
+| `nova:process-change` | { done, total } | — | No .process-summary, a cada mudança. |

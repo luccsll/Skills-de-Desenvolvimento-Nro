@@ -8,7 +8,7 @@ Especialista no design system Nova UI: escolhe os componentes, monta HTML/CSS/JS
 nova-ui/                      ← a skill (o "cérebro" do agente)
   SKILL.md                    regras, tabela de decisão, formato de entrega e exemplo
   references/
-    componentes.md            79 componentes: HTML base, classes, data-*, funções, eventos
+    componentes.md            83 componentes: HTML base, classes, data-*, funções, eventos
     api-js.md                 índice de todas as funções NOVAUI.* e eventos nova:*
     fundamentos.md            tokens, tipografia, espaçamento, ícones, utilitários, classes no lugar de CSS inline
     fluig.md                  estrutura no Fluig, beforeSendValidate, etapas, pai x filho, datasets, e-mail, convenções de JS
@@ -35,4 +35,4 @@ Baixe o `nova-ui-skill.zip` na seção Skills de IA do showcase e envie como ski
 
 ## Versão
 
-Gerado a partir do showcase de 09/10/2026 (79 componentes). Quando a Nova UI mudar, baixe o pacote de novo.
+Gerado a partir do showcase de 15/10/2026 (83 componentes). Quando a Nova UI mudar, baixe o pacote de novo.

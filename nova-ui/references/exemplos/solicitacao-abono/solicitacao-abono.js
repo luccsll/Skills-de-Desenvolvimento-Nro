@@ -182,19 +182,11 @@ $(function () {
   };
 
   function atualizarResumo() {
-    var feitas = 0;
+    // parte completa: a Nova UI mostra o selo "Completo", marca a parte no
+    // resumo e atualiza a barra e o "x de y partes"
     $.each(PARTES, function (id, completa) {
-      var ok = completa();
-      feitas += ok;
-      $('#' + id)
-        .toggleClass('is-complete', ok)
-        .find('.request-section__complete')
-        .prop('hidden', !ok);
-      $('#request-summary-sections [data-sec="' + id + '"]').toggleClass('is-done', ok);
+      NOVAUI.process.setComplete({ target: '#' + id, complete: completa() });
     });
-    $('#resumo-progresso-texto').text(feitas + ' de 4 partes');
-    $('#resumo-progresso').toggleClass('progress--success', feitas === 4);
-    NOVAUI.progress.set({ target: '#resumo-progresso', value: feitas * 25 });
     $('#resumo-operador').text($('#operador-nome').val() || '—');
     $('#resumo-praca').text($('#praca').val() ? $('#praca option:selected').text() : '—');
     $('#resumo-qcx').text($('#valor-qcx').val() ? 'R$ ' + $('#valor-qcx').val() : '—');
@@ -203,11 +195,6 @@ $(function () {
 
   $('#formulario-abono').on('input change', function () {
     setTimeout(atualizarResumo, 0);
-  });
-
-  $('#request-summary-sections').on('click', 'a', function (e) {
-    e.preventDefault();
-    $($(this).attr('href'))[0].scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
   /* ---------------------------------------------------------------------

@@ -54,6 +54,8 @@ Componentes que vão para o `<body>` quando abrem (menu) são escutados pelo `do
 | `nova:attachment-add` | Anexo (upload de arquivos) (`#anexo`) | Arquivo anexado. sent = true quando foi para a aba Anexos. |
 | `nova:attachment-remove` | Anexo (upload de arquivos) (`#anexo`) | Arquivo removido. |
 | `nova:attachment-error` | Anexo (upload de arquivos) (`#anexo`) | Arquivo recusado (tipo, tamanho, limite, repetido ou etapa). |
+| `NOVAUI.signature.validate · isEmpty · get · set · clear · toFile` | Assinatura (`#assinatura`) | Assinatura desenhada; validate no beforeSendValidate. |
+| `nova:signature-change` | Assinatura (`#assinatura`) | Assinatura mudou `{ value, empty }`. |
 | `nova:color-change` | Seletor de cor (`#cor`) | Nova cor escolhida. |
 | `NOVAUI.table.refresh(target)` | Tabela (`#tabela`) | Atualiza depois de trocar as linhas. |
 | `NOVAUI.table.getSelected(target)` | Tabela (`#tabela`) | Linhas marcadas. |
@@ -146,8 +148,14 @@ Componentes que vão para o `<body>` quando abrem (menu) são escutados pelo `do
 |---|---|
 | `NOVAUI.refresh(root)` | Inicia componentes inseridos depois no HTML (AJAX, conteúdo de `NOVAUI.modal.create`). Na tabela pai x filho use `NOVAUI.childTable`, que já faz isso. |
 | `NOVAUI.util.emit · esc · norm · store` | Disparar evento, escapar HTML, normalizar texto (sem acento/minúsculo), ler/gravar localStorage. |
-| `NOVAUI.integration.datasets · protheus · rm · fluig · util` | Funções de integração da equipe (`integrations.js`). Ver `integracoes.md`. |
+| `NOVAUI.integration.datasets · protheus · rm · fluig · util` | Funções de integração da equipe (`integrations.js`, já dentro do `nova-ui.min.js`; exige `vcXMLRPC.js` no formulário). Ver `integracoes.md`. |
+| `NOVAUI.integration.rm.searchLeader(searchParam, request)` | Solicitante + hierarquia de liderança. Devolve **string JSON**. |
+| `NOVAUI.integration.rm.searchTeam(chapa, request)` | Equipe de um líder (diretos ou árvore). Devolve **objeto**. |
 | `NOVAUI.progress.set({ target, value })` | Muda o preenchimento da barra de progresso (0 a 100). No HTML, use `data-value` no `.progress`. |
 | `NOVAUI.rating.set({ target, value })` | Muda a nota exibida no `.rating-display` (ex.: 4.3). No HTML, use `data-value`. |
 | `NOVAUI.anchorNav.refresh()` | Recalcula a navegação por âncoras depois de mudar as seções. |
+| `NOVAUI.process.setComplete({ target, complete })` | Marca a parte (`.process-section`) como completa: selo, número verde e item do resumo. (`#process-section`) |
+| `NOVAUI.process.isComplete(target)` | true se a parte está completa. |
+| `NOVAUI.process.refresh(root?)` | Recalcula partes automáticas (`data-process-auto`) e o resumo. Raramente necessário. |
+| `nova:process-change` | `{ done, total }` no `.process-summary`, a cada mudança. |
 | `NOVAUI.version` | Versão carregada. |

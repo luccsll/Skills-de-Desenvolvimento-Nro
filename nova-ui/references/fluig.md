@@ -9,16 +9,16 @@ Na tela de processo, só a **área do formulário** é editável. Breadcrumbs, a
 ```html
 <html>
   <head>
-    <link type="text/css" rel="stylesheet" href="/style-guide/css/fluig-style-guide.min.css" />
     <script type="text/javascript" src="/portal/resources/js/jquery/jquery.js"></script>
     <script type="text/javascript" src="/portal/resources/js/jquery/jquery-ui.min.js"></script>
     <script type="text/javascript" src="/portal/resources/js/mustache/mustache-min.js"></script>
+    <!-- só se algum campo usar zoom nativo ou FLUIGC.* -->
     <script type="text/javascript" src="/style-guide/js/fluig-style-guide.min.js" charset="utf-8"></script>
-    <!-- só se o formulário consultar datasets -->
+    <!-- só se o formulário consultar datasets ou usar NOVAUI.integration.* -->
     <script type="text/javascript" src="/webdesk/vcXMLRPC.js"></script>
 
-    <!-- Nova UI (depois do CSS do Fluig) -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+    <!-- Nova UI -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..600,0..1,0&display=block" />
     <!-- só se o formulário tiver anexo com layout 'drop' -->
     <link rel="stylesheet" href="https://unpkg.com/filepond/dist/filepond.min.css" />
@@ -28,11 +28,12 @@ Na tela de processo, só a **área do formulário** é editável. Breadcrumbs, a
     <link type="text/css" rel="stylesheet" href="nome-do-formulario.css" />
   </head>
   <body>
-    <div class="fluig-style-guide">
-      <form name="form" role="form">
+    <form name="form" role="form">
+      <!-- campos ocultos de controle (atividade, solicitante…) podem ficar aqui -->
+      <div class="nova-design-system">
         <!-- conteúdo com componentes da Nova UI -->
-      </form>
-    </div>
+      </div>
+    </form>
 
     <!-- só se tiver anexo com layout 'drop' (carregue ANTES da Nova UI) -->
     <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
@@ -54,10 +55,10 @@ Inclua FilePond e pdf.js **só** quando a tela usar anexo com área de arrastar 
 - **Autocomplete**: o input visível mostra o rótulo; o `input type="hidden"` com `name` recebe o código (`valueInput`). Grave o código, não o texto.
 - **Anexo**: o nome do arquivo é gravado no campo indicado em `nameField` (as próximas etapas acham o anexo por ele). Com `fluig: true` o arquivo vai para a aba Anexos do processo.
 - **Botões**: sempre `type="button"`.
-- **Ordem do CSS**: Nova UI depois do `fluig-style-guide.min.css`.
+- **Sem o style guide do Fluig**: o formulário não carrega o `fluig-style-guide.min.css` nem usa o wrapper `.fluig-style-guide`. A área do formulário fica dentro de `<div class="nova-design-system">` (fonte, cor e `box-sizing` da Nova UI). O `fluig-style-guide.min.js` só entra se algum campo usar zoom nativo ou `FLUIGC.*`.
 - **Classes que não colidem com o Fluig**: a Nova UI evita as do Bootstrap 3 e as do `wcm_global.css`. Use `.form-col-*` (não `.col-*`), `.data-table` (não `.table`), `.page-container` (não `.container`), `.form-layout` (não `.form`), `.form-inline-row` (não `.form-inline`), `.form-error-text` (não `.form-error`), `.breadcrumbs` (não `.breadcrumb`).
 - **Sem CSS inline**: nada de `style=""` nem `<style>` no HTML. Use utilitários da Nova UI (`.margin-top-4`, `.table--min-md`, `.col-width-120`, `data-value`…) ou crie a classe no `.css` do processo. Única exceção: template de e-mail (ver abaixo).
-- **Sem internet no servidor**: se o Google Fonts estiver bloqueado, os ícones aparecem como texto ("search"). Hospede Inter e Material Symbols junto com a biblioteca.
+- **Sem internet no servidor**: se o Google Fonts estiver bloqueado, os ícones aparecem como texto ("search"). Hospede Open Sans e Material Symbols junto com a biblioteca.
 - **Cache**: a URL tem versão (`/v1/`). Mudança que quebra algo sai em `/v2/`.
 - **Logins**: no Fluig da NRO o login é o nome junto, sem ponto (ex.: `marcosferreira`). Use esse formato em exemplos de usuário, destinatário de e-mail e `user` do histórico de alterações.
 
@@ -113,6 +114,34 @@ $(function () {
   NOVAUI.childTable.create({ target: '#itens', editable: INICIO.indexOf(atividade) > -1 });
 });
 ```
+
+## Página de processo (sem CSS próprio)
+
+Tela de escolha, cabeçalho, partes numeradas e resumo são componentes (`componentes.md`, grupo **Processo**). Estrutura:
+
+```html
+<form name="form" role="form">
+  <div class="nova-design-system">
+    <div id="tela-escolha"> .process-choice com .choice-card </div>
+    <div id="tela-formulario" hidden>
+      <header class="process-header"> … </header>
+      <div class="process-layout">
+        <div class="process-layout__main">
+          <section class="process-section" id="parte-x" data-process-auto> … </section>
+        </div>
+        <aside class="process-layout__aside">
+          <div class="process-summary"> … [data-process-sections] … </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</form>
+```
+
+- Parte de outra etapa: `hidden` na `.process-section` (numeração e resumo se ajustam).
+- Parte completa: `data-process-auto` (obrigatórios preenchidos) ou `NOVAUI.process.setComplete({ target, complete })`.
+- Etapa atual: `NOVAUI.stepper.set('#etapas', índice)` no `.stepper--scroll` do cabeçalho.
+- Não escreva CSS para cabeçalho, partes, resumo ou tela de escolha. Se precisar de algo que esses componentes não fazem, proponha incluir na Nova UI.
 
 ## Pai x filho
 

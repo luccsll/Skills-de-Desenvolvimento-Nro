@@ -303,23 +303,23 @@
     }
 
     .attachment__progress {
-    margin-top: var(--nova-space-1);
-}
+        margin-top: var(--nova-space-1);
+    }
 
-.attachment__item.is-done .attachment__file-meta {
-    color: var(--nova-success-text);
-}
+    .attachment__item.is-done .attachment__file-meta {
+        color: var(--nova-success-text);
+    }
 
-.attachment__item.is-error .attachment__file {
-    border-color: var(--nova-danger-text);
-    background: var(--nova-danger-bg);
-}
+    .attachment__item.is-error .attachment__file {
+        border-color: var(--nova-danger-text);
+        background: var(--nova-danger-bg);
+    }
 
-.attachment__item.is-error .attachment__file-meta {
-    color: var(--nova-danger-text);
-}
+    .attachment__item.is-error .attachment__file-meta {
+        color: var(--nova-danger-text);
+    }
 
-.attachment__file-actions {
+    .attachment__file-actions {
         width: 100%;
         justify-content: flex-end;
     }

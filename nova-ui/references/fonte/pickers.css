@@ -411,6 +411,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
     .datepicker,
     .timepicker {
         animation: none;

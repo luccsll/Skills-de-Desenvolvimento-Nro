@@ -122,7 +122,7 @@
     --nro-amber-800: #6e4c00;
 
     /* ----- Tipografia ----- */
-    --nro-font-sans: 'Inter', 'Segoe UI', Roboto, Arial, sans-serif;
+    --nro-font-sans: 'Open Sans', Arial, sans-serif;
     --nro-font-mono: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', monospace;
 
     /* =====================================================================
@@ -578,9 +578,9 @@
 
     :root[data-theme="auto"],
     [data-theme="auto"] {
-    --nova-scrollbar-thumb: rgba(203, 214, 236, .22);
-    --nova-scrollbar-thumb-hover: rgba(122, 162, 224, .6);
-    --nova-scrollbar-thumb-active: #7aa2e0;
+        --nova-scrollbar-thumb: rgba(203, 214, 236, .22);
+        --nova-scrollbar-thumb-hover: rgba(122, 162, 224, .6);
+        --nova-scrollbar-thumb-active: #7aa2e0;
 
         color-scheme: dark;
 

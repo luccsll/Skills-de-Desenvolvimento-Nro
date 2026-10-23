@@ -1,0 +1,165 @@
+/* =========================================================================
+   NOVA UI — ASSINATURA
+   <div class="signature" data-signature> (montado pelo signature.js)
+     .signature__box       área de desenho (fundo de papel, linha e ×)
+     .signature__actions   status, Desfazer e Limpar
+   --signature-height (180px) e --signature-ink (cor da tinta)
+   ========================================================================= */
+.signature {
+    --signature-height: 180px;
+    --signature-ink: #283272;     /* fixa: a tinta fica escura também no tema escuro */
+    display: flex;
+    flex-direction: column;
+    gap: var(--nova-space-2);
+    width: 100%;
+    min-width: 0;
+    font-family: var(--nova-font-family);
+}
+
+.signature textarea[hidden],
+.signature input[type="hidden"] {
+    display: none !important;
+}
+
+.signature__box {
+    position: relative;
+    height: var(--signature-height);
+    overflow: hidden;
+    border: 1.5px dashed var(--nova-color-border-strong);
+    border-radius: var(--nova-radius-md);
+    /* papel sempre claro, inclusive no tema escuro: a assinatura sai como no papel */
+    background: #fff;
+    transition: border-color var(--nova-transition-fast), box-shadow var(--nova-transition-fast);
+}
+
+.signature:not(.is-readonly) .signature__box:hover {
+    border-color: var(--nova-color-brand-500);
+}
+
+.signature.is-drawing .signature__box {
+    border-style: solid;
+    border-color: var(--nova-color-brand-500);
+    box-shadow: 0 0 0 3px var(--nova-color-brand-100);
+}
+
+.signature.has-value .signature__box {
+    border-style: solid;
+}
+
+.signature.has-error .signature__box {
+    border-color: var(--nova-danger-text);
+    box-shadow: 0 0 0 3px var(--nova-danger-bg);
+}
+
+.signature__pad {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: crosshair;
+    touch-action: none;          /* o dedo desenha em vez de rolar a página */
+    user-select: none;
+}
+
+.signature.is-readonly .signature__pad {
+    cursor: default;
+}
+
+/* linha de assinatura com × */
+.signature__line {
+    position: absolute;
+    right: var(--nova-space-6);
+    bottom: 28%;
+    left: var(--nova-space-6);
+    border-bottom: 1px solid #c9d1de;
+    pointer-events: none;
+}
+
+.signature__x {
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    font-size: 18px;
+    line-height: 1;
+    color: #9aa5b8;
+}
+
+.signature__hint {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--nova-space-2);
+    padding-bottom: 12%;
+    font-size: var(--nova-font-size-sm);
+    color: #7d889c;
+    pointer-events: none;
+    transition: opacity var(--nova-transition-fast);
+}
+
+.signature__hint .icon {
+    --icon-size: 20px;
+}
+
+.signature.has-value .signature__hint,
+.signature.is-drawing .signature__hint {
+    opacity: 0;
+}
+
+/* ----- ações ----- */
+.signature__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--nova-space-1);
+}
+
+.signature__actions[hidden],
+.signature.is-readonly .signature__actions:not(:has(.signature__status:not(:empty))) {
+    display: none;
+}
+
+.signature__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-right: auto;
+    font-size: var(--nova-font-size-xs);
+    font-weight: var(--nova-font-weight-semibold);
+    color: var(--nova-success-text);
+}
+
+.signature__status:not(:empty)::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.signature:not(.has-value) [data-signature-undo],
+.signature:not(.has-value) [data-signature-clear] {
+    visibility: hidden;
+}
+
+.signature__error {
+    display: flex;
+    gap: 6px;
+    margin: 0;
+    font-size: var(--nova-font-size-sm);
+    color: var(--nova-danger-text);
+}
+
+.signature__error[hidden] {
+    display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .signature__box,
+    .signature__hint {
+        transition: none;
+    }
+}
